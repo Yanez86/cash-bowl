@@ -18,6 +18,11 @@ propria. Selfhosted, gratuita e libera.
   mese registri le spese nelle quattro categorie (Sopravvivenza, Svago, Cultura,
   Extra), a fine mese l'app ti mostra com'è andata e ti pone le quattro domande
   del metodo.
+- **Spese al volo**: alla cassa fotografi lo scontrino o scrivi solo la cifra e
+  salvi. Resta una *bozza* che completi con calma; le bozze non falsano i conti,
+  ma l'app ti ricorda quante ne hai da sistemare.
+- **Foto degli scontrini** allegate alla spesa, rimpicciolite dal telefono e
+  ripulite dai dati di posizione.
 - Più persone in famiglia, ognuna col proprio accesso. Le spese sono di famiglia
   oppure private, lo decidi tu voce per voce.
 - Report configurabili: per categoria, per periodo, andamento nel tempo,
@@ -54,6 +59,8 @@ qual è il tuo indirizzo.
 ## Backup
 
 L'app salva ogni giorno una copia del database in `data/backups/`.
+Le foto degli scontrini sono file normali in `data/receipts/`: si copiano da
+sole insieme alla cartella, senza duplicarle ogni giorno.
 Se fai puntare quella cartella dentro una cartella già sincronizzata con
 Google Drive, Dropbox o Nextcloud, hai il backup fuori casa senza dare
 nessuna password al programma.
@@ -90,6 +97,9 @@ Self-hosted family expense tracking using the **kakebo** method. Free and open.
 - **Nothing leaves your server**: no telemetry, no external services, no CDN.
 - Kakebo cycle: set a savings goal at the start of the month, log spending into
   the four categories, review with the four kakebo questions at month end.
+- **Quick capture**: snap the receipt or type just the amount and save. It stays
+  a *draft* until you complete it; drafts never affect the totals.
+- **Receipt photos**, resized on the phone and stripped of location metadata.
 - Multiple household users; each expense is either shared or private.
 - Configurable reports, CSV and PDF export, editable categories.
 - English and Italian. Light, dark and colour themes.

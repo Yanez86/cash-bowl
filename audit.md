@@ -82,7 +82,23 @@ qualcuno stia provando a entrare.
 - [ ] La cartella dei backup non è raggiungibile dal web
 - [ ] È documentato cosa contiene esattamente un backup, prima di sincronizzarlo su cloud
 
-## 1.7 Manutenzione
+## 1.7 Bozze e foto degli scontrini
+
+- [ ] Dimensione massima del file verificata **sul server**, non solo nel browser
+- [ ] Tipo del file riconosciuto dai byte iniziali, non dal nome: solo JPEG, PNG, WebP
+- [ ] File SVG sempre rifiutati
+- [ ] Il nome del file scelto dall'utente non viene mai usato: nome generato a caso
+- [ ] Nessun pezzo di percorso proveniente dall'esterno finisce in un percorso reale
+- [ ] Le foto stanno in `data/receipts/`, fuori dalla cartella pubblica del sito
+- [ ] Nessun indirizzo diretto al file: si passa sempre da una rotta che controlla i permessi
+- [ ] La foto di una spesa privata non è scaricabile da un altro utente
+- [ ] Metadati nascosti rimossi prima del salvataggio: **posizione GPS**, modello, orario
+- [ ] Il file non può essere interpretato come HTML dal browser
+- [ ] Cancellando la spesa si cancella anche il file: nessun file orfano sul disco
+- [ ] Limite complessivo allo spazio occupato, per evitare che il disco si riempia
+- [ ] Le bozze rispettano gli stessi controlli di visibilità delle spese complete
+
+## 1.8 Manutenzione
 
 - [ ] `npm audit` eseguito automaticamente dalla CI a ogni modifica
 - [ ] Nessuna dipendenza con vulnerabilità note di gravità alta o critica
@@ -90,7 +106,7 @@ qualcuno stia provando a entrare.
 - [ ] Le versioni sono numerate e c'è un canale per segnalare problemi (`SECURITY.md`)
 - [ ] Procedura di ripristino da backup **provata davvero**, non solo scritta
 
-## 1.8 Prove pratiche da rifare a ogni versione
+## 1.9 Prove pratiche da rifare a ogni versione
 
 1. Provare a entrare con password sbagliata dieci volte: deve scattare il blocco.
 2. Copiare l'indirizzo di una spesa privata e aprirlo con un altro utente: deve negare.
@@ -98,6 +114,11 @@ qualcuno stia provando a entrare.
 4. Aprire l'app in `http://`: deve reindirizzare a `https://`.
 5. Fare logout e usare il tasto "indietro" del browser: non deve mostrare dati.
 6. Cancellare il database di prova e ripristinarlo dal backup: deve funzionare.
+7. Rinominare un file qualsiasi in `.jpg` e caricarlo: deve essere rifiutato.
+8. Copiare l'indirizzo della foto di uno scontrino privato e aprirlo con un
+   altro utente, e da finestra anonima: deve negare in entrambi i casi.
+9. Caricare una foto scattata col telefono e ricontrollarne i metadati: la
+   posizione GPS non deve esserci più.
 
 ---
 
@@ -133,6 +154,11 @@ schermo piccolo e per chi ha una connessione lenta.
 - [ ] Tastiera corretta sul telefono: numerica per gli importi, calendario per le date
 - [ ] Autocompletamento attivo dove ha senso (`autocomplete`)
 - [ ] Il contenuto già scritto non va perso in caso di errore di invio
+- [ ] La foto dello scontrino è sempre **facoltativa**: si può salvare senza
+- [ ] Esiste sempre l'alternativa alla fotocamera: scegliere un'immagine dalla galleria
+- [ ] L'anteprima della foto ha un testo alternativo utile (es. "scontrino del 3 marzo, 24,50 €")
+- [ ] L'avviso "hai N bozze da sistemare" è annunciato agli screen reader e non
+      è affidato al solo colore
 
 ## 2.4 Colore e leggibilità
 
@@ -174,7 +200,9 @@ schermo piccolo e per chi ha una connessione lenta.
 3. Portare lo zoom del browser al 200% e verificare che nulla si sovrapponga.
 4. Aprire l'app su un telefono piccolo (schermo da 5 pollici).
 5. Provare tutte le palette in chiaro e in scuro con un verificatore di contrasto.
-6. Simulare una connessione lenta e verificare che gli stati di caricamento si vedano.
+6. Simulare una connessione lenta e verificare che gli stati di caricamento si vedano,
+   compreso il caricamento della foto.
+7. Salvare una bozza usando solo la tastiera, senza mai toccare la fotocamera.
 
 ---
 

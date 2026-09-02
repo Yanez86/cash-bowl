@@ -158,6 +158,36 @@ provando a entrare.
   "arrivano solo dal nostro form".
 - Dipendenze: `npm audit` in CI. Aggiornamenti di sicurezza applicati subito.
 
+### 8.1 Bozze e file caricati dagli utenti (foto degli scontrini)
+
+**Bozze.** Una spesa può essere salvata come bozza con **la sola foto oppure il
+solo importo**. Ne discende che nel database importo, categoria e visibilità
+sono *opzionali* finché lo stato è `draft`. Conseguenza da non dimenticare: ogni
+query che calcola totali, bilanci o report deve escludere le bozze in modo
+esplicito. Il posto giusto per farlo è la clausola `WHERE`, non un filtro a
+valle.
+
+**Foto.** Una sola foto per spesa. Il ridimensionamento avviene **nel browser**
+(canvas, lato lungo ~1600 px, JPEG): nessuna libreria di immagini sul server.
+Regole non negoziabili:
+
+- Dimensione massima verificata sul server, non solo nel browser.
+- Il tipo del file si riconosce dai **byte iniziali** del file, non dal nome né
+  da quello che dichiara il browser. Ammessi solo JPEG, PNG e WebP. Mai SVG.
+- Il nome del file scelto dall'utente non si usa mai: si genera un nome casuale.
+  Nessun pezzo di percorso arriva dall'esterno.
+- I file stanno in `data/receipts/`, **fuori** dalla cartella servita
+  pubblicamente. Non esiste un indirizzo diretto al file.
+- Si scaricano solo attraverso una rotta che verifica sessione e permessi, con
+  gli stessi controlli famiglia/privato delle spese.
+- I metadati nascosti (**posizione GPS**, modello del telefono, orario) si
+  rimuovono prima di salvare: una foto di scontrino dice dove sei stato.
+- La risposta che serve l'immagine usa `Content-Type` esplicito e
+  `Content-Disposition: attachment` dove opportuno; mai far interpretare il file
+  come HTML.
+- Cancellando la spesa si cancella il file. Un file orfano è un dato personale
+  dimenticato sul disco.
+
 Checklist completa e verifiche periodiche: `audit.md`.
 
 ---
@@ -233,6 +263,10 @@ Poca cerimonia, ma il minimo indispensabile.
 - Almeno un test che verifichi che **un utente non veda le spese private di un
   altro**. Questo test non si cancella mai.
 - Prima di correggere un bug, si scrive il test che lo riproduce.
+- Almeno un test che verifichi che **le bozze non entrino in nessun totale**.
+- Almeno un test che verifichi che un file non-immagine rinominato in `.jpg`
+  venga rifiutato, e uno che verifichi che la foto di una spesa privata altrui
+  non sia scaricabile. Questi test non si cancellano mai.
 
 ---
 

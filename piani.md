@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **nessuna riga di codice scritta.** Solo documentazione.
+Stato attuale: **fase 0 completata, nessuna riga di codice scritta.**
 
 ---
 
@@ -26,6 +26,8 @@ Stato attuale: **nessuna riga di codice scritta.** Solo documentazione.
 | Tecnologia | TypeScript + SvelteKit + SQLite |
 | Temi | chiaro/scuro/auto + palette d'accento, per utente |
 | Lingue | italiano e inglese |
+| Bozze | spesa salvabile al volo con **la sola foto oppure il solo importo**; fuori dai conti finché non è completata |
+| Scontrini | **una** foto per spesa, rimpicciolita dal telefono prima dell'invio |
 
 ---
 
@@ -36,9 +38,8 @@ Stato attuale: **nessuna riga di codice scritta.** Solo documentazione.
 - [x] `audit.md` — checklist sicurezza e accessibilità
 - [x] `README.md` — presentazione e istruzioni
 - [x] `LICENSE` (AGPL-3.0) e `.gitignore`
-- [ ] `git init` e primo commit
-- [ ] Creazione del repository su GitHub (**richiede ok esplicito**)
-- [ ] Scelta definitiva del nome pubblico e della descrizione
+- [x] `git init` e primo commit
+- [ ] Creazione del repository su GitHub (`cash-bowl`, pubblico)
 
 ---
 
@@ -72,13 +73,13 @@ riavvio.
 
 ---
 
-## Fase 3 — Il cuore: spese e kakebo
+## Fase 3 — Il cuore: spese, bozze e kakebo
 
 - [ ] Tabelle `categories`, `transactions`, `months`
 - [ ] Categorie iniziali kakebo: Sopravvivenza, Svago, Cultura, Extra
 - [ ] Gestione sotto-categorie: crea, rinomina, riordina, disattiva
       (le categorie usate **non** si cancellano: si disattivano, per non perdere lo storico)
-- [ ] Inserimento rapido di una spesa: importo, data, categoria, nota,
+- [ ] Inserimento di una spesa: importo, data, categoria, nota,
       "di famiglia" o "privata"
 - [ ] Inserimento delle entrate e delle spese fisse del mese
 - [ ] Impostazione dell'obiettivo di risparmio mensile
@@ -86,7 +87,20 @@ riavvio.
 - [ ] Modifica ed eliminazione di una voce
 - [ ] Test dei calcoli del bilancio con importi in centesimi
 
-**Fatta quando:** puoi registrare un mese intero e l'app ti dice quanto ti resta.
+### Bozze di spesa
+
+- [ ] Stato `draft` sulla transazione (bozza / completata)
+- [ ] Salvataggio al volo: basta **la foto oppure l'importo**; data di oggi
+      automatica; categoria, nota e visibilità si mettono dopo
+- [ ] Pulsante di inserimento rapido sempre raggiungibile col pollice
+- [ ] Le bozze **non entrano** nei totali del bilancio kakebo
+- [ ] Avviso ben visibile nella schermata principale: "hai N bozze da sistemare"
+- [ ] Elenco "da sistemare", ordinato dalla più vecchia, con completamento in un passaggio
+- [ ] Una bozza si completa quando ha importo, data e categoria
+- [ ] Test: le bozze restano fuori da tutti i totali e da tutti i report
+
+**Fatta quando:** puoi registrare un mese intero, salvare una spesa in due tocchi
+mentre sei alla cassa, e l'app ti dice quanto ti resta.
 
 ---
 
@@ -106,13 +120,41 @@ riavvio.
 
 ---
 
-## Fase 5 — Report
+## Fase 5 — Scontrini fotografati
+
+- [ ] Scatto diretto dal telefono (`<input type="file" accept="image/*" capture>`)
+      e, in alternativa, scelta di un'immagine già in galleria
+- [ ] **Rimpicciolimento nel browser prima dell'invio**: lato lungo ~1600 px,
+      JPEG, obiettivo 200–400 KB
+- [ ] **Una sola foto per spesa** (la seconda sostituisce la prima, con conferma)
+- [ ] Controlli sul server: dimensione massima, tipo verificato dai byte reali
+      del file e non dal nome, solo JPEG/PNG/WebP
+- [ ] Rimozione dei dati nascosti nella foto (**posizione GPS**, modello del
+      telefono) prima del salvataggio
+- [ ] Salvataggio come file in `data/receipts/`, nome casuale, **fuori** dalla
+      cartella pubblica del sito
+- [ ] La foto si scarica solo attraverso un indirizzo che verifica chi sei:
+      una foto di una spesa privata altrui non deve mai essere raggiungibile
+- [ ] Anteprima nella scheda della spesa, con ingrandimento a schermo intero
+- [ ] Eliminazione della foto; cancellando la spesa si cancella anche il file
+- [ ] Le foto rientrano nell'export completo dei dati e nel ripristino
+- [ ] Pagina di stato: spazio occupato dagli scontrini
+- [ ] Test: l'utente A non scarica la foto di una spesa privata dell'utente B
+- [ ] Test: un file non-immagine rinominato in `.jpg` viene rifiutato
+
+**Fatta quando:** alla cassa fotografi lo scontrino, esce una bozza, e la sera la
+completi dal divano.
+
+---
+
+## Fase 6 — Report
 
 - [ ] Bilancio mensile kakebo: previsto contro reale, risparmiato contro obiettivo
 - [ ] Rituale di fine mese con le quattro domande kakebo e le risposte salvate
 - [ ] Spese per categoria in un periodo scelto (grafico + tabella equivalente)
 - [ ] Andamento nel tempo: confronto tra mesi e tra anni
 - [ ] Filtri configurabili: periodo, categorie, utente, famiglia/privato
+- [ ] Le bozze sono escluse dai report, ma segnalate come "N voci non conteggiate"
 - [ ] Export CSV
 - [ ] Export PDF tramite stampa del browser, con foglio di stile dedicato
 
@@ -120,12 +162,14 @@ riavvio.
 
 ---
 
-## Fase 6 — Backup e manutenzione
+## Fase 7 — Backup e manutenzione
 
 - [ ] Backup automatico giornaliero del database in `data/backups/`
 - [ ] Rotazione: conserva le ultime N copie, cancella le più vecchie
+- [ ] Le foto degli scontrini sono già file: si sincronizzano come cartella,
+      non si duplicano ogni giorno
 - [ ] Copia di sicurezza automatica prima di ogni migrazione
-- [ ] Export completo dei dati (JSON) e reimportazione
+- [ ] Export completo dei dati (JSON + foto) e reimportazione
 - [ ] Procedura di ripristino scritta e **provata almeno una volta**
 - [ ] Pagina di stato: versione, spazio occupato, data dell'ultimo backup
 
@@ -133,7 +177,7 @@ riavvio.
 
 ---
 
-## Fase 7 — Distribuzione
+## Fase 8 — Distribuzione
 
 - [ ] `README.md` con installazione in un comando
 - [ ] Immagine Docker pubblicata automaticamente a ogni versione
@@ -146,7 +190,7 @@ riavvio.
 
 ---
 
-## Fase 8 — Audit finale
+## Fase 9 — Audit finale
 
 - [ ] Audit di sicurezza completo secondo `audit.md`
 - [ ] Audit di accessibilità completo secondo `audit.md`
@@ -161,7 +205,8 @@ riavvio.
 Da qui non si scrive nulla senza una decisione esplicita.
 
 - Spese ricorrenti create automaticamente ogni mese
-- Allegato dello scontrino (foto) a una spesa
+- Lettura automatica dell'importo dallo scontrino fotografato (OCR)
+- Più foto per la stessa spesa (fatture su più pagine)
 - Obiettivi di risparmio a lungo termine (vacanza, fondo emergenze)
 - Importazione da CSV di un altro programma
 - Tema personalizzato con colori scelti liberamente dall'utente
@@ -179,3 +224,7 @@ Da qui non si scrive nulla senza una decisione esplicita.
 | 2026-09-02 | Backup su cartella locale invece di caricamento diretto su cloud | evita di custodire password del cloud dentro l'app |
 | 2026-09-02 | Una sola valuta, scegliibile | evita tassi di cambio e chiamate a servizi esterni |
 | 2026-09-02 | Temi predefiniti, non personalizzati | copre il bisogno reale con poche righe di CSS |
+| 2026-09-02 | Bozze escluse dai totali, con avviso ben visibile | i numeri del kakebo devono restare affidabili |
+| 2026-09-02 | Bozza salvabile con la sola foto o il solo importo | l'inserimento al volo deve stare in due tocchi |
+| 2026-09-02 | Una foto per spesa, rimpicciolita nel browser | disco del server contenuto, caricamento veloce, nessuna libreria di immagini sul server |
+| 2026-09-02 | Rimozione dei dati GPS dalle foto | una foto di scontrino porta con sé il luogo in cui è stata scattata |
