@@ -1,5 +1,6 @@
 import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
+import { generate } from '$lib/server/recurring';
 import { currency } from '$lib/server/settings';
 import { exists, selectable } from '$lib/server/categories';
 import { readEntry } from '$lib/server/entry-form';
@@ -20,6 +21,9 @@ export const load: PageServerLoad = ({ locals, url }) => {
 	const requested = url.searchParams.get('ym') ?? '';
 	const ym = isMonth(requested) ? requested : currentMonth();
 	const viewer = locals.user!.id;
+	// Le ricorrenti mancanti entrano adesso: i conti del mese devono essere
+	// giusti dal primo giorno. Rifarlo non cambia niente.
+	generate(db(), ym, viewer);
 
 	return {
 		ym,

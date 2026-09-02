@@ -15,7 +15,8 @@
 		"logout": "Sign out",
 		"menu": "Menu",
 		"reports": "Reports",
-		"settings": "Maintenance"
+		"settings": "Maintenance",
+		"recurring": "Recurring"
 	},
 	"common": {
 		"save": "Save",
@@ -254,7 +255,8 @@
 		"importNoUsers": "There are no users in the file: nobody would be able to sign in.",
 		"importFailed": "Import failed: the data was left as it was.",
 		"importTooBig": "The file is too big.",
-		"receiptTooMany": "You chose more photos than there is room for: at most 5 per expense."
+		"receiptTooMany": "You chose more photos than there is room for: at most 5 per expense.",
+		"invalidDay": "The day must be a number from 1 to 28."
 	},
 	"receipt": {
 		"legend": "Receipts",
@@ -351,5 +353,31 @@
 			"other": "Data imported: {count} entries."
 		},
 		"migrationsTitle": "Applied migrations"
+	},
+	"recurring": {
+		"title": "Recurring entries",
+		"intro": "Rent, bills, subscriptions, salary: set them once and every month they enter on their own, already valid. The current month ({month}) has been filled in already.",
+		"empty": "No recurring entries yet. Add one below.",
+		"kind": "Type",
+		"kindFixed": "Fixed cost",
+		"kindExpense": "Expense",
+		"kindIncome": "Income",
+		"example": "Rent",
+		"day": "Day of the month",
+		"dayHint": "(1 to 28, so it exists in February too)",
+		"everyMonthOn": "every month on the {day}",
+		"since": "since {month}",
+		"suspended": "suspended",
+		"suspend": "Suspend",
+		"resume": "Resume",
+		"addTitle": "Add a recurring entry",
+		"addHint": "It applies from the current month onwards: past months are not touched.",
+		"createSubmit": "Create the recurring entry",
+		"created": "Recurring entry “{name}” created: it is already in the current month.",
+		"updated": "Recurring entry updated. Months already recorded stay as they were.",
+		"toggled": "Recurring entry updated.",
+		"removed": "Recurring entry deleted. Entries already recorded stay where they are.",
+		"descriptionOf": "Description of {name}",
+		"amountOf": "Amount of {name}"
 	}
 }

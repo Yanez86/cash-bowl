@@ -1,5 +1,6 @@
 import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
+import { generate } from '$lib/server/recurring';
 import { currency } from '$lib/server/settings';
 import { readEntry } from '$lib/server/entry-form';
 import { parseAmount } from '$lib/money';
@@ -25,6 +26,8 @@ const monthOf = (url: URL) => {
 export const load: PageServerLoad = ({ locals, url }) => {
 	const ym = monthOf(url);
 	const viewer = locals.user!.id;
+	generate(db(), ym, viewer);
+
 	const month = db().prepare('SELECT reflection FROM months WHERE ym = ?').get(ym) as
 		{ reflection: string | null } | undefined;
 

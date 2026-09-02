@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 8 completata** (più foto per spesa, foto raddrizzate). Prossima: fase 9.
+Stato attuale: **fase 9 completata** (spese ricorrenti). Prossima: fase 10.
 
 ---
 
@@ -253,16 +253,24 @@ il disco resta pulito. 79 test verdi.
 
 ## Fase 9 — Spese ricorrenti
 
-- [ ] Tabella `recurring`: descrizione, importo, categoria, giorno del mese,
-      tipo (spesa fissa o spesa normale), attiva o sospesa, da quale mese vale
-- [ ] All'apertura di un mese le ricorrenti mancanti vengono **inserite già
+- [x] Tabella `recurring`: descrizione, importo, categoria, giorno del mese,
+      tipo (spesa fissa, spesa o entrata), attiva o sospesa, da quale mese vale
+- [x] All'apertura di un mese le ricorrenti mancanti vengono **inserite già
       valide**: i conti sono giusti dal primo giorno
-- [ ] Ogni voce ricorda da quale ricorrente è nata: non si duplica mai
-- [ ] Non si generano mesi futuri, né mesi precedenti alla creazione della
-      ricorrente: aprire per sbaglio un mese lontano non deve produrre nulla
-- [ ] Pannello per crearle, sospenderle, cambiarne l'importo
-- [ ] Cambiare l'importo non tocca i mesi già passati
-- [ ] Test: generazione una volta sola, nessuna generazione fuori dai limiti
+- [x] Ogni voce ricorda da quale ricorrente è nata, e un **indice unico nel
+      database** impedisce il doppione anche se sbagliasse il codice
+- [x] Non si generano mesi futuri, né mesi precedenti alla creazione della
+      ricorrente
+- [x] Il giorno va da 1 a 28: così la voce esiste anche a febbraio
+- [x] Pannello per crearle, sospenderle, cambiarne importo e descrizione
+- [x] Cambiare l'importo non tocca i mesi già passati
+- [x] Cancellare la regola non cancella le voci già registrate: erano spese vere
+- [x] Test: generazione una volta sola, niente futuro, niente passato, sospese
+      ferme, doppione rifiutato dal database
+
+**Verificato:** affitto 800 e stipendio 2000 creati; il cruscotto li mostra
+subito; ricaricando dieci volte le voci restano due; cambiando l'affitto a 850 il
+mese in corso resta a 800; la sospensione funziona. 88 test verdi.
 
 ## Fase 10 — Obiettivi di risparmio
 

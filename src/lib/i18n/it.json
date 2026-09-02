@@ -15,7 +15,8 @@
 		"logout": "Esci",
 		"menu": "Menù",
 		"reports": "Report",
-		"settings": "Manutenzione"
+		"settings": "Manutenzione",
+		"recurring": "Ricorrenti"
 	},
 	"common": {
 		"save": "Salva",
@@ -254,7 +255,8 @@
 		"importNoUsers": "Nel file non c'è nessun utente: nessuno potrebbe più entrare.",
 		"importFailed": "Reimportazione non riuscita: i dati sono rimasti com'erano.",
 		"importTooBig": "Il file è troppo grande.",
-		"receiptTooMany": "Hai scelto più foto di quante ne restino: al massimo 5 per spesa."
+		"receiptTooMany": "Hai scelto più foto di quante ne restino: al massimo 5 per spesa.",
+		"invalidDay": "Il giorno deve essere un numero da 1 a 28."
 	},
 	"receipt": {
 		"legend": "Scontrini",
@@ -351,5 +353,31 @@
 			"other": "Reimportati i dati: {count} voci."
 		},
 		"migrationsTitle": "Migrazioni applicate"
+	},
+	"recurring": {
+		"title": "Voci ricorrenti",
+		"intro": "Affitto, bollette, abbonamenti, stipendio: le metti una volta e ogni mese si inseriscono da sole, già valide. Il mese in corso ({month}) è già stato riempito.",
+		"empty": "Nessuna voce ricorrente. Aggiungine una qui sotto.",
+		"kind": "Tipo",
+		"kindFixed": "Spesa fissa",
+		"kindExpense": "Spesa",
+		"kindIncome": "Entrata",
+		"example": "Affitto",
+		"day": "Giorno del mese",
+		"dayHint": "(da 1 a 28, così esiste anche a febbraio)",
+		"everyMonthOn": "ogni mese il {day}",
+		"since": "da {month}",
+		"suspended": "sospesa",
+		"suspend": "Sospendi",
+		"resume": "Riattiva",
+		"addTitle": "Aggiungi una voce ricorrente",
+		"addHint": "Vale dal mese in corso in avanti: i mesi già passati non vengono toccati.",
+		"createSubmit": "Crea la ricorrente",
+		"created": "Ricorrente «{name}» creata: la trovi già nel mese in corso.",
+		"updated": "Ricorrente aggiornata. I mesi già registrati restano come erano.",
+		"toggled": "Ricorrente aggiornata.",
+		"removed": "Ricorrente eliminata. Le voci già registrate restano dove sono.",
+		"descriptionOf": "Descrizione di {name}",
+		"amountOf": "Importo di {name}"
 	}
 }
