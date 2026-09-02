@@ -53,15 +53,17 @@ Obiettivo: una pagina bianca che parte con un comando e si aggiorna da sola.
 - [x] Variabili d'ambiente e file `.env.example` documentato
 - [x] Pipeline CI: build, test, `npm audit`
 - [x] Prima migrazione: tabelle `users`, `sessions`, `settings`
-- [ ] **Da provare davvero su Docker**: Docker non è installato sulla macchina di
-      sviluppo, quindi `Dockerfile` e `docker-compose.yml` sono scritti ma mai
-      eseguiti. Verificarli prima di considerare la fase chiusa del tutto.
+- [x] **Provato davvero su Docker** (2026-09-02): immagine costruita (474 MB),
+      `docker compose up` avviato, applicazione raggiungibile attraverso Caddy,
+      dati conservati allo spegnimento e riaccensione, app non in esecuzione come
+      amministratore di sistema (`uid=1000 node`)
 
 **Fatta quando:** `docker compose up` mostra una pagina e i dati sopravvivono al
 riavvio.
-**Verificato finora:** applicazione compilata, avviata, pagina servita, database
-creato e conservato al riavvio; 3 test automatici verdi; controllo dei tipi,
-formattazione e lint puliti.
+**Verificato:** `docker compose up` costruisce e avvia app + Caddy; la pagina
+risponde su :8080 con le intestazioni di sicurezza; spegnendo e riaccendendo
+restano spese, ricorrenti, foto e obiettivi; la copia di sicurezza del giorno
+viene fatta da sola.
 
 ---
 
@@ -330,6 +332,7 @@ si toglie insieme alla fase: nient'altro dipende da lei.
 
 - [ ] `README.md` con installazione in un comando
 - [ ] Immagine Docker pubblicata automaticamente a ogni versione
+      (la build locale è già provata: vedi fase 1)
 - [ ] Versioni numerate e `CHANGELOG.md`
 - [ ] Guida all'aggiornamento e alla messa in sicurezza (HTTPS, porte, router)
 - [ ] Schermate dell'app nel README

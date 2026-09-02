@@ -1,0 +1,19 @@
+# Quello che non deve finire dentro l'immagine.
+node_modules
+build
+.svelte-kit
+static/ocr
+
+# I tuoi dati non entrano MAI in un'immagine da distribuire.
+data
+.env
+.env.*
+!.env.example
+
+.git
+.github
+*.md
+!README.md
+coverage
+*.log
+.DS_Store

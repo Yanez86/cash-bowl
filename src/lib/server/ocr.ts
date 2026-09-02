@@ -2,7 +2,7 @@
 // Senza, il pulsante non compare: meglio niente pulsante che un pulsante rotto.
 import { existsSync } from 'node:fs';
 
-const CANDIDATES = ['static/ocr/eng.traineddata.gz', 'build/client/ocr/eng.traineddata.gz'];
+const CANDIDATES = ['static/ocr/eng.traineddata', 'build/client/ocr/eng.traineddata'];
 
 let known: boolean | undefined;
 

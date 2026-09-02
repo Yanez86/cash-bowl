@@ -17,6 +17,9 @@ export async function readAmount(image: string, onProgress?: Progress): Promise<
 		workerPath: `${OCR_PATH}/worker.min.js`,
 		corePath: OCR_PATH,
 		langPath: OCR_PATH,
+		// I dati della lingua sono già scompattati: ci pensa il server a
+		// comprimerli in viaggio. Vedi scripts/copy-ocr-assets.mjs
+		gzip: false,
 		logger: (message: { status: string; progress: number }) => {
 			if (message.status === 'recognizing text') onProgress?.(Math.round(message.progress * 100));
 		}
