@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
 import * as categories from '$lib/server/categories';
 import type { Actions, PageServerLoad } from './$types';
@@ -23,12 +23,12 @@ export const actions: Actions = {
 			const parentId = id(form, 'parent_id');
 			const value = name(form);
 			if (!parentId || !value) {
-				return fail(400, { error: `Scrivi un nome (massimo ${MAX_NAME} caratteri).` });
+				return refuse(400, 'errors.categoryNameRequired', { max: MAX_NAME });
 			}
 			try {
 				categories.addChild(db(), parentId, value);
 			} catch {
-				return fail(400, { error: 'Esiste già una sotto-categoria con questo nome.' });
+				return refuse(400, 'errors.categoryNameTaken');
 			}
 			return { added: value };
 		}),
@@ -37,11 +37,11 @@ export const actions: Actions = {
 		request.formData().then((form) => {
 			const target = id(form);
 			const value = name(form);
-			if (!target || !value) return fail(400, { error: 'Nome non valido.' });
+			if (!target || !value) return refuse(400, 'errors.categoryNameRequired', { max: MAX_NAME });
 			try {
 				categories.rename(db(), target, value);
 			} catch {
-				return fail(400, { error: 'Esiste già una categoria con questo nome.' });
+				return refuse(400, 'errors.categoryNameTaken');
 			}
 			return { renamed: true };
 		}),
@@ -51,7 +51,7 @@ export const actions: Actions = {
 			const target = id(form);
 			const active = form.get('active') === '1';
 			if (!target || !categories.setActive(db(), target, active)) {
-				return fail(400, { error: 'Le quattro categorie kakebo restano sempre attive.' });
+				return refuse(400, 'errors.rootCategoryFixed');
 			}
 			return { toggled: true };
 		}),
@@ -60,9 +60,7 @@ export const actions: Actions = {
 		request.formData().then((form) => {
 			const target = id(form);
 			if (!target || !categories.remove(db(), target)) {
-				return fail(400, {
-					error: 'Si eliminano solo le sotto-categorie mai usate. Le altre si disattivano.'
-				});
+				return refuse(400, 'errors.categoryInUse');
 			}
 			return { removed: true };
 		}),
@@ -72,7 +70,7 @@ export const actions: Actions = {
 			const target = id(form);
 			const direction = form.get('direction') === 'up' ? -1 : 1;
 			if (!target || !categories.move(db(), target, direction)) {
-				return fail(400, { error: 'Non si può spostare oltre.' });
+				return refuse(400, 'errors.cannotMove');
 			}
 			return { moved: true };
 		})

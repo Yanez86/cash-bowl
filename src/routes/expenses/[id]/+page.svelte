@@ -1,39 +1,33 @@
 <script lang="ts">
 	import EntryForm from '$lib/EntryForm.svelte';
+	import { translator } from '$lib/i18n';
 
 	let { data, form } = $props();
+	const t = $derived(translator(data.locale));
+	const isDraft = $derived(data.entry.status === 'draft');
 </script>
 
-<h1>{data.entry.status === 'draft' ? 'Completa la bozza' : 'Modifica la spesa'}</h1>
-<p class="hint">Inserita da {data.entry.author}.</p>
+<h1>{isDraft ? t('entryEdit.titleDraft') : t('entryEdit.titleEdit')}</h1>
+<p class="hint">{t('entryEdit.author', { name: data.entry.author })}</p>
 
-{#if data.entry.status === 'draft'}
-	<p class="notice">
-		Questa voce è ancora una bozza: non è contata nei totali. Compila importo, categoria e data, poi
-		premi «Salva».
-	</p>
+{#if isDraft}
+	<p class="notice">{t('entryEdit.draftNotice')}</p>
 {/if}
 
-{#if form?.error}<p class="error" role="alert">{form.error}</p>{/if}
-{#if form?.saved}<p role="status">Modifiche salvate.</p>{/if}
+{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
+{#if form?.saved}<p class="notice" role="status">{t('entryEdit.saved')}</p>{/if}
 
 <form method="post" action="?/save">
 	<EntryForm
+		locale={data.locale}
 		categories={data.categories}
 		entry={data.entry}
 		defaultDate={data.today}
-		showDraftButton={data.entry.status === 'draft'}
+		showDraftButton={isDraft}
 	/>
 </form>
 
-<h2>Elimina</h2>
+<h2>{t('entryEdit.deleteTitle')}</h2>
 <form method="post" action="?/remove">
-	<button type="submit">Elimina questa voce</button>
+	<button type="submit" class="quiet">{t('entryEdit.deleteSubmit')}</button>
 </form>
-
-<style>
-	.notice {
-		border-left: 4px solid currentColor;
-		padding: 0.5rem 0.75rem;
-	}
-</style>

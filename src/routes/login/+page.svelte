@@ -1,15 +1,16 @@
 <script lang="ts">
-	let { form } = $props();
+	import { translator } from '$lib/i18n';
+
+	let { data, form } = $props();
+	const t = $derived(translator(data.locale));
 </script>
 
-<h1>Accedi a cash-bowl</h1>
+<h1>{t('login.title')}</h1>
 
-{#if form?.error}
-	<p class="error" role="alert">{form.error}</p>
-{/if}
+{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
 
 <form method="post">
-	<label for="username">Nome utente</label>
+	<label for="username">{t('login.username')}</label>
 	<input
 		id="username"
 		name="username"
@@ -18,8 +19,8 @@
 		required
 	/>
 
-	<label for="password">Password</label>
+	<label for="password">{t('login.password')}</label>
 	<input id="password" name="password" type="password" autocomplete="current-password" required />
 
-	<p><button type="submit">Entra</button></p>
+	<p><button type="submit">{t('login.submit')}</button></p>
 </form>

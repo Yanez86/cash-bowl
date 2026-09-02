@@ -1,22 +1,23 @@
 <script lang="ts">
-	let { form } = $props();
+	import { translator } from '$lib/i18n';
+
+	let { data, form } = $props();
+	const t = $derived(translator(data.locale));
+	const MIN = 12;
 </script>
 
-<h1>Benvenuto in cash-bowl</h1>
-<p>
-	Questo è il primo avvio: crea il tuo accesso. Diventerai l'amministratore e potrai creare tu gli
-	account degli altri membri della famiglia.
-</p>
+<h1>{t('setup.title')}</h1>
+<p>{t('setup.intro')}</p>
 
-{#if form?.error}
-	<p class="error" role="alert">{form.error}</p>
-{/if}
+{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
 
 <form method="post">
-	<label for="display_name">Il tuo nome</label>
+	<label for="display_name">{t('setup.yourName')}</label>
 	<input id="display_name" name="display_name" value={form?.displayName ?? ''} required />
 
-	<label for="username">Nome utente <span class="hint">(minuscolo, senza spazi)</span></label>
+	<label for="username">
+		{t('setup.username')} <span class="hint">{t('setup.usernameHint')}</span>
+	</label>
 	<input
 		id="username"
 		name="username"
@@ -25,25 +26,27 @@
 		required
 	/>
 
-	<label for="password">Password <span class="hint">(almeno 12 caratteri)</span></label>
+	<label for="password">
+		{t('setup.password')} <span class="hint">{t('setup.passwordHint', { min: MIN })}</span>
+	</label>
 	<input
 		id="password"
 		name="password"
 		type="password"
 		autocomplete="new-password"
-		minlength="12"
+		minlength={MIN}
 		required
 	/>
 
-	<label for="password_repeat">Ripeti la password</label>
+	<label for="password_repeat">{t('setup.repeat')}</label>
 	<input
 		id="password_repeat"
 		name="password_repeat"
 		type="password"
 		autocomplete="new-password"
-		minlength="12"
+		minlength={MIN}
 		required
 	/>
 
-	<p><button type="submit">Crea il mio accesso</button></p>
+	<p><button type="submit">{t('setup.submit')}</button></p>
 </form>

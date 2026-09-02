@@ -1,9 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html
+	lang="%lang%"
+	data-theme="%theme%"
+	data-accent="%accent%"
+	data-contrast="%contrast%"
+	data-motion="%motion%"
+>
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="text-scale" content="scale" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		%themeColor%
+		<link rel="icon" href="/icon-192.png" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

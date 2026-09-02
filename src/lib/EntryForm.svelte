@@ -1,16 +1,20 @@
 <script lang="ts">
 	// Il modulo di una spesa. Serve sia per l'inserimento al volo sia per la
 	// modifica: un solo posto in cui cambiare i campi.
+	import { categoryLabel } from './CategoryLabel';
+	import { translator, type Locale } from './i18n';
+	import type { Choice } from './server/categories';
 	import { today } from './dates';
 
 	let {
+		locale,
 		categories,
 		entry = null,
 		defaultDate = today(),
-		showDraftButton = true,
-		submitLabel = 'Salva'
+		showDraftButton = true
 	}: {
-		categories: { id: number; label: string }[];
+		locale: Locale;
+		categories: Choice[];
 		entry?: {
 			amount?: string;
 			occurred_on?: string;
@@ -20,11 +24,14 @@
 		} | null;
 		defaultDate?: string;
 		showDraftButton?: boolean;
-		submitLabel?: string;
 	} = $props();
+
+	const t = $derived(translator(locale));
 </script>
 
-<label for="amount">Importo <span class="hint">(per esempio 12,34)</span></label>
+<label for="amount">
+	{t('common.amount')} <span class="hint">{t('common.amountExample')}</span>
+</label>
 <input
 	id="amount"
 	name="amount"
@@ -33,17 +40,17 @@
 	value={entry?.amount ?? ''}
 />
 
-<label for="category_id">Categoria</label>
+<label for="category_id">{t('common.category')}</label>
 <select id="category_id" name="category_id">
-	<option value="">— scegli —</option>
-	{#each categories as category (category.id)}
-		<option value={category.id} selected={entry?.category_id === category.id}>
-			{category.label}
+	<option value="">{t('common.choose')}</option>
+	{#each categories as choice (choice.id)}
+		<option value={choice.id} selected={entry?.category_id === choice.id}>
+			{categoryLabel(t, choice.rootKey, choice.child)}
 		</option>
 	{/each}
 </select>
 
-<label for="occurred_on">Data</label>
+<label for="occurred_on">{t('common.date')}</label>
 <input
 	id="occurred_on"
 	name="occurred_on"
@@ -52,7 +59,7 @@
 	required
 />
 
-<label for="note">Nota <span class="hint">(facoltativa)</span></label>
+<label for="note">{t('common.note')} <span class="hint">{t('common.optional')}</span></label>
 <input id="note" name="note" maxlength="500" value={entry?.note ?? ''} />
 
 <p>
@@ -64,14 +71,14 @@
 			value="private"
 			checked={entry?.visibility === 'private'}
 		/>
-		Spesa privata: la vedrai solo tu
+		{t('entry.privateLabel')}
 	</label>
 </p>
 
 <p class="buttons">
-	<button type="submit" name="status" value="complete">{submitLabel}</button>
+	<button type="submit" name="status" value="complete">{t('common.save')}</button>
 	{#if showDraftButton}
-		<button type="submit" name="status" value="draft">Salva come bozza</button>
+		<button type="submit" name="status" value="draft" class="quiet">{t('entry.saveDraft')}</button>
 	{/if}
 </p>
 

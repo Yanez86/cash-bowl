@@ -1,51 +1,64 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { categoryLabel } from '$lib/CategoryLabel';
 	import MonthNav from '$lib/MonthNav.svelte';
+	import { translator } from '$lib/i18n';
 	import { formatAmount } from '$lib/money';
 
 	let { data } = $props();
-	const euro = (cents: number) => formatAmount(cents, 'it', data.currency);
+	const t = $derived(translator(data.locale));
+	const euro = $derived((cents: number) => formatAmount(cents, data.locale, data.currency));
 </script>
 
-<MonthNav ym={data.ym} path={resolve('/expenses')} />
+<MonthNav ym={data.ym} path={resolve('/expenses')} locale={data.locale} />
 
-<h1>Spese del mese</h1>
+<h1>{t('expenses.title')}</h1>
 
 {#if data.entries.length === 0}
-	<p>Nessuna spesa registrata in questo mese. <a href={resolve('/')}>Aggiungine una</a>.</p>
+	<p>{t('expenses.empty')} <a href={resolve('/')}>{t('expenses.addOne')}</a></p>
 {:else}
-	<table>
-		<caption class="hint">
-			{data.entries.length} spese, per un totale di {euro(data.summary.spent)}
-		</caption>
-		<thead>
-			<tr>
-				<th scope="col">Data</th>
-				<th scope="col">Categoria</th>
-				<th scope="col">Nota</th>
-				<th scope="col">Chi</th>
-				<th scope="col">Importo</th>
-				<th scope="col">Azioni</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each data.entries as entry (entry.id)}
+	<div class="scroller">
+		<table>
+			<caption class="hint">
+				{t('expenses.summary', {
+					count: data.entries.length,
+					amount: euro(data.summary.spent)
+				})}
+			</caption>
+			<thead>
 				<tr>
-					<td>{entry.occurred_on}</td>
-					<td>{entry.category_name}</td>
-					<td>
-						{entry.note ?? '—'}
-						{#if entry.visibility === 'private'}<span class="hint">(privata)</span>{/if}
-					</td>
-					<td>{entry.author}</td>
-					<td>{euro(entry.amount_cents ?? 0)}</td>
-					<td>
-						<a href={resolve('/expenses/[id]', { id: String(entry.id) })}>
-							Modifica <span class="hint">del {entry.occurred_on}</span>
-						</a>
-					</td>
+					<th scope="col">{t('common.date')}</th>
+					<th scope="col">{t('common.category')}</th>
+					<th scope="col">{t('common.note')}</th>
+					<th scope="col">{t('common.who')}</th>
+					<th scope="col">{t('common.amount')}</th>
+					<th scope="col">{t('common.actions')}</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{#each data.entries as entry (entry.id)}
+					<tr>
+						<td>{entry.occurred_on}</td>
+						<td>{categoryLabel(t, entry.category_root_key ?? '', entry.category_child)}</td>
+						<td>
+							{entry.note ?? t('common.none')}
+							{#if entry.visibility === 'private'}
+								<span class="hint">{t('entry.private')}</span>
+							{/if}
+						</td>
+						<td>{entry.author}</td>
+						<td>{euro(entry.amount_cents ?? 0)}</td>
+						<td>
+							<a href={resolve('/expenses/[id]', { id: String(entry.id) })}>
+								{t('common.edit')}
+								<span class="visually-hidden">
+									{t('expenses.editOne', { date: entry.occurred_on })}
+								</span>
+							</a>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 {/if}

@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
 import { currency } from '$lib/server/settings';
 import { exists, selectable } from '$lib/server/categories';
@@ -34,10 +34,10 @@ export const actions: Actions = {
 	add: async ({ request, locals }) => {
 		const form = await request.formData();
 		const parsed = readEntry(form, 'expense');
-		if (!parsed.ok) return fail(400, { error: parsed.error });
+		if (!parsed.ok) return refuse(400, parsed.problem.key, parsed.problem.vars);
 
 		if (parsed.input.categoryId !== null && !exists(db(), parsed.input.categoryId)) {
-			return fail(400, { error: 'Categoria non valida.' });
+			return refuse(400, 'errors.invalidCategory');
 		}
 
 		createEntry(db(), parsed.input, locals.user!.id);

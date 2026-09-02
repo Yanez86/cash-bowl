@@ -1,104 +1,126 @@
 <script lang="ts">
+	import { translator } from '$lib/i18n';
+
 	let { data, form } = $props();
+	const t = $derived(translator(data.locale));
+	const MIN = 12;
 </script>
 
-<h1>Utenti della famiglia</h1>
+<h1>{t('admin.title')}</h1>
 
-{#if form?.error}<p class="error" role="alert">{form.error}</p>{/if}
-{#if form?.created}<p role="status">Account «{form.created}» creato.</p>{/if}
-{#if form?.updated}<p role="status">Utente aggiornato.</p>{/if}
-{#if form?.passwordReset}<p role="status">Password reimpostata.</p>{/if}
-{#if form?.deleted}<p role="status">Utente eliminato.</p>{/if}
+{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
+{#if form?.created}<p class="notice" role="status">
+		{t('admin.created', { name: form.created })}
+	</p>{/if}
+{#if form?.updated}<p class="notice" role="status">{t('admin.updated')}</p>{/if}
+{#if form?.passwordReset}<p class="notice" role="status">{t('admin.passwordReset')}</p>{/if}
+{#if form?.deleted}<p class="notice" role="status">{t('admin.deleted')}</p>{/if}
 
-<table>
-	<caption class="hint">Chi può entrare in questa installazione</caption>
-	<thead>
-		<tr>
-			<th scope="col">Nome</th>
-			<th scope="col">Nome utente</th>
-			<th scope="col">Ruolo</th>
-			<th scope="col">Stato</th>
-			<th scope="col">Azioni</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each data.users as user (user.id)}
+<div class="scroller">
+	<table>
+		<caption class="hint">{t('admin.caption')}</caption>
+		<thead>
 			<tr>
-				<td>{user.display_name}</td>
-				<td>{user.username}</td>
-				<td>{user.is_admin ? 'Amministratore' : 'Membro'}</td>
-				<td>{user.is_active ? 'Attivo' : 'Disattivato'}</td>
-				<td>
-					{#if user.id !== data.me?.id}
-						<form method="post" action="?/toggleActive">
-							<input type="hidden" name="id" value={user.id} />
-							<button type="submit">
-								{user.is_active ? 'Disattiva' : 'Riattiva'}
-								<span class="hint">{user.display_name}</span>
-							</button>
-						</form>
-						<form method="post" action="?/delete">
-							<input type="hidden" name="id" value={user.id} />
-							<button type="submit">
-								Elimina <span class="hint">{user.display_name}</span>
-							</button>
-						</form>
-					{:else}
-						<span class="hint">sei tu</span>
-					{/if}
-				</td>
+				<th scope="col">{t('admin.name')}</th>
+				<th scope="col">{t('admin.username')}</th>
+				<th scope="col">{t('admin.role')}</th>
+				<th scope="col">{t('admin.state')}</th>
+				<th scope="col">{t('common.actions')}</th>
 			</tr>
-		{/each}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each data.users as user (user.id)}
+				<tr>
+					<td>{user.display_name}</td>
+					<td>{user.username}</td>
+					<td>{user.is_admin ? t('admin.roleAdmin') : t('admin.roleMember')}</td>
+					<td>{user.is_active ? t('admin.active') : t('admin.inactive')}</td>
+					<td class="row">
+						{#if user.id !== data.me?.id}
+							<form method="post" action="?/toggleActive">
+								<input type="hidden" name="id" value={user.id} />
+								<button type="submit" class="quiet">
+									{user.is_active ? t('admin.deactivate') : t('admin.reactivate')}
+									<span class="visually-hidden">{user.display_name}</span>
+								</button>
+							</form>
+							<form method="post" action="?/delete">
+								<input type="hidden" name="id" value={user.id} />
+								<button type="submit" class="quiet">
+									{t('common.delete')} <span class="visually-hidden">{user.display_name}</span>
+								</button>
+							</form>
+						{:else}
+							<span class="hint">{t('admin.you')}</span>
+						{/if}
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
 
-<h2>Aggiungi una persona</h2>
+<h2>{t('admin.addTitle')}</h2>
 <form method="post" action="?/create">
-	<label for="display_name">Nome</label>
+	<label for="display_name">{t('admin.name')}</label>
 	<input id="display_name" name="display_name" required />
 
-	<label for="username">Nome utente <span class="hint">(minuscolo, senza spazi)</span></label>
+	<label for="username">
+		{t('admin.username')} <span class="hint">{t('setup.usernameHint')}</span>
+	</label>
 	<input id="username" name="username" autocomplete="off" required />
 
-	<label for="password">Password iniziale <span class="hint">(almeno 12 caratteri)</span></label>
+	<label for="password">
+		{t('admin.initialPassword')} <span class="hint">{t('setup.passwordHint', { min: MIN })}</span>
+	</label>
 	<input
 		id="password"
 		name="password"
 		type="password"
 		autocomplete="new-password"
-		minlength="12"
+		minlength={MIN}
 		required
 	/>
 
 	<p>
 		<label for="is_admin" class="hint">
 			<input id="is_admin" name="is_admin" type="checkbox" />
-			Rendi questa persona amministratore
+			{t('admin.makeAdmin')}
 		</label>
 	</p>
 
-	<p><button type="submit">Crea l'account</button></p>
+	<p><button type="submit">{t('admin.createSubmit')}</button></p>
 </form>
 
-<h2>Reimposta la password di qualcuno</h2>
-<p class="hint">Da usare quando un familiare ha dimenticato la password.</p>
+<h2>{t('admin.resetTitle')}</h2>
+<p class="hint">{t('admin.resetHint')}</p>
 <form method="post" action="?/resetPassword">
-	<label for="reset_id">Persona</label>
+	<label for="reset_id">{t('admin.resetPerson')}</label>
 	<select id="reset_id" name="id" required>
 		{#each data.users as user (user.id)}
 			<option value={user.id}>{user.display_name} ({user.username})</option>
 		{/each}
 	</select>
 
-	<label for="reset_password">Nuova password <span class="hint">(almeno 12 caratteri)</span></label>
+	<label for="reset_password">
+		{t('profile.newPassword')} <span class="hint">{t('setup.passwordHint', { min: MIN })}</span>
+	</label>
 	<input
 		id="reset_password"
 		name="password"
 		type="password"
 		autocomplete="new-password"
-		minlength="12"
+		minlength={MIN}
 		required
 	/>
 
-	<p><button type="submit">Reimposta la password</button></p>
+	<p><button type="submit">{t('admin.resetSubmit')}</button></p>
 </form>
+
+<style>
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+</style>

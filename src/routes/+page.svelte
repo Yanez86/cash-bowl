@@ -1,103 +1,113 @@
 <script lang="ts">
-	// ponytail: testi in italiano e formattazione fissata su 'it'.
-	// Nella fase 4 passano dai file di traduzione e dalla lingua dell'utente.
 	import { resolve } from '$app/paths';
+	import { categoryLabel } from '$lib/CategoryLabel';
 	import EntryForm from '$lib/EntryForm.svelte';
 	import MonthNav from '$lib/MonthNav.svelte';
+	import { translator } from '$lib/i18n';
 	import { formatAmount } from '$lib/money';
 
 	let { data, form } = $props();
-
-	const euro = (cents: number) => formatAmount(cents, 'it', data.currency);
+	const t = $derived(translator(data.locale));
+	const euro = $derived((cents: number) => formatAmount(cents, data.locale, data.currency));
 </script>
 
-<MonthNav ym={data.ym} path={resolve('/')} />
+<MonthNav ym={data.ym} path={resolve('/')} locale={data.locale} />
 
-<h1>Il mio mese</h1>
+<h1>{t('dashboard.title')}</h1>
 
 {#if data.summary.drafts > 0}
 	<p class="notice" role="status">
-		Hai <strong>{data.summary.drafts}</strong>
-		{data.summary.drafts === 1 ? 'bozza' : 'bozze'} da sistemare in questo mese: non sono contate nei
-		totali. <a href={resolve('/drafts')}>Sistemale ora</a>
+		{t('dashboard.drafts', { count: data.summary.drafts })}
+		<a href={resolve('/drafts')}>{t('dashboard.draftsLink')}</a>
 	</p>
 {/if}
 
 <dl class="summary">
 	<div>
-		<dt>Entrate</dt>
+		<dt>{t('dashboard.income')}</dt>
 		<dd>{euro(data.summary.income)}</dd>
 	</div>
 	<div>
-		<dt>Spese fisse</dt>
+		<dt>{t('dashboard.fixed')}</dt>
 		<dd>{euro(data.summary.fixed)}</dd>
 	</div>
 	<div>
-		<dt>Obiettivo di risparmio</dt>
+		<dt>{t('dashboard.goal')}</dt>
 		<dd>{euro(data.summary.goal)}</dd>
 	</div>
 	<div>
-		<dt>Disponibile per il mese</dt>
+		<dt>{t('dashboard.available')}</dt>
 		<dd>{euro(data.summary.available)}</dd>
 	</div>
 	<div>
-		<dt>Speso finora</dt>
+		<dt>{t('dashboard.spent')}</dt>
 		<dd>{euro(data.summary.spent)}</dd>
 	</div>
 	<div class="highlight">
-		<dt>Ti resta</dt>
+		<dt>{t('dashboard.remaining')}</dt>
 		<dd>{euro(data.summary.remaining)}</dd>
 	</div>
 </dl>
 
 {#if data.summary.remaining < 0}
-	<p class="notice" role="status">
-		Hai superato il disponibile di {euro(-data.summary.remaining)}. L'obiettivo di risparmio è
-		ancora al sicuro finché il messo da parte resta sopra {euro(data.summary.goal)}.
+	<p class="error" role="status">
+		{t('dashboard.overspent', {
+			amount: euro(-data.summary.remaining),
+			saved: euro(data.summary.saved)
+		})}
 	</p>
 {/if}
 
 <p>
-	<a href={`${resolve('/month')}?ym=${data.ym}`}>Entrate, spese fisse e obiettivo</a> ·
-	<a href={`${resolve('/expenses')}?ym=${data.ym}`}>Tutte le spese del mese</a>
+	<a href={`${resolve('/month')}?ym=${data.ym}`}>{t('dashboard.planLink')}</a> ·
+	<a href={`${resolve('/expenses')}?ym=${data.ym}`}>{t('dashboard.expensesLink')}</a>
 </p>
 
-<h2>Aggiungi una spesa</h2>
-{#if form?.error}<p class="error" role="alert">{form.error}</p>{/if}
-{#if form?.saved === 'complete'}<p role="status">Spesa registrata.</p>{/if}
+<h2 id="add">{t('dashboard.addTitle')}</h2>
+{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
+{#if form?.saved === 'complete'}<p class="notice" role="status">{t('dashboard.saved')}</p>{/if}
 {#if form?.saved === 'draft'}
-	<p role="status">Bozza salvata. La trovi in <a href={resolve('/drafts')}>Da sistemare</a>.</p>
+	<p class="notice" role="status">
+		{t('dashboard.savedDraft')} <a href={resolve('/drafts')}>{t('dashboard.draftsLink')}</a>
+	</p>
 {/if}
 <form method="post" action="?/add">
-	<EntryForm categories={data.categories} defaultDate={data.today} />
+	<EntryForm locale={data.locale} categories={data.categories} defaultDate={data.today} />
 </form>
 
-<h2>Dove sono finiti i soldi</h2>
-<table>
-	<thead>
-		<tr><th scope="col">Categoria</th><th scope="col">Speso</th></tr>
-	</thead>
-	<tbody>
-		{#each data.byCategory as row (row.id)}
-			<tr><td>{row.name}</td><td>{euro(row.total)}</td></tr>
-		{/each}
-	</tbody>
-	<tfoot>
-		<tr><th scope="row">Totale</th><td>{euro(data.summary.spent)}</td></tr>
-	</tfoot>
-</table>
+<h2>{t('dashboard.whereTitle')}</h2>
+<div class="scroller">
+	<table>
+		<thead>
+			<tr><th scope="col">{t('common.category')}</th><th scope="col">{t('dashboard.spent')}</th></tr
+			>
+		</thead>
+		<tbody>
+			{#each data.byCategory as row (row.id)}
+				<tr>
+					<td>{categoryLabel(t, row.kakebo_key, null)}</td>
+					<td>{euro(row.total)}</td>
+				</tr>
+			{/each}
+		</tbody>
+		<tfoot>
+			<tr><th scope="row">{t('common.total')}</th><td>{euro(data.summary.spent)}</td></tr>
+		</tfoot>
+	</table>
+</div>
 
-<h2>Ultime spese</h2>
+<h2>{t('dashboard.latestTitle')}</h2>
 {#if data.latest.length === 0}
-	<p>Nessuna spesa registrata in questo mese.</p>
+	<p>{t('dashboard.empty')}</p>
 {:else}
 	<ul class="latest">
 		{#each data.latest as entry (entry.id)}
 			<li>
 				<a href={resolve('/expenses/[id]', { id: String(entry.id) })}>
-					{entry.occurred_on} · {euro(entry.amount_cents ?? 0)} · {entry.category_name}
+					{entry.occurred_on} · {euro(entry.amount_cents ?? 0)} ·
+					{categoryLabel(t, entry.category_root_key ?? '', entry.category_child)}
 					{#if entry.note}<span class="hint">— {entry.note}</span>{/if}
-					{#if entry.visibility === 'private'}<span class="hint">(privata)</span>{/if}
+					{#if entry.visibility === 'private'}<span class="hint">{t('entry.private')}</span>{/if}
 				</a>
 			</li>
 		{/each}
@@ -107,14 +117,17 @@
 <style>
 	.summary {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
 		gap: 0.75rem;
 	}
 	.summary div {
-		border: 1px solid;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
 		padding: 0.75rem;
 	}
 	.summary dt {
+		color: var(--muted);
 		font-size: 0.9em;
 	}
 	.summary dd {
@@ -123,21 +136,19 @@
 		font-weight: 700;
 	}
 	.highlight {
-		border-width: 3px;
-	}
-	.notice {
-		border-left: 4px solid currentColor;
-		padding: 0.5rem 0.75rem;
+		border-color: var(--accent);
+		border-width: 2px;
 	}
 	.latest {
 		padding-left: 0;
 		list-style: none;
 	}
 	.latest li {
-		border-bottom: 1px solid;
+		border-bottom: 1px solid var(--border);
 	}
 	.latest a {
 		display: block;
-		padding: 0.6rem 0;
+		padding: 0.7rem 0;
+		min-height: var(--tap);
 	}
 </style>

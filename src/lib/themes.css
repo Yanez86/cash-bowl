@@ -1,0 +1,125 @@
+/* Tutti i colori dell'applicazione stanno qui, e solo qui: nei componenti non
+   deve comparire nessun colore scritto a mano. Vedi CLAUDE.md §9.
+
+   Ogni palette definisce la sua versione chiara e la sua versione scura; più in
+   basso due sole regole scelgono quale delle due usare. Così una palette si
+   aggiunge in cinque righe. */
+
+:root {
+	/* --- base, uguale per tutte le palette --- */
+	--bg-light: #f7f6f3;
+	--surface-light: #ffffff;
+	--text-light: #1b1a18;
+	--muted-light: #56534d;
+	--border-light: #8a857c;
+	--danger-light: #99251a;
+
+	--bg-dark: #16161a;
+	--surface-dark: #212127;
+	--text-dark: #f3f2ef;
+	--muted-dark: #b0aca4;
+	--border-dark: #6e6d78;
+	--danger-dark: #ff9d92;
+
+	/* --- palette predefinita: Kakebo --- */
+	--accent-light: #1a6152;
+	--accent-fg-light: #ffffff;
+	--accent-dark: #7ad0b7;
+	--accent-fg-dark: #08201a;
+
+	--radius: 10px;
+	--gap: 1rem;
+	--tap: 44px;
+}
+
+[data-accent='forest'] {
+	--accent-light: #2c5f2f;
+	--accent-fg-light: #ffffff;
+	--accent-dark: #8fcf8a;
+	--accent-fg-dark: #0d1f0d;
+}
+
+[data-accent='amber'] {
+	--accent-light: #7d4b00;
+	--accent-fg-light: #ffffff;
+	--accent-dark: #f0bb63;
+	--accent-fg-dark: #241700;
+}
+
+[data-accent='night'] {
+	--accent-light: #37457f;
+	--accent-fg-light: #ffffff;
+	--accent-dark: #a3b3f0;
+	--accent-fg-dark: #10162e;
+}
+
+[data-accent='grey'] {
+	--accent-light: #454545;
+	--accent-fg-light: #ffffff;
+	--accent-dark: #c6c6c6;
+	--accent-fg-dark: #1a1a1a;
+}
+
+/* --- chiaro: è il punto di partenza --- */
+:root {
+	color-scheme: light;
+	--bg: var(--bg-light);
+	--surface: var(--surface-light);
+	--text: var(--text-light);
+	--muted: var(--muted-light);
+	--border: var(--border-light);
+	--danger: var(--danger-light);
+	--accent: var(--accent-light);
+	--accent-fg: var(--accent-fg-light);
+}
+
+/* --- scuro: quando lo chiede il telefono, se l'utente non ha scelto "chiaro" --- */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		color-scheme: dark;
+		--bg: var(--bg-dark);
+		--surface: var(--surface-dark);
+		--text: var(--text-dark);
+		--muted: var(--muted-dark);
+		--border: var(--border-dark);
+		--danger: var(--danger-dark);
+		--accent: var(--accent-dark);
+		--accent-fg: var(--accent-fg-dark);
+	}
+}
+
+/* --- scuro scelto a mano: vince sempre, in entrambe le direzioni --- */
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--bg: var(--bg-dark);
+	--surface: var(--surface-dark);
+	--text: var(--text-dark);
+	--muted: var(--muted-dark);
+	--border: var(--border-dark);
+	--danger: var(--danger-dark);
+	--accent: var(--accent-dark);
+	--accent-fg: var(--accent-fg-dark);
+}
+
+/* --- alto contrasto: bordi netti e grigi che diventano testo pieno --- */
+:root[data-contrast='high'] {
+	--muted: var(--text);
+	--border: var(--text);
+}
+
+/* --- meno movimento: scelto dall'utente o chiesto dal sistema --- */
+:root[data-motion='reduced'] *,
+:root[data-motion='reduced'] *::before,
+:root[data-motion='reduced'] *::after {
+	animation-duration: 0.001ms !important;
+	transition-duration: 0.001ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		transition-duration: 0.001ms !important;
+	}
+}

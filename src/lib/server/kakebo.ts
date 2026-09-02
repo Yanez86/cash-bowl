@@ -120,17 +120,23 @@ export type Entry = {
 	amount_cents: number | null;
 	occurred_on: string;
 	category_id: number | null;
-	category_name: string | null;
+	category_root_key: string | null;
+	category_child: string | null;
 	note: string | null;
 	visibility: Visibility;
 	created_by: number;
 	author: string;
 };
 
+// Il nome delle quattro categorie kakebo non viene dal database ma dalla chiave:
+// così la pagina lo traduce. Le sotto-categorie hanno il nome scelto dall'utente.
 const ENTRY_COLUMNS = `t.id, t.kind, t.status, t.amount_cents, t.occurred_on, t.category_id,
-	c.name AS category_name, t.note, t.visibility, t.created_by, u.display_name AS author
+	COALESCE(root.kakebo_key, c.kakebo_key) AS category_root_key,
+	CASE WHEN c.parent_id IS NULL THEN NULL ELSE c.name END AS category_child,
+	t.note, t.visibility, t.created_by, u.display_name AS author
 	FROM transactions t
 	LEFT JOIN categories c ON c.id = t.category_id
+	LEFT JOIN categories root ON root.id = c.parent_id
 	JOIN users u ON u.id = t.created_by`;
 
 /** Le voci di un mese, di un tipo, che chi guarda ha il diritto di vedere. */

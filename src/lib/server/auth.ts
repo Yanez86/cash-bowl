@@ -31,6 +31,9 @@ export type SessionUser = {
 	is_admin: number;
 	locale: string;
 	theme: string;
+	accent: string;
+	high_contrast: number;
+	reduced_motion: number;
 };
 
 // --- password ---------------------------------------------------------------
@@ -49,20 +52,18 @@ export async function verifyPassword(password: string, stored: string): Promise<
 	return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
 
-/** Motivo per cui una password non va bene, oppure null se va bene. */
-export function passwordProblem(password: string): string | null {
+/** Un problema è una chiave di traduzione: il testo lo sceglie la pagina. */
+export type Problem = { key: string; vars?: Record<string, string | number> };
+
+export function passwordProblem(password: string): Problem | null {
 	if (password.length < MIN_PASSWORD_LENGTH) {
-		return `La password deve avere almeno ${MIN_PASSWORD_LENGTH} caratteri.`;
+		return { key: 'errors.passwordTooShort', vars: { min: MIN_PASSWORD_LENGTH } };
 	}
 	return null;
 }
 
-/** Motivo per cui un nome utente non va bene, oppure null se va bene. */
-export function usernameProblem(username: string): string | null {
-	if (!USERNAME_PATTERN.test(username)) {
-		return 'Il nome utente deve avere da 3 a 32 caratteri: lettere minuscole, numeri, punto, trattino.';
-	}
-	return null;
+export function usernameProblem(username: string): Problem | null {
+	return USERNAME_PATTERN.test(username) ? null : { key: 'errors.usernameFormat' };
 }
 
 // --- utenti -----------------------------------------------------------------
@@ -73,15 +74,21 @@ export function countUsers(db: DB): number {
 
 export async function createUser(
 	db: DB,
-	user: { username: string; displayName: string; password: string; isAdmin?: boolean }
+	user: {
+		username: string;
+		displayName: string;
+		password: string;
+		isAdmin?: boolean;
+		locale?: string;
+	}
 ): Promise<number> {
 	const hash = await hashPassword(user.password);
 	const result = db
 		.prepare(
-			`INSERT INTO users (username, display_name, password_hash, is_admin)
-			 VALUES (?, ?, ?, ?)`
+			`INSERT INTO users (username, display_name, password_hash, is_admin, locale)
+			 VALUES (?, ?, ?, ?, COALESCE(?, 'en'))`
 		)
-		.run(user.username, user.displayName, hash, user.isAdmin ? 1 : 0);
+		.run(user.username, user.displayName, hash, user.isAdmin ? 1 : 0, user.locale ?? null);
 	return Number(result.lastInsertRowid);
 }
 
@@ -114,7 +121,8 @@ export function readSession(db: DB, token: string): SessionUser | null {
 	const hash = fingerprint(token);
 	const row = db
 		.prepare(
-			`SELECT u.id, u.username, u.display_name, u.is_admin, u.locale, u.theme, s.expires_at
+			`SELECT u.id, u.username, u.display_name, u.is_admin, u.locale, u.theme,
+			        u.accent, u.high_contrast, u.reduced_motion, s.expires_at
 			 FROM sessions s JOIN users u ON u.id = s.user_id
 			 WHERE s.token_hash = ? AND s.expires_at > ? AND u.is_active = 1`
 		)
@@ -134,7 +142,10 @@ export function readSession(db: DB, token: string): SessionUser | null {
 		display_name: row.display_name,
 		is_admin: row.is_admin,
 		locale: row.locale,
-		theme: row.theme
+		theme: row.theme,
+		accent: row.accent,
+		high_contrast: row.high_contrast,
+		reduced_motion: row.reduced_motion
 	};
 }
 

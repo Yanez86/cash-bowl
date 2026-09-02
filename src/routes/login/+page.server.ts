@@ -16,7 +16,7 @@ export const actions: Actions = {
 		// Sempre lo stesso messaggio: non si rivela se il nome utente esiste,
 		// né se il blocco per troppi tentativi è scattato. Vedi audit.md §1.1
 		if (!token) {
-			return fail(400, { username, error: 'Nome utente o password non validi.' });
+			return fail(400, { username, error: 'errors.invalidCredentials', vars: undefined });
 		}
 
 		setSessionCookie(cookies, token, url.protocol === 'https:');

@@ -33,11 +33,20 @@ export function tree(db: DB, includeInactive = false): Root[] {
 	return roots;
 }
 
-/** Le categorie scegliibili in un modulo: le quattro radici e le loro figlie attive. */
-export function selectable(db: DB): { id: number; label: string }[] {
+export type Choice = { id: number; rootKey: string; child: string | null };
+
+/**
+ * Le categorie scegliibili in un modulo. Il nome delle quattro radici non viene
+ * dal database ma dalla chiave: così si traduce. Vedi CLAUDE.md §10.
+ */
+export function selectable(db: DB): Choice[] {
 	return tree(db).flatMap((root) => [
-		{ id: root.id, label: root.name },
-		...root.children.map((child) => ({ id: child.id, label: `${root.name} · ${child.name}` }))
+		{ id: root.id, rootKey: root.kakebo_key ?? '', child: null },
+		...root.children.map((child) => ({
+			id: child.id,
+			rootKey: root.kakebo_key ?? '',
+			child: child.name
+		}))
 	]);
 }
 

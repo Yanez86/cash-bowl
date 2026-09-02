@@ -13,7 +13,7 @@ import {
 import { setSessionCookie } from '$lib/server/session-cookie';
 
 export const actions: Actions = {
-	default: async ({ request, cookies, url }) => {
+	default: async ({ request, cookies, url, locals }) => {
 		const form = await request.formData();
 		const displayName = String(form.get('display_name') ?? '').trim();
 		const username = String(form.get('username') ?? '')
@@ -23,18 +23,26 @@ export const actions: Actions = {
 		const repeat = String(form.get('password_repeat') ?? '');
 
 		const values = { displayName, username };
-		if (!displayName) return fail(400, { ...values, error: 'Scrivi il tuo nome.' });
+		if (!displayName)
+			return fail(400, { ...values, error: 'errors.nameRequired', vars: undefined });
 
 		const problem = usernameProblem(username) ?? passwordProblem(password);
-		if (problem) return fail(400, { ...values, error: problem });
+		if (problem) return fail(400, { ...values, error: problem.key, vars: problem.vars });
 		if (password !== repeat) {
-			return fail(400, { ...values, error: 'Le due password non coincidono.' });
+			return fail(400, { ...values, error: 'errors.passwordMismatch', vars: undefined });
 		}
 
 		// Corsa fra due richieste: il secondo arrivato non deve diventare admin.
 		if (countUsers(db()) > 0) redirect(303, '/login');
 
-		const id = await createUser(db(), { username, displayName, password, isAdmin: true });
+		// Il primo utente si tiene la lingua con cui è arrivato dal browser.
+		const id = await createUser(db(), {
+			username,
+			displayName,
+			password,
+			isAdmin: true,
+			locale: locals.locale
+		});
 		setSessionCookie(cookies, createSession(db(), id), url.protocol === 'https:');
 		redirect(303, '/');
 	}

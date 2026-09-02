@@ -1,24 +1,46 @@
-/* ponytail: stile minimo e provvisorio. Viene sostituito dai temi nella fase 4. */
-:root {
-	color-scheme: light dark;
-	--gap: 1rem;
+/* Struttura e spaziature. I colori arrivano tutti da themes.css. */
+@import './lib/themes.css';
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
 body {
 	margin: 0;
+	background: var(--bg);
+	color: var(--text);
 	font-family: system-ui, sans-serif;
 	line-height: 1.5;
+	/* Sul telefono l'ultima riga non deve finire sotto la barra di sistema. */
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 main {
-	max-width: 40rem;
+	max-width: 44rem;
 	margin: 0 auto;
-	padding: var(--gap);
+	/* Spazio in fondo per non finire sotto il pulsante rotondo. */
+	padding: var(--gap) var(--gap) 6rem;
 }
 
-:where(a, button, input, select, summary):focus-visible {
-	outline: 3px solid currentColor;
+h1 {
+	font-size: 1.6rem;
+}
+
+h2 {
+	font-size: 1.2rem;
+	margin-top: 2rem;
+}
+
+a {
+	color: var(--accent);
+}
+
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
+	outline: 3px solid var(--accent);
 	outline-offset: 2px;
+	border-radius: 3px;
 }
 
 label {
@@ -27,31 +49,77 @@ label {
 	font-weight: 600;
 }
 
-input {
+:where(input, select) {
 	display: block;
 	width: 100%;
-	box-sizing: border-box;
-	min-height: 44px;
+	min-height: var(--tap);
 	padding: 0.5rem;
 	font: inherit;
+	color: var(--text);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+input[type='checkbox'] {
+	display: inline-block;
+	width: auto;
+	min-height: auto;
+	margin-right: 0.4rem;
 }
 
 button {
-	min-height: 44px;
+	min-height: var(--tap);
 	padding: 0.5rem 1rem;
 	font: inherit;
+	color: var(--accent-fg);
+	background: var(--accent);
+	border: 1px solid var(--accent);
+	border-radius: var(--radius);
 	cursor: pointer;
 }
 
+button.quiet {
+	color: var(--accent);
+	background: var(--surface);
+	border-color: var(--border);
+}
+
 .error {
-	border-left: 4px solid currentColor;
-	padding: 0.5rem 0.75rem;
+	color: var(--danger);
+	border: 1px solid var(--danger);
+	border-radius: var(--radius);
+	padding: 0.6rem 0.8rem;
+	margin: var(--gap) 0;
+}
+
+.notice {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-left: 4px solid var(--accent);
+	border-radius: var(--radius);
+	padding: 0.6rem 0.8rem;
 	margin: var(--gap) 0;
 }
 
 .hint {
+	color: var(--muted);
 	font-weight: 400;
 	font-size: 0.9em;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* Le tabelle larghe scorrono per conto loro: la pagina non si allarga mai. */
+.scroller {
+	overflow-x: auto;
 }
 
 table {
@@ -60,18 +128,26 @@ table {
 	margin-top: var(--gap);
 }
 
+caption {
+	text-align: left;
+	padding-bottom: 0.5rem;
+}
+
 th,
 td {
 	text-align: left;
 	padding: 0.5rem;
-	border-bottom: 1px solid;
+	border-bottom: 1px solid var(--border);
+	vertical-align: top;
 }
 
-nav {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--gap);
-	align-items: center;
-	padding: var(--gap);
-	border-bottom: 1px solid;
+fieldset {
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	margin: var(--gap) 0 0;
+}
+
+legend {
+	font-weight: 600;
+	padding: 0 0.4rem;
 }

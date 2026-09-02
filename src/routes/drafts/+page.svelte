@@ -1,46 +1,51 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { translator } from '$lib/i18n';
 	import { formatAmount } from '$lib/money';
 
 	let { data } = $props();
-	const euro = (cents: number | null) =>
-		cents === null ? 'da mettere' : formatAmount(cents, 'it', data.currency);
+	const t = $derived(translator(data.locale));
+	const euro = $derived((cents: number | null) =>
+		cents === null ? t('drafts.missingAmount') : formatAmount(cents, data.locale, data.currency)
+	);
 </script>
 
-<h1>Da sistemare</h1>
-<p>
-	Le bozze non entrano in nessun totale finché non hanno importo, categoria e data. Sono qui
-	apposta: registri al volo, sistemi con calma.
-</p>
+<h1>{t('drafts.title')}</h1>
+<p>{t('drafts.intro')}</p>
 
 {#if data.drafts.length === 0}
-	<p>Nessuna bozza in sospeso. Tutto a posto.</p>
+	<p>{t('drafts.empty')}</p>
 {:else}
-	<table>
-		<caption class="hint">Dalla più vecchia</caption>
-		<thead>
-			<tr>
-				<th scope="col">Data</th>
-				<th scope="col">Importo</th>
-				<th scope="col">Nota</th>
-				<th scope="col">Chi</th>
-				<th scope="col">Azioni</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each data.drafts as draft (draft.id)}
+	<div class="scroller">
+		<table>
+			<caption class="hint">{t('drafts.oldestFirst')}</caption>
+			<thead>
 				<tr>
-					<td>{draft.occurred_on}</td>
-					<td>{euro(draft.amount_cents)}</td>
-					<td>{draft.note ?? '—'}</td>
-					<td>{draft.author}</td>
-					<td>
-						<a href={resolve('/expenses/[id]', { id: String(draft.id) })}>
-							Completa <span class="hint">la bozza del {draft.occurred_on}</span>
-						</a>
-					</td>
+					<th scope="col">{t('common.date')}</th>
+					<th scope="col">{t('common.amount')}</th>
+					<th scope="col">{t('common.note')}</th>
+					<th scope="col">{t('common.who')}</th>
+					<th scope="col">{t('common.actions')}</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{#each data.drafts as draft (draft.id)}
+					<tr>
+						<td>{draft.occurred_on}</td>
+						<td>{euro(draft.amount_cents)}</td>
+						<td>{draft.note ?? t('common.none')}</td>
+						<td>{draft.author}</td>
+						<td>
+							<a href={resolve('/expenses/[id]', { id: String(draft.id) })}>
+								{t('common.edit')}
+								<span class="visually-hidden">
+									{t('drafts.complete', { date: draft.occurred_on })}
+								</span>
+							</a>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 {/if}

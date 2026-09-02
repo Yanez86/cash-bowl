@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 3 completata** (spese, bozze e bilancio kakebo). Prossima: fase 4.
+Stato attuale: **fase 4 completata** (due lingue, temi, telefono, PWA). Prossima: fase 5.
 
 ---
 
@@ -107,9 +107,8 @@ con copia di sicurezza automatica. 13 test verdi, tipi e lint puliti.
 
 - [x] Stato `draft` sulla transazione (bozza / completata)
 - [x] Salvataggio al volo con il solo importo; **la sola foto** arriva nella fase 5
-- [ ] Pulsante di inserimento rapido sempre raggiungibile col pollice: per ora il
-      modulo sta nella schermata principale. Il pulsante fisso è lavoro di
-      interfaccia, va nella fase 4.
+- [x] Pulsante di inserimento rapido sempre raggiungibile col pollice
+      (pulsante rotondo fisso in basso a destra, fatto nella fase 4)
 - [x] Le bozze **non entrano** nei totali del bilancio kakebo
 - [x] Avviso ben visibile nella schermata principale: "hai N bozze da sistemare"
 - [x] Elenco "da sistemare", ordinato dalla più vecchia, con completamento in un passaggio
@@ -124,19 +123,28 @@ la bozza da 12,90 resta fuori dai totali ed è segnalata. 28 test verdi.
 
 ## Fase 4 — Interfaccia, telefono e lingue
 
-- [ ] Impianto multilingua: `t()`, `it.json`, `en.json`, rilevamento e selettore
-- [ ] Test che verifica le chiavi di traduzione mancanti
-- [ ] Layout responsive, pensato prima per il telefono
-- [ ] **Temi**: file unico di variabili CSS, chiaro/scuro/auto,
+- [x] Impianto multilingua: `t()`, `it.json`, `en.json`, rilevamento e selettore
+- [x] Test che verifica le chiavi di traduzione mancanti (e quelle vuote)
+- [x] Layout responsive, pensato prima per il telefono
+- [x] **Temi**: file unico di variabili CSS, chiaro/scuro/auto,
       palette d'accento (Kakebo, Bosco, Ambra, Notte, Grigio)
-- [ ] Interruttori "alto contrasto" e "riduci animazioni"
-- [ ] Selezione del tema salvata sul profilo e applicata senza lampo bianco
-- [ ] PWA: manifest, icone, installabile sulla schermata home
-- [ ] Stati vuoto / caricamento / errore su ogni schermata
+- [x] 18 test automatici sui contrasti: ogni palette, in chiaro e in scuro
+- [x] Interruttori "alto contrasto" e "riduci animazioni"
+- [x] Selezione del tema salvata sul profilo e applicata senza lampo bianco
+      (gli attributi sono già nell'HTML servito dal server)
+- [x] PWA: manifest, icone, installabile sulla schermata home
+- [x] Icone PNG generate da uno script senza librerie (`scripts/make-icons.mjs`)
+- [x] Service worker che tiene in cache i file dell'applicazione, mai le pagine
+- [x] Stati vuoto ed errore su ogni schermata (pagina di errore tradotta)
+- [ ] Indicatore di caricamento: i moduli sono form normali, il browser mostra il
+      suo. Un indicatore nostro serve solo quando arriverà il caricamento delle
+      foto, nella fase 5.
 
 **Fatta quando:** l'app si installa sul telefono, parla due lingue e cambia tema.
-
----
+**Verificato:** browser italiano → interfaccia italiana; browser inglese →
+interfaccia inglese; cambio a inglese + scuro + ambra + alto contrasto riflesso
+negli attributi della pagina; valori inventati rifiutati e riportati ai
+predefiniti; manifest, service worker e icone serviti correttamente.
 
 ## Fase 5 — Scontrini fotografati
 

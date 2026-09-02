@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { refuse } from '$lib/server/problem';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import {
@@ -42,7 +42,7 @@ function userId(form: FormData): number | null {
 export const load: PageServerLoad = ({ locals }) => ({ users: list(), me: locals.user });
 
 export const actions: Actions = {
-	create: async ({ request }) => {
+	create: async ({ request, locals }) => {
 		const form = await request.formData();
 		const displayName = String(form.get('display_name') ?? '').trim();
 		const username = String(form.get('username') ?? '')
@@ -51,29 +51,30 @@ export const actions: Actions = {
 		const password = String(form.get('password') ?? '');
 		const isAdmin = form.get('is_admin') === 'on';
 
-		if (!displayName) return fail(400, { error: 'Scrivi il nome della persona.' });
+		if (!displayName) return refuse(400, 'errors.nameRequired');
 		const problem = usernameProblem(username) ?? passwordProblem(password);
-		if (problem) return fail(400, { error: problem });
+		if (problem) return refuse(400, problem.key, problem.vars);
 
 		const taken = db().prepare('SELECT 1 FROM users WHERE username = ?').get(username);
-		if (taken) return fail(400, { error: 'Questo nome utente è già preso.' });
+		if (taken) return refuse(400, 'errors.usernameTaken');
 
-		await createUser(db(), { username, displayName, password, isAdmin });
+		// Parte con la lingua di chi lo sta creando; poi se la cambia dal profilo.
+		await createUser(db(), { username, displayName, password, isAdmin, locale: locals.locale });
 		return { created: username };
 	},
 
 	toggleActive: async ({ request, locals }) => {
 		const form = await request.formData();
 		const id = userId(form);
-		if (!id) return fail(400, { error: 'Utente non valido.' });
-		if (id === locals.user!.id) return fail(400, { error: 'Non puoi disattivare te stesso.' });
+		if (!id) return refuse(400, 'errors.invalidUser');
+		if (id === locals.user!.id) return refuse(400, 'errors.cannotDeactivateSelf');
 
 		const row = db().prepare('SELECT is_active FROM users WHERE id = ?').get(id) as
 			{ is_active: number } | undefined;
-		if (!row) return fail(404, { error: 'Utente non trovato.' });
+		if (!row) return refuse(404, 'errors.userNotFound');
 
 		if (row.is_active === 1 && !otherAdminsActive(id)) {
-			return fail(400, { error: 'Deve restare almeno un amministratore attivo.' });
+			return refuse(400, 'errors.lastAdmin');
 		}
 
 		const next = row.is_active === 1 ? 0 : 1;
@@ -87,13 +88,13 @@ export const actions: Actions = {
 		const form = await request.formData();
 		const id = userId(form);
 		const password = String(form.get('password') ?? '');
-		if (!id) return fail(400, { error: 'Utente non valido.' });
+		if (!id) return refuse(400, 'errors.invalidUser');
 
 		const problem = passwordProblem(password);
-		if (problem) return fail(400, { error: problem });
+		if (problem) return refuse(400, problem.key, problem.vars);
 
 		const exists = db().prepare('SELECT 1 FROM users WHERE id = ?').get(id);
-		if (!exists) return fail(404, { error: 'Utente non trovato.' });
+		if (!exists) return refuse(404, 'errors.userNotFound');
 
 		await setPassword(db(), id, password);
 		return { passwordReset: true };
@@ -102,10 +103,10 @@ export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		const form = await request.formData();
 		const id = userId(form);
-		if (!id) return fail(400, { error: 'Utente non valido.' });
-		if (id === locals.user!.id) return fail(400, { error: 'Non puoi eliminare te stesso.' });
+		if (!id) return refuse(400, 'errors.invalidUser');
+		if (id === locals.user!.id) return refuse(400, 'errors.cannotDeleteSelf');
 		if (!otherAdminsActive(id)) {
-			return fail(400, { error: 'Deve restare almeno un amministratore attivo.' });
+			return refuse(400, 'errors.lastAdmin');
 		}
 
 		db().prepare('DELETE FROM users WHERE id = ?').run(id);
