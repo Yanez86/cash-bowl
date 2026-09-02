@@ -56,6 +56,35 @@ l'amministratore, e da lì potrà creare gli account degli altri familiari.
 serve HTTPS. La configurazione inclusa (Caddy) se ne occupa da sola, ma va detto
 qual è il tuo indirizzo.
 
+## Provare in casa, dal computer e dal telefono
+
+Serve Docker attivo. Dalla cartella del progetto:
+
+```bash
+docker compose up -d      # accende
+docker compose down       # spegne
+docker compose logs -f app   # guarda cosa sta facendo
+```
+
+Poi apri:
+
+- dal computer: `http://localhost:8080`
+- dal telefono, sullo stesso wi-fi: `http://<indirizzo-del-computer>:8080`
+
+Per usare due indirizzi diversi, nel file `.env` lascia commentata la riga
+`ORIGIN` e togli il commento a `PROTOCOL_HEADER` e `HOST_HEADER`.
+
+Sul telefono puoi già aggiungere l'app alla schermata home. Senza HTTPS però
+alcune cose da "app vera" (funzionamento senza rete, richiesta di installazione
+su Android) restano spente: tornano quando l'installazione ha un indirizzo
+HTTPS, come descritto sopra.
+
+Per ricominciare da zero, cancellando tutti i dati di prova:
+
+```bash
+docker compose down && rm -rf data && docker compose up -d
+```
+
 ## Backup
 
 L'app salva ogni giorno una copia del database in `data/backups/`.

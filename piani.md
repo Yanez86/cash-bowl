@@ -6,7 +6,9 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 11 completata** (lettura dell'importo dallo scontrino). Prossima: fase 12.
+Stato attuale: **in prova**. Le fasi da 0 a 11 sono fatte. La distribuzione
+(fase 12) è **sospesa per scelta**: prima si usa l'applicazione per davvero, si
+sistema quello che salta fuori, e si decide dopo quando è pronta da distribuire.
 
 ---
 
@@ -328,7 +330,26 @@ che questo progetto non vuole. `tesseract.js` gira **nel browser**, non tocca il
 server, e i suoi file stanno dentro l'installazione. Se un giorno pesasse troppo,
 si toglie insieme alla fase: nient'altro dipende da lei.
 
-## Fase 12 — Distribuzione
+## Fase di prova (in corso)
+
+Si usa l'applicazione per davvero, dal computer e dal telefono, e qui si segna
+quello che non va. Ogni riga diventa un lavoro; quando l'elenco è vuoto e
+l'impressione è buona, si riprende dalla fase 12.
+
+Come segnalare qualcosa: basta dirlo a parole — cosa stavi facendo, cosa ti
+aspettavi, cosa è successo. La schermata e l'ora aiutano.
+
+### Da sistemare
+
+- _(vuoto: niente ancora segnalato)_
+
+### Da valutare dopo averla usata
+
+- _(vuoto)_
+
+---
+
+## Fase 12 — Distribuzione (sospesa)
 
 - [ ] `README.md` con installazione in un comando
 - [ ] Immagine Docker pubblicata automaticamente a ogni versione
