@@ -26,6 +26,7 @@
 		showDraftButton={isDraft}
 		receipts={data.receipts}
 		maxReceipts={data.maxReceipts}
+		ocrAvailable={data.ocrAvailable}
 	/>
 </form>
 

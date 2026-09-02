@@ -1,5 +1,6 @@
 import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
+import { ocrAvailable } from '$lib/server/ocr';
 import { generate } from '$lib/server/recurring';
 import { currency } from '$lib/server/settings';
 import { exists, selectable } from '$lib/server/categories';
@@ -26,6 +27,7 @@ export const load: PageServerLoad = ({ locals, url }) => {
 	generate(db(), ym, viewer);
 
 	return {
+		ocrAvailable: ocrAvailable(),
 		ym,
 		today: today(),
 		currency: currency(db()),

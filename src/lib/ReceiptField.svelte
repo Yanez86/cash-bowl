@@ -4,15 +4,20 @@
 	// si riempie. Senza JavaScript il campo resta un normale campo file e
 	// funziona lo stesso, solo più lentamente.
 	import { translator, type Locale } from './i18n';
+	import { amountForInput } from './money';
 
 	let {
 		locale,
 		existing = [],
-		max = 5
+		max = 5,
+		ocrAvailable = false,
+		onAmount
 	}: {
 		locale: Locale;
 		existing?: { id: number; position: number }[];
 		max?: number;
+		ocrAvailable?: boolean;
+		onAmount?: (amount: string) => void;
 	} = $props();
 
 	const t = $derived(translator(locale));
@@ -26,6 +31,11 @@
 	let working = $state(false);
 	let problem = $state('');
 
+	// Lettura dell'importo dallo scontrino: si accende solo su richiesta.
+	let reading = $state(false);
+	let readProgress = $state(0);
+	let readResult = $state('');
+
 	async function shrink(file: File): Promise<string> {
 		// "from-image" rispetta il verso in cui è stata scattata.
 		const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
@@ -36,6 +46,27 @@
 		canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 		bitmap.close();
 		return canvas.toDataURL('image/jpeg', QUALITY);
+	}
+
+	async function readReceipt() {
+		if (shrunk.length === 0) return;
+		reading = true;
+		readProgress = 0;
+		readResult = '';
+		try {
+			const { readAmount } = await import('./ocr');
+			const cents = await readAmount(shrunk[0], (percent) => (readProgress = percent));
+			if (cents === null) {
+				readResult = t('receipt.ocrNotFound');
+			} else {
+				onAmount?.(amountForInput(cents));
+				readResult = t('receipt.ocrFound');
+			}
+		} catch {
+			readResult = t('receipt.ocrFailed');
+		} finally {
+			reading = false;
+		}
 	}
 
 	async function chosen(event: Event) {
@@ -102,6 +133,16 @@
 		<input type="hidden" name="receipt_data" value={photo} />
 	{/each}
 
+	{#if ocrAvailable && shrunk.length > 0}
+		<p class="ocr">
+			<button type="button" class="quiet" onclick={readReceipt} disabled={reading}>
+				{reading ? t('receipt.ocrReading', { percent: readProgress }) : t('receipt.ocrButton')}
+			</button>
+			<span class="hint">{t('receipt.ocrHint')}</span>
+		</p>
+		{#if readResult}<p role="status">{readResult}</p>{/if}
+	{/if}
+
 	{#if working}<p role="status">{t('receipt.working')}</p>{/if}
 	{#if problem}<p class="error" role="alert">{problem}</p>{/if}
 
@@ -131,5 +172,11 @@
 	}
 	input[type='file'] {
 		border: 1px dashed var(--border);
+	}
+	.ocr {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
 	}
 </style>

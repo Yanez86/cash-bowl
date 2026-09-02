@@ -274,7 +274,13 @@
 		"existingAlt": "Scontrino {n} allegato a questa spesa",
 		"newAlt": "Anteprima della foto {n} che stai per salvare",
 		"openFull": "Apri la foto a schermo intero",
-		"attached": "con foto"
+		"attached": "con foto",
+		"ocrButton": "Leggi l'importo dallo scontrino",
+		"ocrHint": "La prima volta scarica circa 4 MB, poi resta sul telefono.",
+		"ocrReading": "Sto leggendo… {percent}%",
+		"ocrFound": "Importo proposto: controllalo prima di salvare.",
+		"ocrNotFound": "Non sono riuscito a leggere un importo. Scrivilo a mano.",
+		"ocrFailed": "La lettura non è riuscita. Scrivi l'importo a mano."
 	},
 	"reports": {
 		"title": "Report",

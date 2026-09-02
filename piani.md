@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 10 completata** (obiettivi di risparmio). Prossima: fase 11.
+Stato attuale: **fase 11 completata** (lettura dell'importo dallo scontrino). Prossima: fase 12.
 
 ---
 
@@ -293,16 +293,38 @@ mese restano a zero; eliminando l'obiettivo spariscono anche i movimenti.
 
 ## Fase 11 — Lettura dell'importo dallo scontrino (OCR)
 
-- [ ] Pulsante «Leggi l'importo» che compare dopo aver scattato la foto
-- [ ] Il motore si scarica solo alla prima volta che si preme, e poi resta
-- [ ] I file della lingua stanno dentro il progetto: nessuno scaricamento da
-      internet a runtime, la regola "funziona senza internet" resta valida
-- [ ] Cerca i candidati (TOTALE, TOT, EUR, l'importo più grande in fondo) e
-      **propone**: il campo si riempie solo se confermi
-- [ ] Se non trova niente lo dice, invece di riempire a caso
-- [ ] Dipendenza `tesseract.js`: unica dipendenza esterna aggiunta, con
-      motivazione scritta nella pull request come chiede CLAUDE.md §3
-- [ ] Test: il riconoscimento dei candidati importo su testi di esempio
+- [x] Pulsante «Leggi l'importo» che compare dopo aver scattato la foto
+- [x] Il motore si carica solo alla prima volta che si preme, e poi il browser
+      se lo tiene
+- [x] I file stanno dentro l'installazione, copiati da `node_modules` al momento
+      della build: **nessuno scaricamento da internet**, né in build né a runtime
+- [x] Cerca prima le righe con TOTALE / IMPORTO / AMOUNT partendo dal fondo, poi
+      quelle con la valuta, poi ripiega sull'importo più grande della parte finale
+- [x] **Propone**: il campo si riempie solo dopo che hai premuto, e il messaggio
+      dice di controllare
+- [x] Se non trova niente lo dice, invece di riempire a caso
+- [x] Se i file non sono stati copiati, il pulsante non compare affatto
+- [x] Dipendenza `tesseract.js` (più `@tesseract.js-data/eng` solo in sviluppo):
+      seconda e ultima dipendenza di produzione, motivata qui sotto
+- [x] Test: nove casi sul riconoscimento dell'importo, compreso il contante
+
+**Peso reale, misurato:** il telefono scarica **4,2 MB** la prima volta che
+qualcuno preme il pulsante (motore 1,39 MB, dati lingua 2,82 MB, worker 0,03 MB),
+e poi non li scarica più. Nell'immagine occupano 15 MB.
+
+**Verificato davvero:** fabbricato uno scontrino finto, fotografato e passato al
+motore: ha letto «TOTALE EURO 45,50 / CONTANTE 50,00 / RESTO 4,50» e ha proposto
+**45,50**, non i 50,00 del contante. Il primo tentativo funzionava per caso —
+`CONTANTI` non combaciava con la parola cercata — quindi la scelta della cifra è
+stata riscritta a priorità: prima le parole che dicono _totale_, poi la valuta.
+105 test verdi.
+
+**Perché una dipendenza esterna** (CLAUDE.md §3 chiede di motivarla): riconoscere
+del testo dentro una foto vuol dire un motore di riconoscimento; scriverlo a mano
+non è una scorciatoia disponibile, e ogni alternativa passa da un servizio online,
+che questo progetto non vuole. `tesseract.js` gira **nel browser**, non tocca il
+server, e i suoi file stanno dentro l'installazione. Se un giorno pesasse troppo,
+si toglie insieme alla fase: nient'altro dipende da lei.
 
 ## Fase 12 — Distribuzione
 

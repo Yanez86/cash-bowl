@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
+import { ocrAvailable } from '$lib/server/ocr';
 import { exists, selectable } from '$lib/server/categories';
 import { readEntry } from '$lib/server/entry-form';
 import { refuse } from '$lib/server/problem';
@@ -31,6 +32,7 @@ export const load: PageServerLoad = ({ locals, params }) => {
 	if (!entry) error(404, 'errors.entryNotFound');
 
 	return {
+		ocrAvailable: ocrAvailable(),
 		entry: {
 			...entry,
 			amount: entry.amount_cents === null ? '' : amountForInput(entry.amount_cents)

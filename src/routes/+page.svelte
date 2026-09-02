@@ -72,7 +72,12 @@
 	</p>
 {/if}
 <form method="post" action="?/add" enctype="multipart/form-data">
-	<EntryForm locale={data.locale} categories={data.categories} defaultDate={data.today} />
+	<EntryForm
+		locale={data.locale}
+		categories={data.categories}
+		defaultDate={data.today}
+		ocrAvailable={data.ocrAvailable}
+	/>
 </form>
 
 <h2>{t('dashboard.whereTitle')}</h2>

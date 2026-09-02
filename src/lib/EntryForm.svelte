@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Il modulo di una spesa. Serve sia per l'inserimento al volo sia per la
 	// modifica: un solo posto in cui cambiare i campi.
+	import { untrack } from 'svelte';
 	import { categoryLabel } from './CategoryLabel';
 	import ReceiptField from './ReceiptField.svelte';
 	import { translator, type Locale } from './i18n';
@@ -14,12 +15,14 @@
 		defaultDate = today(),
 		showDraftButton = true,
 		receipts = [],
-		maxReceipts = 5
+		maxReceipts = 5,
+		ocrAvailable = false
 	}: {
 		locale: Locale;
 		categories: Choice[];
 		receipts?: { id: number; position: number }[];
 		maxReceipts?: number;
+		ocrAvailable?: boolean;
 		entry?: {
 			amount?: string;
 			occurred_on?: string;
@@ -32,18 +35,17 @@
 	} = $props();
 
 	const t = $derived(translator(locale));
+
+	// L'importo è tenuto qui perché la lettura dello scontrino possa proporlo.
+	// Si parte dal valore della voce e poi comanda chi scrive: untrack dice
+	// "prendilo una volta sola", ed è esattamente quello che vogliamo.
+	let amount = $state(untrack(() => entry?.amount) ?? '');
 </script>
 
 <label for="amount">
 	{t('common.amount')} <span class="hint">{t('common.amountExample')}</span>
 </label>
-<input
-	id="amount"
-	name="amount"
-	inputmode="decimal"
-	autocomplete="off"
-	value={entry?.amount ?? ''}
-/>
+<input id="amount" name="amount" inputmode="decimal" autocomplete="off" bind:value={amount} />
 
 <label for="category_id">{t('common.category')}</label>
 <select id="category_id" name="category_id">
@@ -80,7 +82,13 @@
 	</label>
 </p>
 
-<ReceiptField {locale} existing={receipts} max={maxReceipts} />
+<ReceiptField
+	{locale}
+	existing={receipts}
+	max={maxReceipts}
+	{ocrAvailable}
+	onAmount={(value) => (amount = value)}
+/>
 
 <p class="buttons">
 	<button type="submit" name="status" value="complete">{t('common.save')}</button>

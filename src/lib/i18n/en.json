@@ -274,7 +274,13 @@
 		"existingAlt": "Receipt {n} attached to this expense",
 		"newAlt": "Preview of photo {n} you are about to save",
 		"openFull": "Open the photo full screen",
-		"attached": "with photo"
+		"attached": "with photo",
+		"ocrButton": "Read the amount from the receipt",
+		"ocrHint": "The first time it downloads about 4 MB, then it stays on your phone.",
+		"ocrReading": "Reading… {percent}%",
+		"ocrFound": "Suggested amount: check it before saving.",
+		"ocrNotFound": "No amount could be read. Please type it in.",
+		"ocrFailed": "Reading failed. Please type the amount in."
 	},
 	"reports": {
 		"title": "Reports",

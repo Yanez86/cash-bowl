@@ -1,6 +1,9 @@
 # dipendenze
 node_modules/
 
+# file dell'OCR: copiati da node_modules a ogni build, non si versionano
+static/ocr/
+
 # build
 build/
 .svelte-kit/
