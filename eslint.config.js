@@ -34,8 +34,12 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {
+			// I link del mese portano una query (?ym=2026-03) e la regola non
+			// riconosce resolve() dentro una stringa composta. cash-bowl è sempre
+			// servito alla radice del proprio indirizzo, quindi il caso che la
+			// regola protegge (un percorso di base) qui non esiste.
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 );

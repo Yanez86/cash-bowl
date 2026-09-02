@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 2 completata** (utenti e accesso funzionanti). Prossima: fase 3.
+Stato attuale: **fase 3 completata** (spese, bozze e bilancio kakebo). Prossima: fase 4.
 
 ---
 
@@ -91,34 +91,36 @@ con copia di sicurezza automatica. 13 test verdi, tipi e lint puliti.
 
 ## Fase 3 — Il cuore: spese, bozze e kakebo
 
-- [ ] Tabelle `categories`, `transactions`, `months`
-- [ ] Categorie iniziali kakebo: Sopravvivenza, Svago, Cultura, Extra
-- [ ] Gestione sotto-categorie: crea, rinomina, riordina, disattiva
+- [x] Tabelle `categories`, `transactions`, `months`
+- [x] Categorie iniziali kakebo: Sopravvivenza, Svago, Cultura, Extra
+- [x] Gestione sotto-categorie: crea, rinomina, riordina, disattiva
       (le categorie usate **non** si cancellano: si disattivano, per non perdere lo storico)
-- [ ] Inserimento di una spesa: importo, data, categoria, nota,
+- [x] Inserimento di una spesa: importo, data, categoria, nota,
       "di famiglia" o "privata"
-- [ ] Inserimento delle entrate e delle spese fisse del mese
-- [ ] Impostazione dell'obiettivo di risparmio mensile
-- [ ] Calcolo del disponibile: entrate − spese fisse − obiettivo di risparmio
-- [ ] Modifica ed eliminazione di una voce
-- [ ] Test dei calcoli del bilancio con importi in centesimi
+- [x] Inserimento delle entrate e delle spese fisse del mese
+- [x] Impostazione dell'obiettivo di risparmio mensile
+- [x] Calcolo del disponibile: entrate − spese fisse − obiettivo di risparmio
+- [x] Modifica ed eliminazione di una voce
+- [x] Test dei calcoli del bilancio con importi in centesimi
 
 ### Bozze di spesa
 
-- [ ] Stato `draft` sulla transazione (bozza / completata)
-- [ ] Salvataggio al volo: basta **la foto oppure l'importo**; data di oggi
-      automatica; categoria, nota e visibilità si mettono dopo
-- [ ] Pulsante di inserimento rapido sempre raggiungibile col pollice
-- [ ] Le bozze **non entrano** nei totali del bilancio kakebo
-- [ ] Avviso ben visibile nella schermata principale: "hai N bozze da sistemare"
-- [ ] Elenco "da sistemare", ordinato dalla più vecchia, con completamento in un passaggio
-- [ ] Una bozza si completa quando ha importo, data e categoria
-- [ ] Test: le bozze restano fuori da tutti i totali e da tutti i report
+- [x] Stato `draft` sulla transazione (bozza / completata)
+- [x] Salvataggio al volo con il solo importo; **la sola foto** arriva nella fase 5
+- [ ] Pulsante di inserimento rapido sempre raggiungibile col pollice: per ora il
+      modulo sta nella schermata principale. Il pulsante fisso è lavoro di
+      interfaccia, va nella fase 4.
+- [x] Le bozze **non entrano** nei totali del bilancio kakebo
+- [x] Avviso ben visibile nella schermata principale: "hai N bozze da sistemare"
+- [x] Elenco "da sistemare", ordinato dalla più vecchia, con completamento in un passaggio
+- [x] Una bozza si completa quando ha importo, data e categoria
+- [x] Test: le bozze restano fuori da tutti i totali e da tutti i report
 
 **Fatta quando:** puoi registrare un mese intero, salvare una spesa in due tocchi
 mentre sei alla cassa, e l'app ti dice quanto ti resta.
-
----
+**Verificato:** entrate 2000 − fisse 800 − obiettivo 300 = 900 disponibili;
+spesa di 45,50 più una privata da 30 → Davide vede 75,50 speso, Anna solo 45,50;
+la bozza da 12,90 resta fuori dai totali ed è segnalata. 28 test verdi.
 
 ## Fase 4 — Interfaccia, telefono e lingue
 

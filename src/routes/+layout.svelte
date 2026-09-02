@@ -16,7 +16,11 @@
 {#if data.user}
 	<nav aria-label="Principale">
 		<a href={resolve('/')}>cash-bowl</a>
-		<a href={resolve('/profile')}>Il mio profilo</a>
+		<a href={resolve('/month')}>Il mese</a>
+		<a href={resolve('/expenses')}>Spese</a>
+		<a href={resolve('/drafts')}>Da sistemare</a>
+		<a href={resolve('/categories')}>Categorie</a>
+		<a href={resolve('/profile')}>Profilo</a>
 		{#if data.user.is_admin}
 			<a href={resolve('/admin/users')}>Utenti</a>
 		{/if}
