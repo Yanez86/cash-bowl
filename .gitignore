@@ -1,0 +1,32 @@
+# dipendenze
+node_modules/
+
+# build
+build/
+.svelte-kit/
+dist/
+
+# segreti e configurazione locale
+.env
+.env.*
+!.env.example
+
+# dati: non finiscono MAI nel repository
+data/
+*.db
+*.db-shm
+*.db-wal
+backups/
+
+# sistema ed editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# log e temporanei
+*.log
+npm-debug.log*
+coverage/
+.tmp/
