@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 9 completata** (spese ricorrenti). Prossima: fase 10.
+Stato attuale: **fase 10 completata** (obiettivi di risparmio). Prossima: fase 11.
 
 ---
 
@@ -274,13 +274,22 @@ mese in corso resta a 800; la sospensione funziona. 88 test verdi.
 
 ## Fase 10 — Obiettivi di risparmio
 
-- [ ] Tabelle `goals` e `goal_deposits`: nome, traguardo, data desiderata
+- [x] Tabelle `goals` e `goal_deposits`: nome, traguardo, data desiderata
       (facoltativa), versamenti con data e nota
-- [ ] Pagina con quanto manca, la percentuale e **quanto mettere via al mese**
+- [x] Pagina con quanto manca, la percentuale e **quanto mettere via al mese**
       per arrivare in tempo
-- [ ] Aggiungere e togliere versamenti; chiudere un obiettivo raggiunto
-- [ ] Restano separati dai conti del mese: nessun numero del kakebo cambia
-- [ ] Test: i calcoli di quanto manca e del ritmo necessario
+- [x] Si può anche **riprendere** dal salvadanaio: il movimento negativo è
+      previsto, non è un errore
+- [x] Chiudere un obiettivo raggiunto e riaprirlo
+- [x] Eliminando l'obiettivo spariscono i suoi movimenti
+- [x] Restano separati dai conti del mese: nessun numero del kakebo cambia
+- [x] Test: quanto manca, la percentuale, i mesi che restano, il ritmo mensile,
+      e la verifica che un versamento non tocchi i totali del mese
+
+**Verificato:** «Vacanza 1500 € entro giugno 2027» → mancano 1500, da mettere via
+150 al mese; versati 300 e ripresi 50 → mancano 1250, 125 al mese; i conti del
+mese restano a zero; eliminando l'obiettivo spariscono anche i movimenti.
+96 test verdi.
 
 ## Fase 11 — Lettura dell'importo dallo scontrino (OCR)
 

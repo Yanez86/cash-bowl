@@ -16,7 +16,8 @@
 		"menu": "Menù",
 		"reports": "Report",
 		"settings": "Manutenzione",
-		"recurring": "Ricorrenti"
+		"recurring": "Ricorrenti",
+		"goals": "Obiettivi"
 	},
 	"common": {
 		"save": "Salva",
@@ -379,5 +380,39 @@
 		"removed": "Ricorrente eliminata. Le voci già registrate restano dove sono.",
 		"descriptionOf": "Descrizione di {name}",
 		"amountOf": "Importo di {name}"
+	},
+	"goals": {
+		"title": "Obiettivi di risparmio",
+		"intro": "Salvadanai separati: vacanza, fondo emergenze, macchina nuova. Quando metti via dei soldi lo registri qui. Non toccano i conti del mese: il kakebo resta quello che è.",
+		"empty": "Nessun obiettivo. Creane uno qui sotto.",
+		"name": "Nome",
+		"example": "Vacanza",
+		"target": "Traguardo",
+		"due": "Entro quando",
+		"of": "di {target}",
+		"reached": "Traguardo raggiunto.",
+		"missing": "Mancano {amount}",
+		"by": "entro il {date}",
+		"pace": "da mettere via: {amount} al mese",
+		"putIn": "Metti dentro",
+		"takeOut": "Riprendi",
+		"depositFor": "Importo da versare su {name}",
+		"movements": {
+			"one": "{count} movimento",
+			"other": "{count} movimenti"
+		},
+		"noMovements": "Nessun movimento registrato.",
+		"change": "Modifica o chiudi",
+		"close": "Segna come raggiunto",
+		"reopen": "Riapri",
+		"deleteGoal": "Elimina l'obiettivo e i suoi movimenti",
+		"addTitle": "Nuovo obiettivo",
+		"createSubmit": "Crea l'obiettivo",
+		"created": "Obiettivo «{name}» creato.",
+		"updated": "Obiettivo aggiornato.",
+		"deposited": "Movimento registrato.",
+		"depositRemoved": "Movimento eliminato.",
+		"toggled": "Obiettivo aggiornato.",
+		"removed": "Obiettivo eliminato."
 	}
 }

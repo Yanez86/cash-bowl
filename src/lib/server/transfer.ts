@@ -6,9 +6,19 @@ import type { DB } from './db.ts';
 
 /** Le tabelle esportate, nell'ordine in cui si possono riscrivere senza rompere
     i riferimenti fra loro. */
-const TABLES = ['users', 'settings', 'categories', 'months', 'transactions', 'receipts'] as const;
+const TABLES = [
+	'users',
+	'settings',
+	'categories',
+	'months',
+	'recurring',
+	'transactions',
+	'receipts',
+	'goals',
+	'goal_deposits'
+] as const;
 
-export const FORMAT = 2;
+export const FORMAT = 3;
 
 /** Le colonne che esistono davvero in una tabella, chieste al database. */
 function columnsOf(db: DB, table: string): string[] {

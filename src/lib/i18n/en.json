@@ -16,7 +16,8 @@
 		"menu": "Menu",
 		"reports": "Reports",
 		"settings": "Maintenance",
-		"recurring": "Recurring"
+		"recurring": "Recurring",
+		"goals": "Goals"
 	},
 	"common": {
 		"save": "Save",
@@ -379,5 +380,39 @@
 		"removed": "Recurring entry deleted. Entries already recorded stay where they are.",
 		"descriptionOf": "Description of {name}",
 		"amountOf": "Amount of {name}"
+	},
+	"goals": {
+		"title": "Savings goals",
+		"intro": "Separate piggy banks: holiday, emergency fund, new car. When you set money aside, you record it here. They never touch the monthly figures: kakebo stays what it is.",
+		"empty": "No goals yet. Create one below.",
+		"name": "Name",
+		"example": "Holiday",
+		"target": "Target",
+		"due": "By when",
+		"of": "of {target}",
+		"reached": "Target reached.",
+		"missing": "{amount} to go",
+		"by": "by {date}",
+		"pace": "to set aside: {amount} a month",
+		"putIn": "Put in",
+		"takeOut": "Take out",
+		"depositFor": "Amount to put into {name}",
+		"movements": {
+			"one": "{count} movement",
+			"other": "{count} movements"
+		},
+		"noMovements": "No movements recorded.",
+		"change": "Edit or close",
+		"close": "Mark as reached",
+		"reopen": "Reopen",
+		"deleteGoal": "Delete the goal and its movements",
+		"addTitle": "New goal",
+		"createSubmit": "Create the goal",
+		"created": "Goal “{name}” created.",
+		"updated": "Goal updated.",
+		"deposited": "Movement recorded.",
+		"depositRemoved": "Movement deleted.",
+		"toggled": "Goal updated.",
+		"removed": "Goal deleted."
 	}
 }
