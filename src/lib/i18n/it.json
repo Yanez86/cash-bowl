@@ -13,7 +13,8 @@
 		"profile": "Profilo",
 		"users": "Utenti",
 		"logout": "Esci",
-		"menu": "Menù"
+		"menu": "Menù",
+		"reports": "Report"
 	},
 	"common": {
 		"save": "Salva",
@@ -259,5 +260,45 @@
 		"newAlt": "Anteprima della foto che stai per salvare",
 		"openFull": "Apri la foto a schermo intero",
 		"attached": "con foto"
+	},
+	"reports": {
+		"title": "Report",
+		"from": "Dal mese",
+		"to": "Al mese",
+		"allCategories": "Tutte le categorie",
+		"everyone": "Tutti",
+		"visibility": "Visibilità",
+		"all": "Tutto",
+		"family": "Di famiglia",
+		"private": "Private",
+		"apply": "Aggiorna il report",
+		"spentInRange": "Speso {amount} da {from} a {to}",
+		"draftsExcluded": {
+			"one": "In questo periodo c'è {count} bozza, non conteggiata.",
+			"other": "In questo periodo ci sono {count} bozze, non conteggiate."
+		},
+		"downloadCsv": "Scarica in CSV (per Excel)",
+		"print": "Stampa o salva in PDF",
+		"printHint": "Nella finestra di stampa scegli «Salva come PDF».",
+		"empty": "Nessuna spesa in questo periodo.",
+		"byCategory": "Per categoria kakebo",
+		"bySubCategory": "Per sotto-categoria",
+		"byMonth": "Mese per mese",
+		"byYear": "Anno per anno",
+		"month": "Mese",
+		"year": "Anno"
+	},
+	"monthEnd": {
+		"title": "Chiusura del mese",
+		"intro": "Le quattro domande del kakebo. Alle prime tre risponde l'app; l'ultima è quella che conta, e la scrivi tu.",
+		"q1": "Quanti soldi avevi a disposizione?",
+		"q2": "Quanti ne volevi mettere da parte?",
+		"q3": "Quanti ne hai spesi?",
+		"q4": "Quanti ne hai messi da parte davvero?",
+		"q5": "Come puoi migliorare il mese prossimo?",
+		"goalReached": "obiettivo raggiunto",
+		"goalMissed": "mancano {amount} all'obiettivo",
+		"submit": "Salva la riflessione",
+		"saved": "Riflessione salvata."
 	}
 }

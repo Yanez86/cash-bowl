@@ -49,7 +49,7 @@ label {
 	font-weight: 600;
 }
 
-:where(input, select) {
+:where(input, select, textarea) {
 	display: block;
 	width: 100%;
 	min-height: var(--tap);
@@ -59,6 +59,12 @@ label {
 	background: var(--surface);
 	border: 1px solid var(--border);
 	border-radius: var(--radius);
+}
+
+textarea {
+	min-height: 6rem;
+	resize: vertical;
+	font-family: inherit;
 }
 
 input[type='checkbox'] {
@@ -150,4 +156,37 @@ fieldset {
 legend {
 	font-weight: 600;
 	padding: 0 0.4rem;
+}
+
+/* --- stampa: è così che si ottiene il PDF, senza librerie --- */
+@media print {
+	:root {
+		--bg: #ffffff;
+		--surface: #ffffff;
+		--text: #000000;
+		--muted: #333333;
+		--border: #999999;
+		--accent: #000000;
+	}
+
+	header,
+	.quick,
+	.filters,
+	.actions,
+	form {
+		display: none !important;
+	}
+
+	main {
+		max-width: none;
+		padding: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	table {
+		break-inside: avoid;
+	}
 }

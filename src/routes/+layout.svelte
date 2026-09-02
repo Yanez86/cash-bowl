@@ -22,6 +22,7 @@
 			<a href={resolve('/month')}>{t('nav.plan')}</a>
 			<a href={resolve('/expenses')}>{t('nav.expenses')}</a>
 			<a href={resolve('/drafts')}>{t('nav.drafts')}</a>
+			<a href={resolve('/reports')}>{t('nav.reports')}</a>
 			<a href={resolve('/categories')}>{t('nav.categories')}</a>
 			<a href={resolve('/profile')}>{t('nav.profile')}</a>
 			{#if data.user.is_admin}

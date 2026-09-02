@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 5 completata** (scontrini fotografati). Prossima: fase 6.
+Stato attuale: **fase 6 completata** (report, chiusura del mese, CSV e PDF). Prossima: fase 7.
 
 ---
 
@@ -181,18 +181,26 @@ spesa il file sparisce dal disco. 57 test verdi.
 
 ## Fase 6 — Report
 
-- [ ] Bilancio mensile kakebo: previsto contro reale, risparmiato contro obiettivo
-- [ ] Rituale di fine mese con le quattro domande kakebo e le risposte salvate
-- [ ] Spese per categoria in un periodo scelto (grafico + tabella equivalente)
-- [ ] Andamento nel tempo: confronto tra mesi e tra anni
-- [ ] Filtri configurabili: periodo, categorie, utente, famiglia/privato
-- [ ] Le bozze sono escluse dai report, ma segnalate come "N voci non conteggiate"
-- [ ] Export CSV
-- [ ] Export PDF tramite stampa del browser, con foglio di stile dedicato
+- [x] Bilancio mensile kakebo: previsto contro reale, risparmiato contro obiettivo
+- [x] Rituale di fine mese con le quattro domande kakebo: alle prime tre risponde
+      l'applicazione, la quarta la scrive la famiglia e resta salvata
+- [x] Spese per categoria in un periodo scelto
+- [x] Spese per sotto-categoria (le prime quindici)
+- [x] Andamento nel tempo: mese per mese e anno per anno
+- [x] Grafici a barre che **sono** la loro tabella: stessa struttura, stessi
+      numeri, niente affidato al solo colore
+- [x] Filtri configurabili: periodo, categoria, persona, famiglia/privato
+- [x] Le bozze sono escluse dai report, ma segnalate come "N voci non conteggiate"
+- [x] Export CSV, con le celle disinnescate contro le formule di Excel
+- [x] Export PDF tramite stampa del browser, con foglio di stile dedicato
+- [x] Test: il report non mostra mai le spese private di un altro, nemmeno
+      chiedendole apposta con il filtro
 
 **Fatta quando:** a fine mese capisci in trenta secondi come è andata.
-
----
+**Verificato:** Davide vede 75,50 € (famiglia più le sue private), Anna 45,50 €;
+il filtro "solo private" mostra 0 ad Anna; la bozza è segnalata e non conteggiata;
+il CSV di Anna non contiene la riga privata di Davide; una nota scritta
+`=cmd|' /c calc'!A1` esce dal CSV disinnescata. 67 test verdi.
 
 ## Fase 7 — Backup e manutenzione
 

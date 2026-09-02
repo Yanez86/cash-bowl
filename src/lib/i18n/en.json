@@ -13,7 +13,8 @@
 		"profile": "Profile",
 		"users": "Users",
 		"logout": "Sign out",
-		"menu": "Menu"
+		"menu": "Menu",
+		"reports": "Reports"
 	},
 	"common": {
 		"save": "Save",
@@ -259,5 +260,45 @@
 		"newAlt": "Preview of the photo you are about to save",
 		"openFull": "Open the photo full screen",
 		"attached": "with photo"
+	},
+	"reports": {
+		"title": "Reports",
+		"from": "From month",
+		"to": "To month",
+		"allCategories": "All categories",
+		"everyone": "Everyone",
+		"visibility": "Visibility",
+		"all": "Everything",
+		"family": "Shared",
+		"private": "Private",
+		"apply": "Update the report",
+		"spentInRange": "{amount} spent from {from} to {to}",
+		"draftsExcluded": {
+			"one": "There is {count} draft in this period, not counted.",
+			"other": "There are {count} drafts in this period, not counted."
+		},
+		"downloadCsv": "Download as CSV (for Excel)",
+		"print": "Print or save as PDF",
+		"printHint": "In the print dialog choose “Save as PDF”.",
+		"empty": "No expenses in this period.",
+		"byCategory": "By kakebo category",
+		"bySubCategory": "By sub-category",
+		"byMonth": "Month by month",
+		"byYear": "Year by year",
+		"month": "Month",
+		"year": "Year"
+	},
+	"monthEnd": {
+		"title": "Closing the month",
+		"intro": "The four kakebo questions. The app answers the first three; the last one is the one that matters, and you write it.",
+		"q1": "How much did you have available?",
+		"q2": "How much did you want to set aside?",
+		"q3": "How much did you spend?",
+		"q4": "How much did you actually set aside?",
+		"q5": "How can you do better next month?",
+		"goalReached": "goal reached",
+		"goalMissed": "{amount} short of the goal",
+		"submit": "Save the reflection",
+		"saved": "Reflection saved."
 	}
 }

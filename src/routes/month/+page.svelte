@@ -56,6 +56,42 @@
 </form>
 <p>{t('plan.availableIs', { amount: euro(data.summary.available) })}</p>
 
+<section class="closing">
+	<h2>{t('monthEnd.title')}</h2>
+	<p>{t('monthEnd.intro')}</p>
+
+	<ol class="questions">
+		<li>
+			{t('monthEnd.q1')}
+			<strong>{euro(data.summary.income - data.summary.fixed)}</strong>
+		</li>
+		<li>{t('monthEnd.q2')} <strong>{euro(data.summary.goal)}</strong></li>
+		<li>{t('monthEnd.q3')} <strong>{euro(data.summary.spent)}</strong></li>
+		<li>
+			{t('monthEnd.q4')}
+			<strong class:good={data.summary.saved >= data.summary.goal}>
+				{euro(data.summary.saved)}
+			</strong>
+			{#if data.summary.goal > 0}
+				<span class="hint">
+					{data.summary.saved >= data.summary.goal
+						? t('monthEnd.goalReached')
+						: t('monthEnd.goalMissed', { amount: euro(data.summary.goal - data.summary.saved) })}
+				</span>
+			{/if}
+		</li>
+	</ol>
+
+	{#if form?.reflectionSaved}<p class="notice" role="status">{t('monthEnd.saved')}</p>{/if}
+	<form method="post" action="?/reflection">
+		<label for="reflection">{t('monthEnd.q5')}</label>
+		<textarea id="reflection" name="reflection" rows="4" maxlength="2000"
+			>{data.reflection}</textarea
+		>
+		<p><button type="submit">{t('monthEnd.submit')}</button></p>
+	</form>
+</section>
+
 {#each sections as section (section.id)}
 	<h2>{section.title}</h2>
 	{#if section.rows.length === 0}
@@ -115,3 +151,22 @@
 		<p><button type="submit">{section.submit}</button></p>
 	</form>
 {/each}
+
+<style>
+	.closing {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 0.5rem 1rem 1rem;
+		margin-top: 2rem;
+	}
+	.questions {
+		padding-left: 1.2rem;
+	}
+	.questions li {
+		margin-bottom: 0.4rem;
+	}
+	.good {
+		color: var(--accent);
+	}
+</style>
