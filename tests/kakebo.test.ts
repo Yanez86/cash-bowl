@@ -49,6 +49,7 @@ const entry = (over: Partial<EntryInput> = {}): EntryInput => ({
 	categoryId: null,
 	note: null,
 	visibility: 'family',
+	receiptFile: null,
 	...over
 });
 
@@ -138,6 +139,24 @@ test('nessuno modifica o cancella le spese private di un altro', async () => {
 	assert.equal(getEntry(db, privata, anna)?.amount_cents, 7000, 'deve essere rimasta intatta');
 
 	assert.equal(deleteEntry(db, privata, anna), true);
+});
+
+test('la foto di una spesa privata non è raggiungibile da un altro', async () => {
+	const { db, anna, bruno, survival } = await scenario();
+	const id = createEntry(
+		db,
+		entry({
+			categoryId: survival,
+			visibility: 'private',
+			receiptFile: '4d6f4a1e-0000-4000-8000-000000000000.jpg'
+		}),
+		anna
+	);
+
+	// La rotta /receipts/[id] parte da qui: se la voce non si vede, non c'è
+	// nessun percorso da cui arrivare al file.
+	assert.equal(getEntry(db, id, anna)?.receipt_file, '4d6f4a1e-0000-4000-8000-000000000000.jpg');
+	assert.equal(getEntry(db, id, bruno), null);
 });
 
 test('le spese di un altro mese restano fuori', async () => {

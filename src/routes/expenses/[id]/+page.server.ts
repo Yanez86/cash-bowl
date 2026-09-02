@@ -1,8 +1,10 @@
 import { error, redirect } from '@sveltejs/kit';
-import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
 import { exists, selectable } from '$lib/server/categories';
 import { readEntry } from '$lib/server/entry-form';
+import { refuse } from '$lib/server/problem';
+import { readReceipt } from '$lib/server/receipt-upload';
+import { deleteReceipt } from '$lib/server/receipts';
 import { amountForInput } from '$lib/money';
 import { deleteEntry, getEntry, today, updateEntry } from '$lib/server/kakebo';
 import type { Actions, PageServerLoad } from './$types';
@@ -33,6 +35,10 @@ export const load: PageServerLoad = ({ locals, params }) => {
 export const actions: Actions = {
 	save: async ({ request, locals, params }) => {
 		const id = entryId(params);
+		const viewer = locals.user!.id;
+		const current = getEntry(db(), id, viewer);
+		if (!current) error(404, 'errors.entryNotFound');
+
 		const form = await request.formData();
 		const parsed = readEntry(form, 'expense');
 		if (!parsed.ok) return refuse(400, parsed.problem.key, parsed.problem.vars);
@@ -40,14 +46,32 @@ export const actions: Actions = {
 		if (parsed.input.categoryId !== null && !exists(db(), parsed.input.categoryId)) {
 			return refuse(400, 'errors.invalidCategory');
 		}
-		if (!updateEntry(db(), id, parsed.input, locals.user!.id)) {
+
+		const upload = await readReceipt(form);
+		if (!upload.ok) return refuse(400, upload.key);
+
+		// Nessuna foto inviata e nessuna rimozione: resta quella che c'era.
+		const receiptFile = upload.removed ? null : (upload.file ?? current.receipt_file);
+
+		if (!updateEntry(db(), id, { ...parsed.input, receiptFile }, viewer)) {
+			// La modifica non è andata: la foto appena caricata non serve a nessuno.
+			deleteReceipt(upload.file);
 			error(404, 'errors.entryNotFound');
 		}
+
+		// Solo ora si butta via la vecchia: prima il dato, poi il file.
+		if (receiptFile !== current.receipt_file) deleteReceipt(current.receipt_file);
 		return { saved: true };
 	},
 
 	remove: ({ locals, params }) => {
-		if (!deleteEntry(db(), entryId(params), locals.user!.id)) error(404, 'errors.entryNotFound');
+		const id = entryId(params);
+		const viewer = locals.user!.id;
+		const current = getEntry(db(), id, viewer);
+		if (!current || !deleteEntry(db(), id, viewer)) error(404, 'errors.entryNotFound');
+
+		// Cancellare la voce cancella anche la foto: niente file orfani sul disco.
+		deleteReceipt(current.receipt_file);
 		redirect(303, '/expenses');
 	}
 };

@@ -242,6 +242,22 @@
 		"cannotMove": "It cannot move any further.",
 		"adminOnly": "This page is for administrators only.",
 		"pageTitle": "Something went wrong",
-		"backHome": "Back to the main screen"
+		"backHome": "Back to the main screen",
+		"receiptEmpty": "The file is empty.",
+		"receiptTooBig": "The photo is too big: the limit is 4 MB.",
+		"receiptNotAnImage": "This file is not a JPEG or PNG photo."
+	},
+	"receipt": {
+		"legend": "Receipt",
+		"add": "Photograph the receipt",
+		"replace": "Replace the photo",
+		"hint": "(optional: the phone shrinks the photo first)",
+		"remove": "Remove the photo",
+		"working": "Preparing the photo…",
+		"resizeFailed": "The photo could not be shrunk: it will be sent as it is.",
+		"existingAlt": "Receipt attached to this expense",
+		"newAlt": "Preview of the photo you are about to save",
+		"openFull": "Open the photo full screen",
+		"attached": "with photo"
 	}
 }

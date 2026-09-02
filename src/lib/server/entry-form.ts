@@ -50,7 +50,9 @@ export function readEntry(form: FormData, kind: Kind): Parsed {
 			occurredOn,
 			categoryId,
 			note: note || null,
-			visibility: isPrivate ? 'private' : 'family'
+			visibility: isPrivate ? 'private' : 'family',
+			// La foto la decide la rotta: qui si legge solo il modulo.
+			receiptFile: null
 		}
 	};
 }

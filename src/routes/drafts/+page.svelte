@@ -33,7 +33,12 @@
 					<tr>
 						<td>{draft.occurred_on}</td>
 						<td>{euro(draft.amount_cents)}</td>
-						<td>{draft.note ?? t('common.none')}</td>
+						<td>
+							{draft.note ?? t('common.none')}
+							{#if draft.receipt_file}
+								<span class="hint">📷 {t('receipt.attached')}</span>
+							{/if}
+						</td>
 						<td>{draft.author}</td>
 						<td>
 							<a href={resolve('/expenses/[id]', { id: String(draft.id) })}>

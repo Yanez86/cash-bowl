@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 4 completata** (due lingue, temi, telefono, PWA). Prossima: fase 5.
+Stato attuale: **fase 5 completata** (scontrini fotografati). Prossima: fase 6.
 
 ---
 
@@ -148,30 +148,36 @@ predefiniti; manifest, service worker e icone serviti correttamente.
 
 ## Fase 5 — Scontrini fotografati
 
-- [ ] Scatto diretto dal telefono (`<input type="file" accept="image/*" capture>`)
-      e, in alternativa, scelta di un'immagine già in galleria
-- [ ] **Rimpicciolimento nel browser prima dell'invio**: lato lungo ~1600 px,
-      JPEG, obiettivo 200–400 KB
-- [ ] **Una sola foto per spesa** (la seconda sostituisce la prima, con conferma)
-- [ ] Controlli sul server: dimensione massima, tipo verificato dai byte reali
-      del file e non dal nome, solo JPEG/PNG/WebP
-- [ ] Rimozione dei dati nascosti nella foto (**posizione GPS**, modello del
-      telefono) prima del salvataggio
-- [ ] Salvataggio come file in `data/receipts/`, nome casuale, **fuori** dalla
-      cartella pubblica del sito
-- [ ] La foto si scarica solo attraverso un indirizzo che verifica chi sei:
-      una foto di una spesa privata altrui non deve mai essere raggiungibile
-- [ ] Anteprima nella scheda della spesa, con ingrandimento a schermo intero
-- [ ] Eliminazione della foto; cancellando la spesa si cancella anche il file
-- [ ] Le foto rientrano nell'export completo dei dati e nel ripristino
-- [ ] Pagina di stato: spazio occupato dagli scontrini
-- [ ] Test: l'utente A non scarica la foto di una spesa privata dell'utente B
-- [ ] Test: un file non-immagine rinominato in `.jpg` viene rifiutato
+- [x] Scatto diretto dal telefono e, in alternativa, scelta di un'immagine già
+      in galleria (un solo campo: lo scegli tu al momento)
+- [x] **Rimpicciolimento nel browser prima dell'invio**: lato lungo ~1600 px,
+      JPEG, orientamento della foto rispettato
+- [x] Funziona anche senza JavaScript: parte il file originale e fa tutto il server
+- [x] **Una sola foto per spesa** (la nuova sostituisce la vecchia)
+- [x] Controlli sul server: dimensione massima 4 MB, tipo verificato dai byte
+      reali del file e non dal nome, solo JPEG e PNG, mai SVG
+- [x] Rimozione dei dati nascosti (**posizione GPS**, modello del telefono,
+      commenti) prima del salvataggio
+- [x] Salvataggio come file in `data/receipts/`, nome casuale, permessi 600,
+      **fuori** dalla cartella pubblica del sito
+- [x] La foto si scarica solo attraverso `/receipts/<voce>`, che verifica chi sei
+- [x] Anteprima nella scheda della spesa, con ingrandimento a schermo intero
+- [x] Eliminazione della foto; cancellando la spesa si cancella anche il file
+- [x] Indicatore 📷 negli elenchi di spese e bozze
+- [x] Test: l'utente A non scarica la foto di una spesa privata dell'utente B
+- [x] Test: un file non-immagine rinominato in `.jpg` viene rifiutato
+- [ ] Le foto nell'export completo dei dati e nel ripristino: fase 7
+- [ ] Pagina di stato con lo spazio occupato dagli scontrini: fase 7
+      (la funzione che lo calcola è già scritta)
 
 **Fatta quando:** alla cassa fotografi lo scontrino, esce una bozza, e la sera la
 completi dal divano.
-
----
+**Verificato:** foto con dentro «GPSLatitude 45.4642» e «iPhone 15» caricata e
+salvata **senza** quei dati; proprietario 200, altro utente 404, senza accesso
+rimandato al login; intestazioni `nosniff`, `Content-Security-Policy` e
+`Content-Disposition: inline` presenti; testo rinominato `.jpg` rifiutato; foto
+da 5 MB rifiutata; nessuna voce creata nei due casi rifiutati; cancellando la
+spesa il file sparisce dal disco. 57 test verdi.
 
 ## Fase 6 — Report
 
@@ -232,6 +238,9 @@ Da qui non si scrive nulla senza una decisione esplicita.
 
 - Spese ricorrenti create automaticamente ogni mese
 - Lettura automatica dell'importo dallo scontrino fotografato (OCR)
+- Raddrizzare le foto caricate senza JavaScript: oggi i dati di orientamento
+  vengono tolti insieme agli altri metadati, quindi una foto scattata di lato
+  può restare di lato. Col JavaScript attivo (il caso normale) non succede.
 - Più foto per la stessa spesa (fatture su più pagine)
 - Obiettivi di risparmio a lungo termine (vacanza, fondo emergenze)
 - Importazione da CSV di un altro programma

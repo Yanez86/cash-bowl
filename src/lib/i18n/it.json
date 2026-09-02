@@ -242,6 +242,22 @@
 		"cannotMove": "Non si può spostare oltre.",
 		"adminOnly": "Questa pagina è riservata agli amministratori.",
 		"pageTitle": "Qualcosa non va",
-		"backHome": "Torna alla schermata principale"
+		"backHome": "Torna alla schermata principale",
+		"receiptEmpty": "Il file è vuoto.",
+		"receiptTooBig": "La foto è troppo grande: il limite è 4 MB.",
+		"receiptNotAnImage": "Questo file non è una foto JPEG o PNG."
+	},
+	"receipt": {
+		"legend": "Scontrino",
+		"add": "Fotografa lo scontrino",
+		"replace": "Sostituisci la foto",
+		"hint": "(facoltativo: la foto viene rimpicciolita dal telefono)",
+		"remove": "Togli la foto",
+		"working": "Preparo la foto…",
+		"resizeFailed": "Non sono riuscito a rimpicciolire la foto: verrà inviata così com'è.",
+		"existingAlt": "Scontrino allegato a questa spesa",
+		"newAlt": "Anteprima della foto che stai per salvare",
+		"openFull": "Apri la foto a schermo intero",
+		"attached": "con foto"
 	}
 }

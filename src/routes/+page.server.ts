@@ -3,6 +3,7 @@ import { db } from '$lib/server/db';
 import { currency } from '$lib/server/settings';
 import { exists, selectable } from '$lib/server/categories';
 import { readEntry } from '$lib/server/entry-form';
+import { readReceipt } from '$lib/server/receipt-upload';
 import {
 	createEntry,
 	currentMonth,
@@ -40,7 +41,10 @@ export const actions: Actions = {
 			return refuse(400, 'errors.invalidCategory');
 		}
 
-		createEntry(db(), parsed.input, locals.user!.id);
+		const upload = await readReceipt(form);
+		if (!upload.ok) return refuse(400, upload.key);
+
+		createEntry(db(), { ...parsed.input, receiptFile: upload.file }, locals.user!.id);
 		return { saved: parsed.input.status };
 	}
 };

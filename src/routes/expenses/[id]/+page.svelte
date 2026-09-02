@@ -17,13 +17,15 @@
 {#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
 {#if form?.saved}<p class="notice" role="status">{t('entryEdit.saved')}</p>{/if}
 
-<form method="post" action="?/save">
+<form method="post" action="?/save" enctype="multipart/form-data">
 	<EntryForm
 		locale={data.locale}
 		categories={data.categories}
 		entry={data.entry}
 		defaultDate={data.today}
 		showDraftButton={isDraft}
+		entryId={data.entry.id}
+		receipt={data.entry.receipt_file}
 	/>
 </form>
 

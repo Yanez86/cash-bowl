@@ -71,7 +71,7 @@
 		{t('dashboard.savedDraft')} <a href={resolve('/drafts')}>{t('dashboard.draftsLink')}</a>
 	</p>
 {/if}
-<form method="post" action="?/add">
+<form method="post" action="?/add" enctype="multipart/form-data">
 	<EntryForm locale={data.locale} categories={data.categories} defaultDate={data.today} />
 </form>
 

@@ -2,6 +2,7 @@
 	// Il modulo di una spesa. Serve sia per l'inserimento al volo sia per la
 	// modifica: un solo posto in cui cambiare i campi.
 	import { categoryLabel } from './CategoryLabel';
+	import ReceiptField from './ReceiptField.svelte';
 	import { translator, type Locale } from './i18n';
 	import type { Choice } from './server/categories';
 	import { today } from './dates';
@@ -11,10 +12,14 @@
 		categories,
 		entry = null,
 		defaultDate = today(),
-		showDraftButton = true
+		showDraftButton = true,
+		entryId = null,
+		receipt = null
 	}: {
 		locale: Locale;
 		categories: Choice[];
+		entryId?: number | null;
+		receipt?: string | null;
 		entry?: {
 			amount?: string;
 			occurred_on?: string;
@@ -74,6 +79,8 @@
 		{t('entry.privateLabel')}
 	</label>
 </p>
+
+<ReceiptField {locale} existing={receipt} {entryId} />
 
 <p class="buttons">
 	<button type="submit" name="status" value="complete">{t('common.save')}</button>

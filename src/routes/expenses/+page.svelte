@@ -45,6 +45,9 @@
 							{#if entry.visibility === 'private'}
 								<span class="hint">{t('entry.private')}</span>
 							{/if}
+							{#if entry.receipt_file}
+								<span class="hint">📷 {t('receipt.attached')}</span>
+							{/if}
 						</td>
 						<td>{entry.author}</td>
 						<td>{euro(entry.amount_cents ?? 0)}</td>
