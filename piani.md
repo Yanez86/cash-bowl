@@ -6,28 +6,28 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 0 completata, nessuna riga di codice scritta.**
+Stato attuale: **fase 1 completata** (scheletro tecnico funzionante). Prossima: fase 2.
 
 ---
 
 ## Decisioni già prese
 
-| Tema | Scelta |
-|---|---|
-| Installazione | Docker + docker-compose, un comando |
-| Utenti | login separati; ogni spesa è "di famiglia" (default) o "privata" |
-| Registrazione | il primo utente è admin, poi crea lui gli altri |
-| Metodo | kakebo: 4 categorie ufficiali + sotto-categorie personalizzabili |
-| Telefono | PWA installabile sulla schermata home |
-| Licenza | AGPL-3.0 |
-| Backup | automatico giornaliero in una cartella locale, sincronizzata dall'utente |
-| Valuta | una sola per installazione, scegliibile |
-| Server | in casa, raggiungibile da fuori → HTTPS obbligatorio |
-| Tecnologia | TypeScript + SvelteKit + SQLite |
-| Temi | chiaro/scuro/auto + palette d'accento, per utente |
-| Lingue | italiano e inglese |
-| Bozze | spesa salvabile al volo con **la sola foto oppure il solo importo**; fuori dai conti finché non è completata |
-| Scontrini | **una** foto per spesa, rimpicciolita dal telefono prima dell'invio |
+| Tema          | Scelta                                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| Installazione | Docker + docker-compose, un comando                                                                          |
+| Utenti        | login separati; ogni spesa è "di famiglia" (default) o "privata"                                             |
+| Registrazione | il primo utente è admin, poi crea lui gli altri                                                              |
+| Metodo        | kakebo: 4 categorie ufficiali + sotto-categorie personalizzabili                                             |
+| Telefono      | PWA installabile sulla schermata home                                                                        |
+| Licenza       | AGPL-3.0                                                                                                     |
+| Backup        | automatico giornaliero in una cartella locale, sincronizzata dall'utente                                     |
+| Valuta        | una sola per installazione, scegliibile                                                                      |
+| Server        | in casa, raggiungibile da fuori → HTTPS obbligatorio                                                         |
+| Tecnologia    | TypeScript + SvelteKit + SQLite                                                                              |
+| Temi          | chiaro/scuro/auto + palette d'accento, per utente                                                            |
+| Lingue        | italiano e inglese                                                                                           |
+| Bozze         | spesa salvabile al volo con **la sola foto oppure il solo importo**; fuori dai conti finché non è completata |
+| Scontrini     | **una** foto per spesa, rimpicciolita dal telefono prima dell'invio                                          |
 
 ---
 
@@ -47,15 +47,21 @@ Stato attuale: **fase 0 completata, nessuna riga di codice scritta.**
 
 Obiettivo: una pagina bianca che parte con un comando e si aggiorna da sola.
 
-- [ ] Progetto SvelteKit + TypeScript `strict`, Prettier, ESLint
-- [ ] Connessione a SQLite e sistema di migrazioni numerate
-- [ ] `docker-compose.yml`: app + Caddy (HTTPS automatico) + volume dei dati
-- [ ] Variabili d'ambiente e file `.env.example` documentato
-- [ ] Pipeline CI: build, test, `npm audit`
-- [ ] Prima migrazione: tabelle `users`, `sessions`, `settings`
+- [x] Progetto SvelteKit + TypeScript `strict`, Prettier, ESLint
+- [x] Connessione a SQLite e sistema di migrazioni numerate (`src/lib/server/db.ts`)
+- [x] `docker-compose.yml`: app + Caddy (HTTPS automatico) + volume dei dati
+- [x] Variabili d'ambiente e file `.env.example` documentato
+- [x] Pipeline CI: build, test, `npm audit`
+- [x] Prima migrazione: tabelle `users`, `sessions`, `settings`
+- [ ] **Da provare davvero su Docker**: Docker non è installato sulla macchina di
+      sviluppo, quindi `Dockerfile` e `docker-compose.yml` sono scritti ma mai
+      eseguiti. Verificarli prima di considerare la fase chiusa del tutto.
 
 **Fatta quando:** `docker compose up` mostra una pagina e i dati sopravvivono al
 riavvio.
+**Verificato finora:** applicazione compilata, avviata, pagina servita, database
+creato e conservato al riavvio; 3 test automatici verdi; controllo dei tipi,
+formattazione e lint puliti.
 
 ---
 
@@ -218,13 +224,13 @@ Da qui non si scrive nulla senza una decisione esplicita.
 
 ## Registro delle decisioni
 
-| Data | Decisione | Motivo |
-|---|---|---|
-| 2026-09-02 | TypeScript invece di Python | scelta del proprietario, confermata dopo aver discusso i costi di manutenzione |
-| 2026-09-02 | Backup su cartella locale invece di caricamento diretto su cloud | evita di custodire password del cloud dentro l'app |
-| 2026-09-02 | Una sola valuta, scegliibile | evita tassi di cambio e chiamate a servizi esterni |
-| 2026-09-02 | Temi predefiniti, non personalizzati | copre il bisogno reale con poche righe di CSS |
-| 2026-09-02 | Bozze escluse dai totali, con avviso ben visibile | i numeri del kakebo devono restare affidabili |
-| 2026-09-02 | Bozza salvabile con la sola foto o il solo importo | l'inserimento al volo deve stare in due tocchi |
-| 2026-09-02 | Una foto per spesa, rimpicciolita nel browser | disco del server contenuto, caricamento veloce, nessuna libreria di immagini sul server |
-| 2026-09-02 | Rimozione dei dati GPS dalle foto | una foto di scontrino porta con sé il luogo in cui è stata scattata |
+| Data       | Decisione                                                        | Motivo                                                                                  |
+| ---------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 2026-09-02 | TypeScript invece di Python                                      | scelta del proprietario, confermata dopo aver discusso i costi di manutenzione          |
+| 2026-09-02 | Backup su cartella locale invece di caricamento diretto su cloud | evita di custodire password del cloud dentro l'app                                      |
+| 2026-09-02 | Una sola valuta, scegliibile                                     | evita tassi di cambio e chiamate a servizi esterni                                      |
+| 2026-09-02 | Temi predefiniti, non personalizzati                             | copre il bisogno reale con poche righe di CSS                                           |
+| 2026-09-02 | Bozze escluse dai totali, con avviso ben visibile                | i numeri del kakebo devono restare affidabili                                           |
+| 2026-09-02 | Bozza salvabile con la sola foto o il solo importo               | l'inserimento al volo deve stare in due tocchi                                          |
+| 2026-09-02 | Una foto per spesa, rimpicciolita nel browser                    | disco del server contenuto, caricamento veloce, nessuna libreria di immagini sul server |
+| 2026-09-02 | Rimozione dei dati GPS dalle foto                                | una foto di scontrino porta con sé il luogo in cui è stata scattata                     |

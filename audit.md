@@ -8,7 +8,7 @@ aperto, non un dettaglio.
 
 Legenda: `[ ]` da verificare · `[x]` verificato · `[!]` problema aperto
 
-Ultima revisione completa: *mai (progetto in fase di documentazione)*
+Ultima revisione completa: _mai (progetto in fase di documentazione)_
 
 ---
 

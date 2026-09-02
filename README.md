@@ -7,7 +7,7 @@ propria. Selfhosted, gratuita e libera.
 > repository contiene solo i documenti di progetto. Le istruzioni di
 > installazione qui sotto descrivono come funzionerà, non ancora come funziona.
 
-*[English version below](#english)*
+_[English version below](#english)_
 
 ---
 
@@ -19,7 +19,7 @@ propria. Selfhosted, gratuita e libera.
   Extra), a fine mese l'app ti mostra com'è andata e ti pone le quattro domande
   del metodo.
 - **Spese al volo**: alla cassa fotografi lo scontrino o scrivi solo la cifra e
-  salvi. Resta una *bozza* che completi con calma; le bozze non falsano i conti,
+  salvi. Resta una _bozza_ che completi con calma; le bozze non falsano i conti,
   ma l'app ti ricorda quante ne hai da sistemare.
 - **Foto degli scontrini** allegate alla spesa, rimpicciolite dal telefono e
   ripulite dai dati di posizione.
@@ -70,11 +70,11 @@ un backup.
 
 ## Documenti del progetto
 
-| File | Contenuto |
-|---|---|
-| [CLAUDE.md](CLAUDE.md) | regole di scrittura del codice |
-| [piani.md](piani.md) | cosa costruiamo e in che ordine |
-| [audit.md](audit.md) | liste di controllo su sicurezza e accessibilità |
+| File                   | Contenuto                                       |
+| ---------------------- | ----------------------------------------------- |
+| [CLAUDE.md](CLAUDE.md) | regole di scrittura del codice                  |
+| [piani.md](piani.md)   | cosa costruiamo e in che ordine                 |
+| [audit.md](audit.md)   | liste di controllo su sicurezza e accessibilità |
 
 ## Licenza
 
@@ -98,7 +98,7 @@ Self-hosted family expense tracking using the **kakebo** method. Free and open.
 - Kakebo cycle: set a savings goal at the start of the month, log spending into
   the four categories, review with the four kakebo questions at month end.
 - **Quick capture**: snap the receipt or type just the amount and save. It stays
-  a *draft* until you complete it; drafts never affect the totals.
+  a _draft_ until you complete it; drafts never affect the totals.
 - **Receipt photos**, resized on the phone and stripped of location metadata.
 - Multiple household users; each expense is either shared or private.
 - Configurable reports, CSV and PDF export, editable categories.

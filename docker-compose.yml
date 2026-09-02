@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    expose:
+      - '3000'
+
+  # Caddy gestisce l'HTTPS da solo: certificato gratuito e rinnovo automatico,
+  # se in .env metti un vero nome di dominio al posto di ":8080".
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - '8080:8080'
+      # Togli il commento a queste due righe quando usi un dominio vero:
+      # - '80:80'
+      # - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config:

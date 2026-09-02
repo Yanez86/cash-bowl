@@ -41,6 +41,7 @@ Ogni scelta tecnica si giudica su questo, non sull'eleganza.
 6. **Cancellare batte aggiungere.** Meno file, meno righe, meno dipendenze.
 
 ### Eccezioni: qui NON si semplifica mai
+
 - Validazione dei dati in arrivo dall'utente.
 - Sicurezza e controllo dei permessi.
 - Gestione degli errori che potrebbe far perdere dati.
@@ -51,17 +52,17 @@ Ogni scelta tecnica si giudica su questo, non sull'eleganza.
 
 ## 3. Stack tecnico (fissato, non si discute per singola PR)
 
-| Cosa | Scelta | Perché |
-|---|---|---|
-| Linguaggio | TypeScript, `strict: true` | scelta del proprietario |
-| Framework | SvelteKit | un solo progetto fa sia le pagine sia il server |
-| Database | SQLite via `better-sqlite3` | un unico file, backup = copia file |
-| Query | SQL scritto a mano | niente ORM da imparare e mantenere |
-| Password | `crypto.scrypt` di Node | già nella libreria standard |
-| Stile | CSS con variabili native | niente framework CSS |
-| Grafici | SVG generato a mano; libreria solo se davvero necessaria | vedi §9 |
-| Runtime | Node LTS | — |
-| Distribuzione | Docker + docker-compose (app + Caddy per HTTPS) | un comando |
+| Cosa          | Scelta                                                   | Perché                                          |
+| ------------- | -------------------------------------------------------- | ----------------------------------------------- |
+| Linguaggio    | TypeScript, `strict: true`                               | scelta del proprietario                         |
+| Framework     | SvelteKit                                                | un solo progetto fa sia le pagine sia il server |
+| Database      | SQLite via `better-sqlite3`                              | un unico file, backup = copia file              |
+| Query         | SQL scritto a mano                                       | niente ORM da imparare e mantenere              |
+| Password      | `crypto.scrypt` di Node                                  | già nella libreria standard                     |
+| Stile         | CSS con variabili native                                 | niente framework CSS                            |
+| Grafici       | SVG generato a mano; libreria solo se davvero necessaria | vedi §9                                         |
+| Runtime       | Node LTS                                                 | —                                               |
+| Distribuzione | Docker + docker-compose (app + Caddy per HTTPS)          | un comando                                      |
 
 **Aggiungere una dipendenza richiede una motivazione scritta nella pull request**
 che spieghi perché non bastano libreria standard, piattaforma o venti righe di
@@ -85,6 +86,7 @@ docs/
 ```
 
 Regole:
+
 - Tutto ciò che sta in `src/lib/server/` **non deve mai** finire nel browser.
 - Nessuna cartella nuova senza motivo. Nessuna cartella "utils" generica: se un
   helper serve a una sola pagina, sta accanto a quella pagina.
@@ -162,7 +164,7 @@ provando a entrare.
 
 **Bozze.** Una spesa può essere salvata come bozza con **la sola foto oppure il
 solo importo**. Ne discende che nel database importo, categoria e visibilità
-sono *opzionali* finché lo stato è `draft`. Conseguenza da non dimenticare: ogni
+sono _opzionali_ finché lo stato è `draft`. Conseguenza da non dimenticare: ogni
 query che calcola totali, bilanci o report deve escludere le bozze in modo
 esplicito. Il posto giusto per farlo è la clausola `WHERE`, non un filtro a
 valle.
@@ -195,6 +197,7 @@ Checklist completa e verifiche periodiche: `audit.md`.
 ## 9. Interfaccia, temi e accessibilità
 
 ### Regole generali
+
 - Prima l'HTML semantico: `<button>` per le azioni, `<a>` per la navigazione,
   `<form>` per i dati. Mai `<div>` cliccabili.
 - Ogni campo ha una `<label>` collegata. Niente `placeholder` al posto
@@ -208,6 +211,7 @@ Checklist completa e verifiche periodiche: `audit.md`.
   bianco non è uno stato.
 
 ### Temi
+
 - **Tutti i colori sono variabili CSS** definite in un unico file
   (`src/lib/themes.css`). Nessun colore scritto a mano nei componenti: mai
   `#3b7d5a` dentro una pagina, sempre `var(--accent)`.
@@ -228,6 +232,7 @@ Checklist completa e verifiche periodiche: `audit.md`.
   finché non viene richiesto: le palette predefinite coprono il bisogno reale.
 
 ### Grafici
+
 - Prima si prova con SVG generato a mano: un grafico a barre sono trenta righe.
   Una libreria si introduce solo quando serve davvero (es. molti punti dati) e
   con la motivazione scritta.
