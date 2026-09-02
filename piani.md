@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 6 completata** (report, chiusura del mese, CSV e PDF). Prossima: fase 7.
+Stato attuale: **fase 7 completata** (backup, export, ripristino provato). Prossima: fase 8.
 
 ---
 
@@ -204,18 +204,30 @@ il CSV di Anna non contiene la riga privata di Davide; una nota scritta
 
 ## Fase 7 — Backup e manutenzione
 
-- [ ] Backup automatico giornaliero del database in `data/backups/`
-- [ ] Rotazione: conserva le ultime N copie, cancella le più vecchie
-- [ ] Le foto degli scontrini sono già file: si sincronizzano come cartella,
+- [x] Backup automatico giornaliero del database in `data/backups/`
+      (parte all'avvio e poi si ricontrolla ogni ora)
+- [x] Rotazione: conserva le ultime N copie (`BACKUP_KEEP`, di serie 14) e
+      **non tocca** le copie fatte prima di una migrazione
+- [x] Le foto degli scontrini sono già file: si sincronizzano come cartella,
       non si duplicano ogni giorno
-- [ ] Copia di sicurezza automatica prima di ogni migrazione
-- [ ] Export completo dei dati (JSON + foto) e reimportazione
-- [ ] Procedura di ripristino scritta e **provata almeno una volta**
-- [ ] Pagina di stato: versione, spazio occupato, data dell'ultimo backup
+- [x] Copia di sicurezza automatica prima di ogni migrazione (dalla fase 1)
+- [x] Copia di sicurezza automatica anche prima di una reimportazione
+- [x] Export completo dei dati in JSON e reimportazione, tutto o niente
+- [x] Download del database in un file solo, coerente, fatto al momento
+- [x] **Procedura di ripristino scritta e provata davvero** (nel README)
+- [x] Pagina di stato: versione, spazio occupato, ultima copia, migrazioni applicate
+- [ ] Le foto dentro il file di export: restano fuori di proposito. Sono già
+      file dentro `data/receipts/` e si copiano come cartella; metterle nel JSON
+      vorrebbe dire scrivere un compressore per rifare un lavoro che la cartella
+      fa già. Nel README è scritto che vanno copiate a parte.
 
 **Fatta quando:** hai cancellato il database di prova e l'hai ripristinato.
-
----
+**Verificato:** database **e** foto cancellati del tutto, poi rimessi: sono
+tornati accesso con la vecchia password, importi (45,50 € spesi), riflessione
+del mese e foto dello scontrino (200 image/jpeg). Provata anche la seconda
+strada: su un'installazione nuova, caricato il file JSON, l'utente provvisorio
+sparisce e torna Davide con la sua password. Un file rotto viene rifiutato e i
+dati restano intatti. 74 test verdi.
 
 ## Fase 8 — Distribuzione
 

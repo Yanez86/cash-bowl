@@ -14,7 +14,8 @@
 		"users": "Utenti",
 		"logout": "Esci",
 		"menu": "Menù",
-		"reports": "Report"
+		"reports": "Report",
+		"settings": "Manutenzione"
 	},
 	"common": {
 		"save": "Salva",
@@ -246,7 +247,13 @@
 		"backHome": "Torna alla schermata principale",
 		"receiptEmpty": "Il file è vuoto.",
 		"receiptTooBig": "La foto è troppo grande: il limite è 4 MB.",
-		"receiptNotAnImage": "Questo file non è una foto JPEG o PNG."
+		"receiptNotAnImage": "Questo file non è una foto JPEG o PNG.",
+		"importNotAFile": "Questo non sembra un file esportato da cash-bowl.",
+		"importWrongFormat": "Il file è di una versione diversa e non si può reimportare.",
+		"importMissingTable": "Nel file manca una parte dei dati.",
+		"importNoUsers": "Nel file non c'è nessun utente: nessuno potrebbe più entrare.",
+		"importFailed": "Reimportazione non riuscita: i dati sono rimasti com'erano.",
+		"importTooBig": "Il file è troppo grande."
 	},
 	"receipt": {
 		"legend": "Scontrino",
@@ -300,5 +307,44 @@
 		"goalMissed": "mancano {amount} all'obiettivo",
 		"submit": "Salva la riflessione",
 		"saved": "Riflessione salvata."
+	},
+	"settings": {
+		"title": "Manutenzione",
+		"stateTitle": "Stato",
+		"version": "Versione",
+		"users": "Utenti",
+		"entries": "Voci registrate",
+		"receipts": "Scontrini",
+		"database": "Database",
+		"lastBackup": "Ultima copia di sicurezza",
+		"never": "mai",
+		"backupTitle": "Copie di sicurezza",
+		"backupIntro": "Il programma fa una copia al giorno da solo e tiene le ultime {keep}. Le trovi in {path}: se quella cartella è dentro una cartella sincronizzata (Drive, Dropbox, Nextcloud), la copia esce di casa da sola.",
+		"receiptsNote": "Le foto degli scontrini sono file normali in {path}: si sincronizzano come cartella, senza essere duplicate ogni giorno.",
+		"backupNow": "Fai una copia adesso",
+		"rotateNow": "Elimina le copie più vecchie",
+		"backupDone": "Copia scritta: {file}",
+		"rotated": {
+			"one": "Eliminata {count} copia vecchia.",
+			"other": "Eliminate {count} copie vecchie."
+		},
+		"backupList": "Copie presenti, dalla più recente",
+		"file": "File",
+		"when": "Quando",
+		"size": "Dimensione",
+		"downloadTitle": "Scarica i dati",
+		"downloadDatabase": "Scarica il database",
+		"downloadDatabaseHint": "Il file da rimettere al suo posto per tornare indietro. Non contiene le foto.",
+		"downloadJson": "Scarica tutto in formato leggibile (JSON)",
+		"downloadJsonHint": "Si può aprire con un editor di testo e si può reimportare qui sotto.",
+		"restoreTitle": "Reimporta i dati",
+		"restoreWarning": "Attenzione: reimportare SOSTITUISCE tutto quello che c'è adesso. Prima di procedere il programma fa da solo una copia di sicurezza, e alla fine tutti dovranno rifare l'accesso. Le foto degli scontrini non sono nel file: vanno rimesse copiando la cartella.",
+		"restoreFile": "File JSON esportato da cash-bowl",
+		"restoreSubmit": "Sostituisci i dati con questo file",
+		"imported": {
+			"one": "Reimportati i dati: {count} voce.",
+			"other": "Reimportati i dati: {count} voci."
+		},
+		"migrationsTitle": "Migrazioni applicate"
 	}
 }

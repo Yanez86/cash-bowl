@@ -14,7 +14,8 @@
 		"users": "Users",
 		"logout": "Sign out",
 		"menu": "Menu",
-		"reports": "Reports"
+		"reports": "Reports",
+		"settings": "Maintenance"
 	},
 	"common": {
 		"save": "Save",
@@ -246,7 +247,13 @@
 		"backHome": "Back to the main screen",
 		"receiptEmpty": "The file is empty.",
 		"receiptTooBig": "The photo is too big: the limit is 4 MB.",
-		"receiptNotAnImage": "This file is not a JPEG or PNG photo."
+		"receiptNotAnImage": "This file is not a JPEG or PNG photo.",
+		"importNotAFile": "This does not look like a file exported from cash-bowl.",
+		"importWrongFormat": "The file is from a different version and cannot be imported.",
+		"importMissingTable": "Part of the data is missing from the file.",
+		"importNoUsers": "There are no users in the file: nobody would be able to sign in.",
+		"importFailed": "Import failed: the data was left as it was.",
+		"importTooBig": "The file is too big."
 	},
 	"receipt": {
 		"legend": "Receipt",
@@ -300,5 +307,44 @@
 		"goalMissed": "{amount} short of the goal",
 		"submit": "Save the reflection",
 		"saved": "Reflection saved."
+	},
+	"settings": {
+		"title": "Maintenance",
+		"stateTitle": "Status",
+		"version": "Version",
+		"users": "Users",
+		"entries": "Recorded entries",
+		"receipts": "Receipts",
+		"database": "Database",
+		"lastBackup": "Last backup",
+		"never": "never",
+		"backupTitle": "Backups",
+		"backupIntro": "The program makes one copy a day on its own and keeps the last {keep}. You will find them in {path}: if that folder sits inside a synced folder (Drive, Dropbox, Nextcloud), the copy leaves the house by itself.",
+		"receiptsNote": "Receipt photos are ordinary files in {path}: they sync as a folder, without being duplicated every day.",
+		"backupNow": "Make a copy now",
+		"rotateNow": "Delete the oldest copies",
+		"backupDone": "Copy written: {file}",
+		"rotated": {
+			"one": "Deleted {count} old copy.",
+			"other": "Deleted {count} old copies."
+		},
+		"backupList": "Copies on disk, newest first",
+		"file": "File",
+		"when": "When",
+		"size": "Size",
+		"downloadTitle": "Download the data",
+		"downloadDatabase": "Download the database",
+		"downloadDatabaseHint": "The file to put back in place to go back. It does not contain the photos.",
+		"downloadJson": "Download everything in readable form (JSON)",
+		"downloadJsonHint": "It opens in a text editor and can be imported back below.",
+		"restoreTitle": "Import the data back",
+		"restoreWarning": "Careful: importing REPLACES everything there is now. The program makes a backup first, and afterwards everyone will have to sign in again. Receipt photos are not in the file: put them back by copying the folder.",
+		"restoreFile": "JSON file exported from cash-bowl",
+		"restoreSubmit": "Replace the data with this file",
+		"imported": {
+			"one": "Data imported: {count} entry.",
+			"other": "Data imported: {count} entries."
+		},
+		"migrationsTitle": "Applied migrations"
 	}
 }

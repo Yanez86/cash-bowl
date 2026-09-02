@@ -27,6 +27,7 @@
 			<a href={resolve('/profile')}>{t('nav.profile')}</a>
 			{#if data.user.is_admin}
 				<a href={resolve('/admin/users')}>{t('nav.users')}</a>
+				<a href={resolve('/admin/settings')}>{t('nav.settings')}</a>
 			{/if}
 			<form method="post" action="/logout">
 				<button type="submit" class="quiet">{t('nav.logout')}</button>

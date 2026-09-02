@@ -1,10 +1,12 @@
 // Chi sei, in che lingua ti parlo, e con che aspetto. Vale per ogni richiesta:
 // l'interfaccia non decide niente sui permessi. Vedi CLAUDE.md §8.
-import { redirect, type Handle } from '@sveltejs/kit';
+import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { SESSION_COOKIE, countUsers, readSession } from '$lib/server/auth';
 import { getSetting } from '$lib/server/settings';
 import { isLocale, localeFromHeader, type Locale } from '$lib/i18n';
+import { dailyBackup } from '$lib/server/backup';
+import { today } from '$lib/server/kakebo';
 
 /** Pagine raggiungibili senza aver fatto l'accesso. */
 const PUBLIC_PATHS = new Set(['/login', '/setup']);
@@ -26,6 +28,27 @@ function themeColorTags(theme: string): string {
 		meta(THEME_COLOR.dark, '(prefers-color-scheme: dark)')
 	].join('\n\t\t');
 }
+
+/** Ogni quanto il programma si chiede se serve la copia di sicurezza del giorno. */
+const BACKUP_CHECK_MS = 60 * 60 * 1000;
+
+/** Parte una volta sola, all'avvio del server. */
+export const init: ServerInit = () => {
+	if (process.env.BACKUP_ENABLED === 'false') return;
+
+	const check = () => {
+		try {
+			dailyBackup(db(), today());
+		} catch (problem) {
+			// Una copia mancata non deve fermare l'applicazione, ma si deve sapere.
+			console.error('copia di sicurezza non riuscita:', problem);
+		}
+	};
+
+	check();
+	// unref: questo orologio non deve tenere in vita il processo da solo.
+	setInterval(check, BACKUP_CHECK_MS).unref();
+};
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get(SESSION_COOKIE);
