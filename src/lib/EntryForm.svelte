@@ -13,13 +13,13 @@
 		entry = null,
 		defaultDate = today(),
 		showDraftButton = true,
-		entryId = null,
-		receipt = null
+		receipts = [],
+		maxReceipts = 5
 	}: {
 		locale: Locale;
 		categories: Choice[];
-		entryId?: number | null;
-		receipt?: string | null;
+		receipts?: { id: number; position: number }[];
+		maxReceipts?: number;
 		entry?: {
 			amount?: string;
 			occurred_on?: string;
@@ -80,7 +80,7 @@
 	</label>
 </p>
 
-<ReceiptField {locale} existing={receipt} {entryId} />
+<ReceiptField {locale} existing={receipts} max={maxReceipts} />
 
 <p class="buttons">
 	<button type="submit" name="status" value="complete">{t('common.save')}</button>

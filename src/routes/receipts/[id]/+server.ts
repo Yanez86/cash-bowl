@@ -5,17 +5,16 @@ import { error } from '@sveltejs/kit';
 import { createReadStream, statSync } from 'node:fs';
 import { Readable } from 'node:stream';
 import { db } from '$lib/server/db';
-import { getEntry } from '$lib/server/kakebo';
-import { MIME, receiptKind, receiptPath } from '$lib/server/receipts';
+import { MIME, findReceipt, receiptKind, receiptPath } from '$lib/server/receipts';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = ({ params, locals }) => {
 	const id = Number(params.id);
 	if (!Number.isInteger(id) || id <= 0) error(404, 'errors.entryNotFound');
 
-	// getEntry filtra per visibilità: se non puoi vederla, per te non esiste.
-	const entry = getEntry(db(), id, locals.user!.id);
-	const path = entry?.receipt_file ? receiptPath(entry.receipt_file) : null;
+	// findReceipt passa dalla spesa: se non puoi vederla, per te non esiste.
+	const receipt = findReceipt(db(), id, locals.user!.id);
+	const path = receipt ? receiptPath(receipt.file) : null;
 	if (!path) error(404, 'errors.entryNotFound');
 
 	let size: number;
@@ -28,7 +27,7 @@ export const GET: RequestHandler = ({ params, locals }) => {
 	const stream = Readable.toWeb(createReadStream(path)) as ReadableStream;
 	return new Response(stream, {
 		headers: {
-			'Content-Type': MIME[receiptKind(entry!.receipt_file!)],
+			'Content-Type': MIME[receiptKind(receipt!.file)],
 			'Content-Length': String(size),
 			'Content-Disposition': 'inline',
 			// Il browser non deve mai provare a interpretare questo file come

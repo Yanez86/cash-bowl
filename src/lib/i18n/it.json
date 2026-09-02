@@ -253,18 +253,23 @@
 		"importMissingTable": "Nel file manca una parte dei dati.",
 		"importNoUsers": "Nel file non c'è nessun utente: nessuno potrebbe più entrare.",
 		"importFailed": "Reimportazione non riuscita: i dati sono rimasti com'erano.",
-		"importTooBig": "Il file è troppo grande."
+		"importTooBig": "Il file è troppo grande.",
+		"receiptTooMany": "Hai scelto più foto di quante ne restino: al massimo 5 per spesa."
 	},
 	"receipt": {
-		"legend": "Scontrino",
+		"legend": "Scontrini",
 		"add": "Fotografa lo scontrino",
-		"replace": "Sostituisci la foto",
-		"hint": "(facoltativo: la foto viene rimpicciolita dal telefono)",
-		"remove": "Togli la foto",
-		"working": "Preparo la foto…",
-		"resizeFailed": "Non sono riuscito a rimpicciolire la foto: verrà inviata così com'è.",
-		"existingAlt": "Scontrino allegato a questa spesa",
-		"newAlt": "Anteprima della foto che stai per salvare",
+		"addMore": "Aggiungi un'altra foto",
+		"hint": {
+			"one": "(facoltativo: puoi aggiungerne ancora {room})",
+			"other": "(facoltativo: puoi aggiungerne ancora {room})"
+		},
+		"full": "Hai raggiunto il massimo di {max} foto. Togline una per aggiungerne un'altra.",
+		"remove": "Togli questa foto",
+		"working": "Preparo le foto…",
+		"resizeFailed": "Non sono riuscito a rimpicciolire le foto: verranno inviate così come sono.",
+		"existingAlt": "Scontrino {n} allegato a questa spesa",
+		"newAlt": "Anteprima della foto {n} che stai per salvare",
 		"openFull": "Apri la foto a schermo intero",
 		"attached": "con foto"
 	},

@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 7 completata** (backup, export, ripristino provato). Prossima: fase 8.
+Stato attuale: **fase 8 completata** (più foto per spesa, foto raddrizzate). Prossima: fase 9.
 
 ---
 
@@ -229,7 +229,65 @@ strada: su un'installazione nuova, caricato il file JSON, l'utente provvisorio
 sparisce e torna Davide con la sua password. Un file rotto viene rifiutato e i
 dati restano intatti. 74 test verdi.
 
-## Fase 8 — Distribuzione
+## Fase 8 — Più foto per spesa e foto raddrizzate
+
+- [x] Tabella `receipts`: una spesa, fino a **5** foto. Quelle già caricate
+      diventano la prima di ognuna, senza perderne nessuna
+- [x] Galleria nella scheda della spesa: aggiungi, togli, apri a schermo intero
+- [x] Si possono scegliere più foto in una volta sola
+- [x] Il tetto di 5 è controllato sul server, non solo nell'interfaccia
+- [x] **Foto raddrizzate**: il verso si legge dai metadati prima di cancellarli e
+      si riscrive in un blocco costruito da noi, fatto di quel solo campo. Il
+      browser raddrizza da solo; posizione GPS e modello spariscono come prima
+- [x] Una foto già dritta non si porta dietro nessun blocco
+- [x] Cancellando la spesa spariscono righe **e** file
+- [x] Formato dell'export portato alla versione 2 (contiene le foto come righe)
+- [x] Test: il tetto di 5, la visibilità delle singole foto, il verso conservato,
+      i segreti rimossi
+
+**Verificato:** tre foto caricate in una volta su una spesa privata; il
+proprietario le scarica tutte e tre (200), un altro utente nessuna (404);
+GPS assente da tutte; caricandone altre tre il rifiuto arriva prima di salvarne
+anche una sola; togliendone una spariscono riga e file; cancellando la spesa
+il disco resta pulito. 79 test verdi.
+
+## Fase 9 — Spese ricorrenti
+
+- [ ] Tabella `recurring`: descrizione, importo, categoria, giorno del mese,
+      tipo (spesa fissa o spesa normale), attiva o sospesa, da quale mese vale
+- [ ] All'apertura di un mese le ricorrenti mancanti vengono **inserite già
+      valide**: i conti sono giusti dal primo giorno
+- [ ] Ogni voce ricorda da quale ricorrente è nata: non si duplica mai
+- [ ] Non si generano mesi futuri, né mesi precedenti alla creazione della
+      ricorrente: aprire per sbaglio un mese lontano non deve produrre nulla
+- [ ] Pannello per crearle, sospenderle, cambiarne l'importo
+- [ ] Cambiare l'importo non tocca i mesi già passati
+- [ ] Test: generazione una volta sola, nessuna generazione fuori dai limiti
+
+## Fase 10 — Obiettivi di risparmio
+
+- [ ] Tabelle `goals` e `goal_deposits`: nome, traguardo, data desiderata
+      (facoltativa), versamenti con data e nota
+- [ ] Pagina con quanto manca, la percentuale e **quanto mettere via al mese**
+      per arrivare in tempo
+- [ ] Aggiungere e togliere versamenti; chiudere un obiettivo raggiunto
+- [ ] Restano separati dai conti del mese: nessun numero del kakebo cambia
+- [ ] Test: i calcoli di quanto manca e del ritmo necessario
+
+## Fase 11 — Lettura dell'importo dallo scontrino (OCR)
+
+- [ ] Pulsante «Leggi l'importo» che compare dopo aver scattato la foto
+- [ ] Il motore si scarica solo alla prima volta che si preme, e poi resta
+- [ ] I file della lingua stanno dentro il progetto: nessuno scaricamento da
+      internet a runtime, la regola "funziona senza internet" resta valida
+- [ ] Cerca i candidati (TOTALE, TOT, EUR, l'importo più grande in fondo) e
+      **propone**: il campo si riempie solo se confermi
+- [ ] Se non trova niente lo dice, invece di riempire a caso
+- [ ] Dipendenza `tesseract.js`: unica dipendenza esterna aggiunta, con
+      motivazione scritta nella pull request come chiede CLAUDE.md §3
+- [ ] Test: il riconoscimento dei candidati importo su testi di esempio
+
+## Fase 12 — Distribuzione
 
 - [ ] `README.md` con installazione in un comando
 - [ ] Immagine Docker pubblicata automaticamente a ogni versione
@@ -242,7 +300,7 @@ dati restano intatti. 74 test verdi.
 
 ---
 
-## Fase 9 — Audit finale
+## Fase 13 — Audit finale
 
 - [ ] Audit di sicurezza completo secondo `audit.md`
 - [ ] Audit di accessibilità completo secondo `audit.md`
@@ -256,13 +314,6 @@ dati restano intatti. 74 test verdi.
 
 Da qui non si scrive nulla senza una decisione esplicita.
 
-- Spese ricorrenti create automaticamente ogni mese
-- Lettura automatica dell'importo dallo scontrino fotografato (OCR)
-- Raddrizzare le foto caricate senza JavaScript: oggi i dati di orientamento
-  vengono tolti insieme agli altri metadati, quindi una foto scattata di lato
-  può restare di lato. Col JavaScript attivo (il caso normale) non succede.
-- Più foto per la stessa spesa (fatture su più pagine)
-- Obiettivi di risparmio a lungo termine (vacanza, fondo emergenze)
 - Importazione da CSV di un altro programma
 - Tema personalizzato con colori scelti liberamente dall'utente
 - Notifiche promemoria di fine mese

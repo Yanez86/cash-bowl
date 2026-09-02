@@ -126,7 +126,7 @@ export type Entry = {
 	visibility: Visibility;
 	created_by: number;
 	author: string;
-	receipt_file: string | null;
+	receipt_count: number;
 };
 
 // Il nome delle quattro categorie kakebo non viene dal database ma dalla chiave:
@@ -134,7 +134,8 @@ export type Entry = {
 const ENTRY_COLUMNS = `t.id, t.kind, t.status, t.amount_cents, t.occurred_on, t.category_id,
 	COALESCE(root.kakebo_key, c.kakebo_key) AS category_root_key,
 	CASE WHEN c.parent_id IS NULL THEN NULL ELSE c.name END AS category_child,
-	t.note, t.visibility, t.created_by, t.receipt_file, u.display_name AS author
+	t.note, t.visibility, t.created_by, u.display_name AS author,
+	(SELECT COUNT(*) FROM receipts r WHERE r.transaction_id = t.id) AS receipt_count
 	FROM transactions t
 	LEFT JOIN categories c ON c.id = t.category_id
 	LEFT JOIN categories root ON root.id = c.parent_id
@@ -200,17 +201,15 @@ export type EntryInput = {
 	categoryId: number | null;
 	note: string | null;
 	visibility: Visibility;
-	receiptFile: string | null;
 };
 
 export function createEntry(db: DB, input: EntryInput, author: number): number {
 	const result = db
 		.prepare(
 			`INSERT INTO transactions
-			   (kind, status, amount_cents, occurred_on, category_id, note, visibility,
-			    receipt_file, created_by)
+			   (kind, status, amount_cents, occurred_on, category_id, note, visibility, created_by)
 			 VALUES (@kind, @status, @amountCents, @occurredOn, @categoryId, @note, @visibility,
-			         @receiptFile, @author)`
+			         @author)`
 		)
 		.run({ ...input, author });
 	return Number(result.lastInsertRowid);
@@ -223,7 +222,7 @@ export function updateEntry(db: DB, id: number, input: EntryInput, viewer: numbe
 			`UPDATE transactions AS t
 			 SET kind = @kind, status = @status, amount_cents = @amountCents,
 			     occurred_on = @occurredOn, category_id = @categoryId,
-			     note = @note, visibility = @visibility, receipt_file = @receiptFile
+			     note = @note, visibility = @visibility
 			 WHERE t.id = @id AND ${VISIBLE}`
 		)
 		.run({ ...input, id, viewer });

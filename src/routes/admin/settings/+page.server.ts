@@ -2,7 +2,7 @@ import { db } from '$lib/server/db';
 import { refuse } from '$lib/server/problem';
 import { backupNow, backupsDir, listBackups, KEEP, rotate } from '$lib/server/backup';
 import { importData } from '$lib/server/transfer';
-import { receiptBytes, receiptsDir } from '$lib/server/receipts';
+import { allFiles, receiptBytes, receiptsDir } from '$lib/server/receipts';
 import { today } from '$lib/server/kakebo';
 import { statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -27,20 +27,16 @@ function counts() {
 		users: one('SELECT COUNT(*) AS n FROM users'),
 		entries: one("SELECT COUNT(*) AS n FROM transactions WHERE status = 'complete'"),
 		drafts: one("SELECT COUNT(*) AS n FROM transactions WHERE status = 'draft'"),
-		receipts: one('SELECT COUNT(*) AS n FROM transactions WHERE receipt_file IS NOT NULL')
+		receipts: one('SELECT COUNT(*) AS n FROM receipts')
 	};
 }
 
 export const load: PageServerLoad = () => {
-	const files = db()
-		.prepare('SELECT receipt_file FROM transactions WHERE receipt_file IS NOT NULL')
-		.all() as { receipt_file: string }[];
-
 	return {
 		version: pkg.version,
 		counts: counts(),
 		databaseBytes: sizeOf(join(DATA_DIR, 'cash-bowl.db')),
-		receiptBytes: receiptBytes(files.map((row) => row.receipt_file)),
+		receiptBytes: receiptBytes(allFiles(db())),
 		backups: listBackups().slice(0, 20),
 		keep: KEEP,
 		paths: { data: DATA_DIR, backups: backupsDir(), receipts: receiptsDir() },

@@ -35,8 +35,8 @@
 						<td>{euro(draft.amount_cents)}</td>
 						<td>
 							{draft.note ?? t('common.none')}
-							{#if draft.receipt_file}
-								<span class="hint">📷 {t('receipt.attached')}</span>
+							{#if draft.receipt_count > 0}
+								<span class="hint">📷 {draft.receipt_count}</span>
 							{/if}
 						</td>
 						<td>{draft.author}</td>

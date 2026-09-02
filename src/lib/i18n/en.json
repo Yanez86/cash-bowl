@@ -253,18 +253,23 @@
 		"importMissingTable": "Part of the data is missing from the file.",
 		"importNoUsers": "There are no users in the file: nobody would be able to sign in.",
 		"importFailed": "Import failed: the data was left as it was.",
-		"importTooBig": "The file is too big."
+		"importTooBig": "The file is too big.",
+		"receiptTooMany": "You chose more photos than there is room for: at most 5 per expense."
 	},
 	"receipt": {
-		"legend": "Receipt",
+		"legend": "Receipts",
 		"add": "Photograph the receipt",
-		"replace": "Replace the photo",
-		"hint": "(optional: the phone shrinks the photo first)",
-		"remove": "Remove the photo",
-		"working": "Preparing the photo…",
-		"resizeFailed": "The photo could not be shrunk: it will be sent as it is.",
-		"existingAlt": "Receipt attached to this expense",
-		"newAlt": "Preview of the photo you are about to save",
+		"addMore": "Add another photo",
+		"hint": {
+			"one": "(optional: you can add {room} more)",
+			"other": "(optional: you can add {room} more)"
+		},
+		"full": "You have reached the maximum of {max} photos. Remove one to add another.",
+		"remove": "Remove this photo",
+		"working": "Preparing the photos…",
+		"resizeFailed": "The photos could not be shrunk: they will be sent as they are.",
+		"existingAlt": "Receipt {n} attached to this expense",
+		"newAlt": "Preview of photo {n} you are about to save",
 		"openFull": "Open the photo full screen",
 		"attached": "with photo"
 	},

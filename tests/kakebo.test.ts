@@ -7,6 +7,14 @@ import { migrate } from '../src/lib/server/db.ts';
 import { createUser } from '../src/lib/server/auth.ts';
 import * as categories from '../src/lib/server/categories.ts';
 import {
+	MAX_PER_ENTRY,
+	addReceipt,
+	filesOf,
+	findReceipt,
+	listReceipts,
+	removeReceipt
+} from '../src/lib/server/receipts.ts';
+import {
 	countDrafts,
 	createEntry,
 	deleteEntry,
@@ -49,7 +57,6 @@ const entry = (over: Partial<EntryInput> = {}): EntryInput => ({
 	categoryId: null,
 	note: null,
 	visibility: 'family',
-	receiptFile: null,
 	...over
 });
 
@@ -143,20 +150,39 @@ test('nessuno modifica o cancella le spese private di un altro', async () => {
 
 test('la foto di una spesa privata non è raggiungibile da un altro', async () => {
 	const { db, anna, bruno, survival } = await scenario();
-	const id = createEntry(
-		db,
-		entry({
-			categoryId: survival,
-			visibility: 'private',
-			receiptFile: '4d6f4a1e-0000-4000-8000-000000000000.jpg'
-		}),
-		anna
-	);
+	const id = createEntry(db, entry({ categoryId: survival, visibility: 'private' }), anna);
+	addReceipt(db, id, '4d6f4a1e-0000-4000-8000-000000000000.jpg');
 
-	// La rotta /receipts/[id] parte da qui: se la voce non si vede, non c'è
+	const [photo] = listReceipts(db, id, anna);
+	assert.ok(photo, 'la proprietaria la vede');
+
+	// La rotta /receipts/[id] parte da qui: se la spesa non si vede, non c'è
 	// nessun percorso da cui arrivare al file.
-	assert.equal(getEntry(db, id, anna)?.receipt_file, '4d6f4a1e-0000-4000-8000-000000000000.jpg');
-	assert.equal(getEntry(db, id, bruno), null);
+	assert.equal(findReceipt(db, photo.id, anna)?.file, '4d6f4a1e-0000-4000-8000-000000000000.jpg');
+	assert.equal(findReceipt(db, photo.id, bruno), null);
+	assert.deepEqual(listReceipts(db, id, bruno), []);
+	assert.equal(removeReceipt(db, photo.id, bruno), null, 'e nemmeno può cancellarla');
+});
+
+test('una spesa non tiene più di cinque foto', async () => {
+	const { db, anna, survival } = await scenario();
+	const id = createEntry(db, entry({ categoryId: survival }), anna);
+
+	for (let index = 1; index <= MAX_PER_ENTRY; index++) {
+		assert.equal(addReceipt(db, id, `4d6f4a1e-0000-4000-8000-00000000000${index}.jpg`), true);
+	}
+	assert.equal(addReceipt(db, id, '4d6f4a1e-0000-4000-8000-000000000009.jpg'), false);
+	assert.equal(listReceipts(db, id, anna).length, MAX_PER_ENTRY);
+});
+
+test('cancellando la spesa spariscono anche le sue foto', async () => {
+	const { db, anna, survival } = await scenario();
+	const id = createEntry(db, entry({ categoryId: survival }), anna);
+	addReceipt(db, id, '4d6f4a1e-0000-4000-8000-000000000000.jpg');
+
+	assert.deepEqual(filesOf(db, id), ['4d6f4a1e-0000-4000-8000-000000000000.jpg']);
+	deleteEntry(db, id, anna);
+	assert.deepEqual(listReceipts(db, id, anna), [], 'le righe se ne vanno con la spesa');
 });
 
 test('le spese di un altro mese restano fuori', async () => {

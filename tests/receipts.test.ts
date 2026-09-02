@@ -9,15 +9,18 @@ import { crc32 } from 'node:zlib';
 
 // La cartella dei dati si decide prima di caricare il modulo.
 process.env.DATA_DIR = mkdtempSync(join(tmpdir(), 'cash-bowl-test-'));
-const { detectImage, receiptPath, saveReceipt, stripMetadata, MAX_BYTES } =
+const { detectImage, readOrientation, receiptPath, saveReceipt, stripMetadata, MAX_BYTES } =
 	await import('../src/lib/server/receipts.ts');
 
-/** Un JPEG finto ma verosimile, con dentro un segmento EXIF pieno di segreti. */
-function jpegWithExif(): Buffer {
-	const exif = Buffer.concat([
-		Buffer.from('Exif\0\0', 'latin1'),
-		Buffer.from('GPSLatitude 45.4642 GPSLongitude 9.1900 iPhone 15', 'latin1')
-	]);
+/**
+ * Un JPEG finto ma verosimile, con dentro un segmento EXIF pieno di segreti.
+ * Con `orientation` il blocco EXIF è quello vero, con il campo del verso.
+ */
+function jpegWithExif(orientation = 0): Buffer {
+	const secrets = Buffer.from('GPSLatitude 45.4642 GPSLongitude 9.1900 iPhone 15', 'latin1');
+	const exif = orientation
+		? Buffer.concat([Buffer.from('Exif\0\0', 'latin1'), tiffWithOrientation(orientation), secrets])
+		: Buffer.concat([Buffer.from('Exif\0\0', 'latin1'), secrets]);
 	const app1 = Buffer.alloc(2 + 2 + exif.length);
 	app1.writeUInt16BE(0xffe1, 0);
 	app1.writeUInt16BE(exif.length + 2, 2);
@@ -26,6 +29,21 @@ function jpegWithExif(): Buffer {
 	const quantisation = Buffer.from([0xff, 0xdb, 0x00, 0x04, 0x11, 0x22]);
 	const imageData = Buffer.from([0xff, 0xda, 0x00, 0x04, 0x01, 0x02, 0x03, 0xff, 0xd9]);
 	return Buffer.concat([Buffer.from([0xff, 0xd8]), app1, quantisation, imageData]);
+}
+
+/** Il blocco TIFF che una macchina fotografica scrive per dire come era girata. */
+function tiffWithOrientation(orientation: number): Buffer {
+	const tiff = Buffer.alloc(26);
+	tiff.write('MM', 0, 'latin1');
+	tiff.writeUInt16BE(42, 2);
+	tiff.writeUInt32BE(8, 4);
+	tiff.writeUInt16BE(1, 8);
+	tiff.writeUInt16BE(0x0112, 10);
+	tiff.writeUInt16BE(3, 12);
+	tiff.writeUInt32BE(1, 14);
+	tiff.writeUInt16BE(orientation, 18);
+	tiff.writeUInt32BE(0, 22);
+	return tiff;
 }
 
 /** Il nostro PNG, con aggiunto un commento che non deve sopravvivere. */
@@ -111,4 +129,32 @@ test('salva con un nome nuovo e già ripulito', () => {
 	const second = saveReceipt(jpegWithExif());
 	assert.ok(second.ok);
 	assert.notEqual(second.file, result.file);
+});
+
+test('il verso della foto sopravvive, i segreti no', () => {
+	const storta = jpegWithExif(6); // scattata girando il telefono
+	assert.equal(readOrientation(storta), 6);
+	assert.ok(storta.includes('GPSLatitude'));
+
+	const clean = Buffer.from(stripMetadata(storta, 'jpeg'));
+	assert.equal(readOrientation(clean), 6, 'il browser deve poterla raddrizzare da solo');
+	assert.ok(!clean.includes('GPSLatitude'), 'ma la posizione non deve restare');
+	assert.ok(!clean.includes('iPhone'), 'né il modello');
+	assert.equal(detectImage(clean), 'jpeg');
+
+	// Il blocco che riscriviamo è minuscolo: dentro non ci sta nient'altro.
+	assert.ok(clean.length < storta.length, 'la foto ripulita è più piccola');
+});
+
+test('una foto dritta non si porta dietro nessun blocco EXIF', () => {
+	const dritta = jpegWithExif(1);
+	const clean = Buffer.from(stripMetadata(dritta, 'jpeg'));
+	assert.equal(readOrientation(clean), 1);
+	assert.ok(!clean.includes('Exif'), 'senza niente da dire, non si scrive niente');
+});
+
+test('un verso senza senso viene ignorato', () => {
+	assert.equal(readOrientation(jpegWithExif(99)), 1);
+	assert.equal(readOrientation(jpegWithExif()), 1, 'EXIF senza il campo del verso');
+	assert.equal(readOrientation(readFileSync('static/icon-192.png')), 1, 'un PNG non ne ha');
 });

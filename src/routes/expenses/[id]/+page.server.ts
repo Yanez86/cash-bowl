@@ -3,8 +3,15 @@ import { db } from '$lib/server/db';
 import { exists, selectable } from '$lib/server/categories';
 import { readEntry } from '$lib/server/entry-form';
 import { refuse } from '$lib/server/problem';
-import { readReceipt } from '$lib/server/receipt-upload';
-import { deleteReceipt } from '$lib/server/receipts';
+import { readReceipts } from '$lib/server/receipt-upload';
+import {
+	MAX_PER_ENTRY,
+	addReceipt,
+	deleteReceipt,
+	filesOf,
+	listReceipts,
+	removeReceipt
+} from '$lib/server/receipts';
 import { amountForInput } from '$lib/money';
 import { deleteEntry, getEntry, today, updateEntry } from '$lib/server/kakebo';
 import type { Actions, PageServerLoad } from './$types';
@@ -19,7 +26,8 @@ function entryId(params: { id: string }): number {
 export const load: PageServerLoad = ({ locals, params }) => {
 	// getEntry filtra già per visibilità: una voce privata di un altro
 	// non esiste, dal punto di vista di chi guarda.
-	const entry = getEntry(db(), entryId(params), locals.user!.id);
+	const id = entryId(params);
+	const entry = getEntry(db(), id, locals.user!.id);
 	if (!entry) error(404, 'errors.entryNotFound');
 
 	return {
@@ -27,6 +35,8 @@ export const load: PageServerLoad = ({ locals, params }) => {
 			...entry,
 			amount: entry.amount_cents === null ? '' : amountForInput(entry.amount_cents)
 		},
+		receipts: listReceipts(db(), id, locals.user!.id),
+		maxReceipts: MAX_PER_ENTRY,
 		today: today(),
 		categories: selectable(db())
 	};
@@ -36,8 +46,7 @@ export const actions: Actions = {
 	save: async ({ request, locals, params }) => {
 		const id = entryId(params);
 		const viewer = locals.user!.id;
-		const current = getEntry(db(), id, viewer);
-		if (!current) error(404, 'errors.entryNotFound');
+		if (!getEntry(db(), id, viewer)) error(404, 'errors.entryNotFound');
 
 		const form = await request.formData();
 		const parsed = readEntry(form, 'expense');
@@ -47,31 +56,40 @@ export const actions: Actions = {
 			return refuse(400, 'errors.invalidCategory');
 		}
 
-		const upload = await readReceipt(form);
+		// Prima si tolgono quelle segnate, poi si contano i posti liberi.
+		const dropped: string[] = [];
+		for (const value of form.getAll('receipt_remove')) {
+			const receiptId = Number(value);
+			const file = Number.isInteger(receiptId) ? removeReceipt(db(), receiptId, viewer) : null;
+			if (file) dropped.push(file);
+		}
+
+		const room = MAX_PER_ENTRY - listReceipts(db(), id, viewer).length;
+		const upload = await readReceipts(form, room);
 		if (!upload.ok) return refuse(400, upload.key);
 
-		// Nessuna foto inviata e nessuna rimozione: resta quella che c'era.
-		const receiptFile = upload.removed ? null : (upload.file ?? current.receipt_file);
-
-		if (!updateEntry(db(), id, { ...parsed.input, receiptFile }, viewer)) {
-			// La modifica non è andata: la foto appena caricata non serve a nessuno.
-			deleteReceipt(upload.file);
+		if (!updateEntry(db(), id, parsed.input, viewer)) {
+			// La modifica non è andata: le foto appena caricate non servono a nessuno.
+			for (const file of upload.files) deleteReceipt(file);
 			error(404, 'errors.entryNotFound');
 		}
 
-		// Solo ora si butta via la vecchia: prima il dato, poi il file.
-		if (receiptFile !== current.receipt_file) deleteReceipt(current.receipt_file);
+		for (const file of upload.files) addReceipt(db(), id, file);
+		// Solo ora si buttano via le vecchie: prima il dato, poi il file.
+		for (const file of dropped) deleteReceipt(file);
 		return { saved: true };
 	},
 
 	remove: ({ locals, params }) => {
 		const id = entryId(params);
 		const viewer = locals.user!.id;
-		const current = getEntry(db(), id, viewer);
-		if (!current || !deleteEntry(db(), id, viewer)) error(404, 'errors.entryNotFound');
+		if (!getEntry(db(), id, viewer)) error(404, 'errors.entryNotFound');
 
-		// Cancellare la voce cancella anche la foto: niente file orfani sul disco.
-		deleteReceipt(current.receipt_file);
+		const files = filesOf(db(), id);
+		if (!deleteEntry(db(), id, viewer)) error(404, 'errors.entryNotFound');
+
+		// Cancellare la voce cancella anche le foto: niente file orfani sul disco.
+		for (const file of files) deleteReceipt(file);
 		redirect(303, '/expenses');
 	}
 };

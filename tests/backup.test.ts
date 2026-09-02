@@ -13,7 +13,7 @@ const { backupNow, backupsDir, dailyBackup, hasTodayBackup, listBackups, rotate 
 const { migrate } = await import('../src/lib/server/db.ts');
 const { createUser } = await import('../src/lib/server/auth.ts');
 const { createEntry } = await import('../src/lib/server/kakebo.ts');
-const { exportData, importData } = await import('../src/lib/server/transfer.ts');
+const { FORMAT, exportData, importData } = await import('../src/lib/server/transfer.ts');
 
 async function filled(file = ':memory:') {
 	const db = new Database(file);
@@ -36,8 +36,7 @@ async function filled(file = ':memory:') {
 			occurredOn: '2026-03-10',
 			categoryId: survival,
 			note: 'Supermercato',
-			visibility: 'private',
-			receiptFile: null
+			visibility: 'private'
 		},
 		anna
 	);
@@ -129,9 +128,15 @@ test('rifiuta i file che non sono un export nostro', async () => {
 		ok: false,
 		key: 'errors.importWrongFormat'
 	});
-	assert.deepEqual(importData(db, { format: 1, tables: { users: [] } }), {
+	assert.deepEqual(importData(db, { format: FORMAT, tables: { users: [] } }), {
 		ok: false,
 		key: 'errors.importMissingTable'
+	});
+
+	// Un file esportato da una versione precedente si riconosce e si rifiuta.
+	assert.deepEqual(importData(db, { format: FORMAT - 1, tables: {} }), {
+		ok: false,
+		key: 'errors.importWrongFormat'
 	});
 
 	const empty = exportData(db);

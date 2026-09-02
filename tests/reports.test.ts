@@ -54,7 +54,6 @@ const entry = (over: Partial<EntryInput> = {}): EntryInput => ({
 	categoryId: null,
 	note: null,
 	visibility: 'family',
-	receiptFile: null,
 	...over
 });
 

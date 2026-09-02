@@ -24,8 +24,8 @@
 		entry={data.entry}
 		defaultDate={data.today}
 		showDraftButton={isDraft}
-		entryId={data.entry.id}
-		receipt={data.entry.receipt_file}
+		receipts={data.receipts}
+		maxReceipts={data.maxReceipts}
 	/>
 </form>
 
