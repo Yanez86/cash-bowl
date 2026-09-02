@@ -6,7 +6,7 @@ prima di essere promosse a una fase.
 
 Legenda: `[ ]` da fare · `[~]` in corso · `[x]` fatto
 
-Stato attuale: **fase 1 completata** (scheletro tecnico funzionante). Prossima: fase 2.
+Stato attuale: **fase 2 completata** (utenti e accesso funzionanti). Prossima: fase 3.
 
 ---
 
@@ -67,15 +67,25 @@ formattazione e lint puliti.
 
 ## Fase 2 — Utenti e accesso
 
-- [ ] Registrazione del **primo** utente, che diventa amministratore
-- [ ] Login e logout con sessioni sicure (cookie HttpOnly)
-- [ ] Blocco dopo troppi tentativi falliti
-- [ ] Pannello admin: creare, disattivare, eliminare utenti familiari
-- [ ] Cambio password e reimpostazione da parte dell'admin
-- [ ] Profilo utente: nome, lingua, tema
-- [ ] Test: un utente non può vedere né modificare i dati privati di un altro
+- [x] Registrazione del **primo** utente, che diventa amministratore
+      (poi la pagina si chiude da sola: nessuno da fuori si registra)
+- [x] Login e logout con sessioni sicure (cookie HttpOnly, SameSite, 30 giorni
+      che si rinnovano usando l'app)
+- [x] Blocco dopo troppi tentativi falliti (10 in 15 minuti, per nome utente e per IP)
+- [x] Pannello admin: creare, disattivare, riattivare, eliminare utenti familiari
+- [x] Cambio password e reimpostazione da parte dell'admin
+- [x] Profilo utente: nome e password
+- [x] Test: 10 controlli automatici su password, sessioni e blocchi
+- [ ] Lingua e tema nel profilo: rimandati alla fase 4, quando avranno un effetto
+      visibile. Le colonne nel database ci sono già.
+- [ ] Test "un utente non vede i dati privati di un altro": si scrive nella fase 3,
+      quando esisteranno le spese da proteggere. Per ora è verificato che un
+      utente normale non entra nel pannello amministratore (403).
 
 **Fatta quando:** due persone diverse entrano e vedono la propria schermata.
+**Verificato:** creazione admin, creazione di un secondo utente, accesso, uscita,
+403 sul pannello riservato, blocco dopo 10 tentativi, migrazione 002 applicata
+con copia di sicurezza automatica. 13 test verdi, tipi e lint puliti.
 
 ---
 

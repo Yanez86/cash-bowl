@@ -15,13 +15,14 @@ test('le migrazioni si applicano e non si ripetono', () => {
 	const db = fresh();
 	const applied = migrate(db);
 	assert.ok(applied.includes('001_init.sql'));
+	assert.ok(applied.includes('002_username_and_login_attempts.sql'));
 	assert.deepEqual(migrate(db), [], 'la seconda esecuzione non deve applicare nulla');
 
 	const tables = db
 		.prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
 		.all()
 		.map((r) => (r as { name: string }).name);
-	for (const t of ['users', 'sessions', 'settings', 'migrations']) {
+	for (const t of ['users', 'sessions', 'settings', 'migrations', 'login_attempts']) {
 		assert.ok(tables.includes(t), `manca la tabella ${t}`);
 	}
 });
@@ -30,21 +31,19 @@ test('lo schema rifiuta i valori non previsti', () => {
 	const db = fresh();
 	migrate(db);
 	const insert = db.prepare(
-		'INSERT INTO users (email, display_name, password_hash, locale) VALUES (?, ?, ?, ?)'
+		'INSERT INTO users (username, display_name, password_hash, locale) VALUES (?, ?, ?, ?)'
 	);
-	insert.run('a@example.com', 'Anna', 'x', 'it');
-	assert.throws(() => insert.run('a@example.com', 'Altro', 'x', 'it'), /UNIQUE/);
-	assert.throws(() => insert.run('b@example.com', 'Bruno', 'x', 'fr'), /CHECK/);
+	insert.run('anna', 'Anna', 'x', 'it');
+	assert.throws(() => insert.run('anna', 'Altro', 'x', 'it'), /UNIQUE/);
+	assert.throws(() => insert.run('bruno', 'Bruno', 'x', 'fr'), /CHECK/);
 });
 
 test('cancellando un utente spariscono le sue sessioni', () => {
 	const db = fresh();
 	migrate(db);
-	db.prepare('INSERT INTO users (id, email, display_name, password_hash) VALUES (1, ?, ?, ?)').run(
-		'a@example.com',
-		'Anna',
-		'x'
-	);
+	db.prepare(
+		'INSERT INTO users (id, username, display_name, password_hash) VALUES (1, ?, ?, ?)'
+	).run('anna', 'Anna', 'x');
 	db.prepare('INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, 1, ?)').run(
 		'impronta',
 		'2099-01-01T00:00:00Z'

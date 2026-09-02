@@ -1,38 +1,16 @@
 <script lang="ts">
-	// ponytail: pagina provvisoria di verifica, testi non tradotti.
-	// Viene sostituita dalla vera schermata iniziale nelle fasi 2-4.
+	// ponytail: schermata iniziale provvisoria. Diventa il cruscotto kakebo
+	// nella fase 3, con spese, bozze e bilancio del mese.
+	import { resolve } from '$app/paths';
+
 	let { data } = $props();
 </script>
 
-<main>
-	<h1>cash-bowl</h1>
-	<p>Il server risponde e il database è pronto.</p>
-	<dl>
-		<dt>Migrazioni applicate</dt>
-		<dd>{data.migrations}</dd>
-		<dt>Utenti registrati</dt>
-		<dd>{data.users}</dd>
-	</dl>
-</main>
+<h1>Ciao {data.user?.display_name}</h1>
+<p>L'accesso funziona. Le spese e il bilancio kakebo arrivano nella prossima fase.</p>
 
-<style>
-	main {
-		max-width: 40rem;
-		margin: 0 auto;
-		padding: 2rem 1rem;
-		font-family: system-ui, sans-serif;
-		line-height: 1.5;
-	}
-	dl {
-		display: grid;
-		grid-template-columns: auto auto;
-		gap: 0.25rem 1rem;
-		justify-content: start;
-	}
-	dt {
-		font-weight: 600;
-	}
-	dd {
-		margin: 0;
-	}
-</style>
+{#if data.user?.is_admin}
+	<p>
+		Sei l'amministratore: puoi <a href={resolve('/admin/users')}>creare gli account</a> della famiglia.
+	</p>
+{/if}

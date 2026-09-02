@@ -1,0 +1,77 @@
+/* ponytail: stile minimo e provvisorio. Viene sostituito dai temi nella fase 4. */
+:root {
+	color-scheme: light dark;
+	--gap: 1rem;
+}
+
+body {
+	margin: 0;
+	font-family: system-ui, sans-serif;
+	line-height: 1.5;
+}
+
+main {
+	max-width: 40rem;
+	margin: 0 auto;
+	padding: var(--gap);
+}
+
+:where(a, button, input, select, summary):focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 2px;
+}
+
+label {
+	display: block;
+	margin-top: var(--gap);
+	font-weight: 600;
+}
+
+input {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	min-height: 44px;
+	padding: 0.5rem;
+	font: inherit;
+}
+
+button {
+	min-height: 44px;
+	padding: 0.5rem 1rem;
+	font: inherit;
+	cursor: pointer;
+}
+
+.error {
+	border-left: 4px solid currentColor;
+	padding: 0.5rem 0.75rem;
+	margin: var(--gap) 0;
+}
+
+.hint {
+	font-weight: 400;
+	font-size: 0.9em;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: var(--gap);
+}
+
+th,
+td {
+	text-align: left;
+	padding: 0.5rem;
+	border-bottom: 1px solid;
+}
+
+nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
+	align-items: center;
+	padding: var(--gap);
+	border-bottom: 1px solid;
+}
