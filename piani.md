@@ -39,7 +39,7 @@ Stato attuale: **fase 1 completata** (scheletro tecnico funzionante). Prossima: 
 - [x] `README.md` — presentazione e istruzioni
 - [x] `LICENSE` (AGPL-3.0) e `.gitignore`
 - [x] `git init` e primo commit
-- [ ] Creazione del repository su GitHub (`cash-bowl`, pubblico)
+- [x] Repository pubblico su GitHub: https://github.com/Yanez86/cash-bowl
 
 ---
 
