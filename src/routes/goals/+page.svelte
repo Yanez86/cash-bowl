@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
 	import { translator } from '$lib/i18n';
 	import { missing, monthlyNeeded, progress } from '$lib/goals';
@@ -57,6 +58,7 @@
 		</p>
 
 		<form method="post" action="?/deposit" class="row">
+			<Csrf token={data.csrf} />
 			<input type="hidden" name="id" value={goal.id} />
 			<label class="visually-hidden" for={`amount-${goal.id}`}>
 				{t('goals.depositFor', { name: goal.name })}
@@ -107,6 +109,7 @@
 										<td>{movement.author}</td>
 										<td>
 											<form method="post" action="?/removeDeposit">
+												<Csrf token={data.csrf} />
 												<input type="hidden" name="id" value={movement.id} />
 												<button type="submit" class="quiet">{t('common.delete')}</button>
 											</form>
@@ -123,6 +126,7 @@
 		<details>
 			<summary>{t('goals.change')}</summary>
 			<form method="post" action="?/update">
+				<Csrf token={data.csrf} />
 				<input type="hidden" name="id" value={goal.id} />
 				<label for={`name-${goal.id}`}>{t('goals.name')}</label>
 				<input id={`name-${goal.id}`} name="name" value={goal.name} maxlength="80" required />
@@ -144,6 +148,7 @@
 			</form>
 			<div class="row">
 				<form method="post" action="?/done">
+					<Csrf token={data.csrf} />
 					<input type="hidden" name="id" value={goal.id} />
 					<input type="hidden" name="done" value={goal.is_done ? '0' : '1'} />
 					<button type="submit" class="quiet">
@@ -151,6 +156,7 @@
 					</button>
 				</form>
 				<form method="post" action="?/remove">
+					<Csrf token={data.csrf} />
 					<input type="hidden" name="id" value={goal.id} />
 					<button type="submit" class="quiet">{t('goals.deleteGoal')}</button>
 				</form>
@@ -161,6 +167,7 @@
 
 <h2>{t('goals.addTitle')}</h2>
 <form method="post" action="?/create">
+	<Csrf token={data.csrf} />
 	<label for="name">{t('goals.name')}</label>
 	<input id="name" name="name" maxlength="80" placeholder={t('goals.example')} required />
 

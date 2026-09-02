@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { categoryLabel } from '$lib/CategoryLabel';
 	import { translator } from '$lib/i18n';
 
@@ -30,6 +31,7 @@
 				{#each root.children as child (child.id)}
 					<li class:inactive={!child.is_active}>
 						<form method="post" action="?/rename" class="row">
+							<Csrf token={data.csrf} />
 							<input type="hidden" name="id" value={child.id} />
 							<label class="visually-hidden" for={`name-${child.id}`}>
 								{t('categories.nameOf', { name: child.name })}
@@ -46,6 +48,7 @@
 
 						<div class="row">
 							<form method="post" action="?/move">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={child.id} />
 								<input type="hidden" name="direction" value="up" />
 								<button type="submit" class="quiet">
@@ -54,6 +57,7 @@
 								</button>
 							</form>
 							<form method="post" action="?/move">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={child.id} />
 								<input type="hidden" name="direction" value="down" />
 								<button type="submit" class="quiet">
@@ -62,6 +66,7 @@
 								</button>
 							</form>
 							<form method="post" action="?/toggle">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={child.id} />
 								<input type="hidden" name="active" value={child.is_active ? '0' : '1'} />
 								<button type="submit" class="quiet">
@@ -70,6 +75,7 @@
 								</button>
 							</form>
 							<form method="post" action="?/remove">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={child.id} />
 								<button type="submit" class="quiet">
 									{t('common.delete')} <span class="visually-hidden">{child.name}</span>
@@ -82,6 +88,7 @@
 		{/if}
 
 		<form method="post" action="?/add" class="row">
+			<Csrf token={data.csrf} />
 			<input type="hidden" name="parent_id" value={root.id} />
 			<label for={`add-${root.id}`}>{t('categories.addTo', { name: rootName })}</label>
 			<input id={`add-${root.id}`} name="name" maxlength="60" required />

@@ -2,5 +2,6 @@ import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = ({ locals }) => ({
 	user: locals.user,
-	locale: locals.locale
+	locale: locals.locale,
+	csrf: locals.csrf
 });

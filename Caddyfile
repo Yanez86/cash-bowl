@@ -20,6 +20,14 @@
 		}
 	}
 
+	# Registro delle richieste, acceso durante la fase di prova: serve a vedere
+	# quali intestazioni manda davvero il browser. Da togliere prima di
+	# distribuire, o almeno da mandare su file invece che a schermo.
+	log {
+		output stdout
+		format json
+	}
+
 	reverse_proxy app:3000
 
 	header {

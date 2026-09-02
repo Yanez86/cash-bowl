@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { translator } from '$lib/i18n';
 
 	let { data, form } = $props();
@@ -38,6 +39,7 @@
 					<td class="row">
 						{#if user.id !== data.me?.id}
 							<form method="post" action="?/toggleActive">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={user.id} />
 								<button type="submit" class="quiet">
 									{user.is_active ? t('admin.deactivate') : t('admin.reactivate')}
@@ -45,6 +47,7 @@
 								</button>
 							</form>
 							<form method="post" action="?/delete">
+								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={user.id} />
 								<button type="submit" class="quiet">
 									{t('common.delete')} <span class="visually-hidden">{user.display_name}</span>
@@ -62,6 +65,7 @@
 
 <h2>{t('admin.addTitle')}</h2>
 <form method="post" action="?/create">
+	<Csrf token={data.csrf} />
 	<label for="display_name">{t('admin.name')}</label>
 	<input id="display_name" name="display_name" required />
 
@@ -95,6 +99,7 @@
 <h2>{t('admin.resetTitle')}</h2>
 <p class="hint">{t('admin.resetHint')}</p>
 <form method="post" action="?/resetPassword">
+	<Csrf token={data.csrf} />
 	<label for="reset_id">{t('admin.resetPerson')}</label>
 	<select id="reset_id" name="id" required>
 		{#each data.users as user (user.id)}

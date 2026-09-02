@@ -257,7 +257,8 @@
 		"importFailed": "Import failed: the data was left as it was.",
 		"importTooBig": "The file is too big.",
 		"receiptTooMany": "You chose more photos than there is room for: at most 5 per expense.",
-		"invalidDay": "The day must be a number from 1 to 28."
+		"invalidDay": "The day must be a number from 1 to 28.",
+		"foreignForm": "The form did not come from this application. Reload the page and try again."
 	},
 	"receipt": {
 		"legend": "Receipts",

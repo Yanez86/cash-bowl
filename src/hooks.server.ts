@@ -1,9 +1,17 @@
 // Chi sei, in che lingua ti parlo, e con che aspetto. Vale per ogni richiesta:
 // l'interfaccia non decide niente sui permessi. Vedi CLAUDE.md §8.
-import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
+import { error, redirect, type Handle, type ServerInit } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { SESSION_COOKIE, countUsers, readSession } from '$lib/server/auth';
 import { getSetting } from '$lib/server/settings';
+import {
+	CSRF_COOKIE,
+	CSRF_FIELD,
+	ensureToken,
+	isFormSubmission,
+	originIsForeign,
+	tokenMatches
+} from '$lib/server/csrf';
 import { isLocale, localeFromHeader, type Locale } from '$lib/i18n';
 import { dailyBackup } from '$lib/server/backup';
 import { today } from '$lib/server/kakebo';
@@ -51,6 +59,24 @@ export const init: ServerInit = () => {
 };
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const https = event.url.protocol === 'https:';
+	event.locals.csrf = ensureToken(event.cookies, https);
+
+	// Prima di tutto: questo modulo arriva davvero da noi?
+	if (isFormSubmission(event.request)) {
+		if (originIsForeign(event.request, event.url.origin)) {
+			error(403, 'errors.foreignForm');
+		}
+		// ponytail: si copia il corpo della richiesta per leggere il gettone
+		// senza consumarlo. Con una foto da qualche megabyte è memoria in più
+		// per un istante; se un giorno desse fastidio, si sposta il gettone
+		// nell'indirizzo dell'azione.
+		const sent = await event.request.clone().formData();
+		if (!tokenMatches(sent.get(CSRF_FIELD), event.cookies.get(CSRF_COOKIE))) {
+			error(403, 'errors.foreignForm');
+		}
+	}
+
 	const token = event.cookies.get(SESSION_COOKIE);
 	event.locals.user = token ? readSession(db(), token) : null;
 	if (token && !event.locals.user) {

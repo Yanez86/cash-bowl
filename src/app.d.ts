@@ -6,6 +6,7 @@ declare global {
 		interface Locals {
 			user: SessionUser | null;
 			locale: Locale;
+			csrf: string;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { translator } from '$lib/i18n';
@@ -32,6 +33,7 @@
 				<a href={resolve('/admin/settings')}>{t('nav.settings')}</a>
 			{/if}
 			<form method="post" action="/logout">
+				<Csrf token={data.csrf} />
 				<button type="submit" class="quiet">{t('nav.logout')}</button>
 			</form>
 		</nav>

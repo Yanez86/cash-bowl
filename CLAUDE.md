@@ -156,6 +156,12 @@ provando a entrare.
 - Nessun segreto scritto nel codice o nel repository: tutto da variabili
   d'ambiente. `.env` è in `.gitignore`.
 - Nei log non finiscono mai password, token, cookie o importi personali.
+- **Ogni modulo che manda dati porta il campo nascosto `csrf`**: si aggiunge con
+  `<Csrf token={data.csrf} />` subito dopo il tag `<form method="post">`. Senza,
+  il server rifiuta l'invio con un 403. Il controllo dell'origine di SvelteKit è
+  spento apposta: Safari su iPhone, senza HTTPS, manda `Origin: null` e nessuna
+  altra intestazione utile, quindi non ci si può affidare a quelle.
+  Vedi `src/lib/server/csrf.ts`.
 - Tutti gli input validati sul server con uno schema esplicito, anche quelli che
   "arrivano solo dal nostro form".
 - Dipendenze: `npm audit` in CI. Aggiornamenti di sicurezza applicati subito.

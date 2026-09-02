@@ -67,7 +67,11 @@ qualcuno stia provando a entrare.
 - [ ] Certificato automatico e rinnovo automatico (Caddy)
 - [ ] Header di sicurezza: `Content-Security-Policy`, `X-Content-Type-Options`,
       `Referrer-Policy`, `Strict-Transport-Security`
-- [ ] Protezione CSRF attiva su tutte le azioni che modificano dati
+- [ ] Protezione CSRF attiva su tutte le azioni che modificano dati: gettone in
+      un cookie più campo nascosto in ogni modulo, e rifiuto secco quando
+      l'origine è dichiarata e diversa dalla nostra
+- [ ] Nessun modulo `method="post"` senza il campo `csrf` (si controlla con una
+      ricerca su tutti i file `.svelte`)
 - [ ] Nessuna risorsa caricata da internet (font, script, CDN): l'app funziona offline
 - [ ] Nessun segreto nel codice o nel repository; tutto da variabili d'ambiente
 - [ ] Il container Docker non gira come utente `root`

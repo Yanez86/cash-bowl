@@ -257,7 +257,8 @@
 		"importFailed": "Reimportazione non riuscita: i dati sono rimasti com'erano.",
 		"importTooBig": "Il file è troppo grande.",
 		"receiptTooMany": "Hai scelto più foto di quante ne restino: al massimo 5 per spesa.",
-		"invalidDay": "Il giorno deve essere un numero da 1 a 28."
+		"invalidDay": "Il giorno deve essere un numero da 1 a 28.",
+		"foreignForm": "Il modulo non è arrivato da questa applicazione. Ricarica la pagina e riprova."
 	},
 	"receipt": {
 		"legend": "Scontrini",

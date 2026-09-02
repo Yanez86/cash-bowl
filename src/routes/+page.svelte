@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
 	import { categoryLabel } from '$lib/CategoryLabel';
 	import EntryForm from '$lib/EntryForm.svelte';
@@ -72,6 +73,7 @@
 	</p>
 {/if}
 <form method="post" action="?/add" enctype="multipart/form-data">
+	<Csrf token={data.csrf} />
 	<EntryForm
 		locale={data.locale}
 		categories={data.categories}

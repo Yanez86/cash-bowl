@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import EntryForm from '$lib/EntryForm.svelte';
 	import { translator } from '$lib/i18n';
 
@@ -18,6 +19,7 @@
 {#if form?.saved}<p class="notice" role="status">{t('entryEdit.saved')}</p>{/if}
 
 <form method="post" action="?/save" enctype="multipart/form-data">
+	<Csrf token={data.csrf} />
 	<EntryForm
 		locale={data.locale}
 		categories={data.categories}
@@ -32,5 +34,6 @@
 
 <h2>{t('entryEdit.deleteTitle')}</h2>
 <form method="post" action="?/remove">
+	<Csrf token={data.csrf} />
 	<button type="submit" class="quiet">{t('entryEdit.deleteSubmit')}</button>
 </form>

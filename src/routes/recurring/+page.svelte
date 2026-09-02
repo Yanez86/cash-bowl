@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { categoryLabel } from '$lib/CategoryLabel';
 	import { translator } from '$lib/i18n';
 	import { monthLabel } from '$lib/dates';
@@ -48,6 +49,7 @@
 				</p>
 
 				<form method="post" action="?/update" class="row">
+					<Csrf token={data.csrf} />
 					<input type="hidden" name="id" value={item.id} />
 					<label class="visually-hidden" for={`description-${item.id}`}>
 						{t('recurring.descriptionOf', { name: item.description })}
@@ -74,6 +76,7 @@
 
 				<div class="row">
 					<form method="post" action="?/toggle">
+						<Csrf token={data.csrf} />
 						<input type="hidden" name="id" value={item.id} />
 						<input type="hidden" name="active" value={item.is_active ? '0' : '1'} />
 						<button type="submit" class="quiet">
@@ -82,6 +85,7 @@
 						</button>
 					</form>
 					<form method="post" action="?/remove">
+						<Csrf token={data.csrf} />
 						<input type="hidden" name="id" value={item.id} />
 						<button type="submit" class="quiet">
 							{t('common.delete')} <span class="visually-hidden">{item.description}</span>
@@ -97,6 +101,7 @@
 <h2>{t('recurring.addTitle')}</h2>
 <p class="hint">{t('recurring.addHint')}</p>
 <form method="post" action="?/create">
+	<Csrf token={data.csrf} />
 	<label for="kind">{t('recurring.kind')}</label>
 	<select id="kind" name="kind" bind:value={kind}>
 		<option value="fixed">{t('recurring.kindFixed')}</option>

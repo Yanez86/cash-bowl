@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { ACCENTS, ACCENT_LABEL, THEMES, THEME_LABEL } from '$lib/appearance';
 	import { translator, LOCALES, LOCALE_NAMES } from '$lib/i18n';
 
@@ -13,6 +14,7 @@
 <h2>{t('profile.appearanceTitle')}</h2>
 {#if form?.appearanceSaved}<p class="notice" role="status">{t('profile.appearanceSaved')}</p>{/if}
 <form method="post" action="?/appearance">
+	<Csrf token={data.csrf} />
 	<label for="locale">{t('profile.language')}</label>
 	<select id="locale" name="locale">
 		{#each LOCALES as code (code)}
@@ -69,6 +71,7 @@
 {#if form?.nameError}<p class="error" role="alert">{t(form.nameError)}</p>{/if}
 {#if form?.nameSaved}<p class="notice" role="status">{t('profile.nameSaved')}</p>{/if}
 <form method="post" action="?/name">
+	<Csrf token={data.csrf} />
 	<label for="display_name">{t('setup.yourName')}</label>
 	<input id="display_name" name="display_name" value={data.user?.display_name ?? ''} required />
 	<p><button type="submit">{t('profile.nameSubmit')}</button></p>
@@ -80,6 +83,7 @@
 {/if}
 {#if form?.passwordSaved}<p class="notice" role="status">{t('profile.passwordSaved')}</p>{/if}
 <form method="post" action="?/password">
+	<Csrf token={data.csrf} />
 	<label for="current_password">{t('profile.currentPassword')}</label>
 	<input
 		id="current_password"

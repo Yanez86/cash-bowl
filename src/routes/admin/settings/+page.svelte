@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
 	import { translator } from '$lib/i18n';
 
@@ -56,9 +57,11 @@
 
 <div class="row">
 	<form method="post" action="?/backup">
+		<Csrf token={data.csrf} />
 		<button type="submit">{t('settings.backupNow')}</button>
 	</form>
 	<form method="post" action="?/rotate">
+		<Csrf token={data.csrf} />
 		<button type="submit" class="quiet">{t('settings.rotateNow')}</button>
 	</form>
 </div>
@@ -102,6 +105,7 @@
 <h2>{t('settings.restoreTitle')}</h2>
 <p class="notice">{t('settings.restoreWarning')}</p>
 <form method="post" action="?/restore" enctype="multipart/form-data">
+	<Csrf token={data.csrf} />
 	<label for="backup">{t('settings.restoreFile')}</label>
 	<input id="backup" name="backup" type="file" accept="application/json,.json" required />
 	<p><button type="submit">{t('settings.restoreSubmit')}</button></p>

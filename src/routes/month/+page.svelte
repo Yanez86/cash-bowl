@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
 	import MonthNav from '$lib/MonthNav.svelte';
 	import { translator } from '$lib/i18n';
@@ -44,6 +45,7 @@
 
 <h2>{t('plan.goalTitle')}</h2>
 <form method="post" action="?/goal">
+	<Csrf token={data.csrf} />
 	<label for="goal">{t('plan.goalLabel')}</label>
 	<input
 		id="goal"
@@ -84,6 +86,7 @@
 
 	{#if form?.reflectionSaved}<p class="notice" role="status">{t('monthEnd.saved')}</p>{/if}
 	<form method="post" action="?/reflection">
+		<Csrf token={data.csrf} />
 		<label for="reflection">{t('monthEnd.q5')}</label>
 		<textarea id="reflection" name="reflection" rows="4" maxlength="2000"
 			>{data.reflection}</textarea
@@ -115,6 +118,7 @@
 							<td>{euro(row.amount_cents ?? 0)}</td>
 							<td>
 								<form method="post" action="?/remove">
+									<Csrf token={data.csrf} />
 									<input type="hidden" name="id" value={row.id} />
 									<button type="submit" class="quiet">
 										{t('common.delete')}
@@ -130,6 +134,7 @@
 	{/if}
 
 	<form method="post" action={section.action}>
+		<Csrf token={data.csrf} />
 		<label for={`${section.id}_amount`}>{section.newLabel}</label>
 		<input
 			id={`${section.id}_amount`}
