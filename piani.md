@@ -392,15 +392,22 @@ aspettavi, cosa è successo. La schermata e l'ora aiutano.
 
 ---
 
-## Fase 12 — Distribuzione (sospesa)
+## Fase 12 — Distribuzione (in corso)
 
-- [ ] `README.md` con installazione in un comando
-- [ ] Immagine Docker pubblicata automaticamente a ogni versione
-      (la build locale è già provata: vedi fase 1)
-- [ ] Versioni numerate e `CHANGELOG.md`
-- [ ] Guida all'aggiornamento e alla messa in sicurezza (HTTPS, porte, router)
-- [ ] Schermate dell'app nel README
+- [x] `README.md` con installazione in un comando, stato veritiero e indirizzo
+      giusto del repository
+- [x] Versioni numerate e `CHANGELOG.md`: la prima è `v0.1.0`
+- [x] Guida all'aggiornamento e alla messa in sicurezza (HTTPS, porte, router),
+      dentro il README
+- [x] Procedura di ripristino con i comandi veri, dentro il README
+- [x] Caddy non tiene più il registro delle richieste: gli indirizzi delle
+      pagine dicono chi guarda cosa
+- [ ] Schermate dell'app nel README (le fa il proprietario dal telefono)
 - [ ] `CONTRIBUTING.md` e `SECURITY.md`
+- [ ] Immagine Docker pubblicata automaticamente a ogni versione. **Rimandata
+      di proposito**: `git clone` più `docker compose up` funziona già, e la
+      pubblicazione automatica serve quando la installa qualcuno che non siamo
+      noi
 
 **Fatta quando:** una persona estranea al progetto la installa da sola.
 
