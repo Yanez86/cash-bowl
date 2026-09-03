@@ -341,7 +341,50 @@ aspettavi, cosa è successo. La schermata e l'ora aiutano.
 
 ### Da sistemare
 
-- _(vuoto: niente ancora segnalato)_
+- [x] Menu hamburger sul telefono al posto della barra di voci che scorre
+      (tag <details> nativo; sullo schermo grande resta la barra in riga)
+- [x] Schermata principale: "rimane" è il numero grande in cima, gli altri
+      cinque fanno un passo indietro
+- [x] Due bordi invece di uno: `--border` per i campi (leggibile, 3:1),
+      `--rule` tenue per riquadri e righe di tabella
+- [x] Date scritte per una persona ("2 mar 2026") invece che come nel database,
+      e correzione del fuso orario che spostava la data indietro di un giorno
+- [x] Importi con le cifre incolonnate (`tabular-nums`)
+- [x] Icone per le azioni: 11 disegni Lucide (licenza ISC) copiati a mano in
+      `src/lib/Icon.svelte`, nessuna dipendenza e nessun collegamento a internet.
+      Nelle righe si vede solo l'icona, con il nome dell'azione nascosto per lo
+      screen reader; altrove icona e parola insieme
+- [x] Spese del mese e Da sistemare: da tabella a elenco di schede, con la data
+      impilata (giorno / mese corto / anno) e la nota piccola sotto il record
+- [x] Un'icona per ogni voce del menu
+- [x] Nella scelta del mese si leggono i nomi veri ("agosto 2026", "ottobre
+      2026") invece di "mese precedente" e "mese successivo"
+- [x] Nessuna sottolineatura sui link: dentro i paragrafi restano riconoscibili
+      dal grassetto, e la sottolineatura torna al passaggio del mouse e col focus
+- [x] Il modulo "aggiungi una spesa" esce dalla schermata principale e va su una
+      pagina sua (`/expenses/new`); il pulsante "+" in basso a destra ora si vede
+      sempre e porta lì. Dopo il salvataggio si torna al mese
+- [x] Categorie mostrate come tag colorati (tinta tenue, scritta scura): un
+      colore fisso per ognuna delle quattro categorie kakebo, ereditato dalle
+      sotto-categorie. 8 test di contrasto nuovi; in alto contrasto e in stampa
+      il colore sparisce e restano parola e bordo
+- [x] Pagina Categorie: ogni sotto-categoria sta su una riga sola. "Rinomina" e
+      "Disattiva" non sono più parole ma icone (✓ salva, occhio, cestino, frecce
+      per l'ordine); il nome dell'azione resta nascosto per lo screen reader
+- [x] Un'icona scelta dall'utente per ogni sotto-categoria: venti disegni Lucide
+      in `src/lib/icons.ts`, scelti da una griglia che si apre senza JavaScript.
+      Nel database si salva solo il nome dell'icona (`migrations/010`), e il
+      server accetta soltanto i nomi della lista. L'icona si rivede poi dentro il
+      tag della categoria in Spese, Mese e Ricorrenti
+
+### Rimasto dalla revisione dell'interfaccia (non ancora deciso)
+
+- [ ] Una classe `.card` sola al posto della stessa scatola scritta a mano in
+      quattro pagine
+- [ ] Stati al passaggio del mouse e alla pressione (oggi c'è solo il focus)
+- [x] "Modifica" nelle tabelle: ora è un pulsante icona di 44×44 px
+- [x] L'emoji 📷 sostituita dall'icona macchina fotografica più "{n} foto"
+- [ ] Una scala di dimensioni del testo al posto dei valori a occhio
 
 ### Da valutare dopo averla usata
 
@@ -373,6 +416,23 @@ aspettavi, cosa è successo. La schermata e l'ora aiutano.
 
 ---
 
+## Fase 14 — Fine delle ricorrenti
+
+- [x] Una ricorrente può finire in tre modi: **per sempre** (finché non la
+      chiudi), **fino a un mese** scelto, oppure **per un numero di volte**
+- [x] Il numero di volte diventa un mese finale al salvataggio: dodici volte da
+      marzo 2026 vuol dire fino a febbraio 2027. Nessun contatore da tenere
+      aggiornato
+- [x] L'ultimo mese è compreso: una ricorrente che finisce a febbraio la voce di
+      febbraio ce l'ha
+- [x] La scadenza si può cambiare dopo: i mesi già registrati non si toccano,
+      come per l'importo
+- [x] Le ricorrenti finite restano nell'elenco, sbiadite e marcate «terminata»
+- [x] Test: l'ultimo mese entra, il mese dopo no, «dodici volte» finisce al mese
+      giusto
+
+---
+
 ## Idee da valutare (non approvate)
 
 Da qui non si scrive nulla senza una decisione esplicita.
@@ -396,4 +456,5 @@ Da qui non si scrive nulla senza una decisione esplicita.
 | 2026-09-02 | Bozze escluse dai totali, con avviso ben visibile                | i numeri del kakebo devono restare affidabili                                           |
 | 2026-09-02 | Bozza salvabile con la sola foto o il solo importo               | l'inserimento al volo deve stare in due tocchi                                          |
 | 2026-09-02 | Una foto per spesa, rimpicciolita nel browser                    | disco del server contenuto, caricamento veloce, nessuna libreria di immagini sul server |
+| 2026-09-02 | Tag delle categorie a tinta tenue invece che a colore pieno      | su venti righe di tabella venti rettangoli pieni coprono l'accento del tema             |
 | 2026-09-02 | Rimozione dei dati GPS dalle foto                                | una foto di scontrino porta con sé il luogo in cui è stata scattata                     |
