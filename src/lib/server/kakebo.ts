@@ -122,6 +122,7 @@ export type Entry = {
 	category_id: number | null;
 	category_root_key: string | null;
 	category_child: string | null;
+	category_icon: string | null;
 	note: string | null;
 	visibility: Visibility;
 	created_by: number;
@@ -134,6 +135,7 @@ export type Entry = {
 const ENTRY_COLUMNS = `t.id, t.kind, t.status, t.amount_cents, t.occurred_on, t.category_id,
 	COALESCE(root.kakebo_key, c.kakebo_key) AS category_root_key,
 	CASE WHEN c.parent_id IS NULL THEN NULL ELSE c.name END AS category_child,
+	c.icon AS category_icon,
 	t.note, t.visibility, t.created_by, u.display_name AS author,
 	(SELECT COUNT(*) FROM receipts r WHERE r.transaction_id = t.id) AS receipt_count
 	FROM transactions t

@@ -1,20 +1,28 @@
 <script lang="ts">
-	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
-	import { categoryLabel } from '$lib/CategoryLabel';
-	import EntryForm from '$lib/EntryForm.svelte';
+	import CategoryTag from '$lib/CategoryTag.svelte';
+	import Icon from '$lib/Icon.svelte';
 	import MonthNav from '$lib/MonthNav.svelte';
 	import { translator } from '$lib/i18n';
+	import { dayLabel, dayParts } from '$lib/dates';
 	import { formatAmount } from '$lib/money';
 
-	let { data, form } = $props();
+	let { data } = $props();
 	const t = $derived(translator(data.locale));
 	const euro = $derived((cents: number) => formatAmount(cents, data.locale, data.currency));
+	const parts = $derived((iso: string) => dayParts(iso, data.locale));
 </script>
 
 <MonthNav ym={data.ym} path={resolve('/')} locale={data.locale} />
 
 <h1>{t('dashboard.title')}</h1>
+
+{#if data.saved === 'complete'}<p class="notice" role="status">{t('dashboard.saved')}</p>{/if}
+{#if data.saved === 'draft'}
+	<p class="notice" role="status">
+		{t('dashboard.savedDraft')} <a href={resolve('/drafts')}>{t('dashboard.draftsLink')}</a>
+	</p>
+{/if}
 
 {#if data.summary.drafts > 0}
 	<p class="notice" role="status">
@@ -24,6 +32,10 @@
 {/if}
 
 <dl class="summary">
+	<div class="lead">
+		<dt>{t('dashboard.remaining')}</dt>
+		<dd class:negative={data.summary.remaining < 0}>{euro(data.summary.remaining)}</dd>
+	</div>
 	<div>
 		<dt>{t('dashboard.income')}</dt>
 		<dd>{euro(data.summary.income)}</dd>
@@ -44,10 +56,6 @@
 		<dt>{t('dashboard.spent')}</dt>
 		<dd>{euro(data.summary.spent)}</dd>
 	</div>
-	<div class="highlight">
-		<dt>{t('dashboard.remaining')}</dt>
-		<dd>{euro(data.summary.remaining)}</dd>
-	</div>
 </dl>
 
 {#if data.summary.remaining < 0}
@@ -64,24 +72,6 @@
 	<a href={`${resolve('/expenses')}?ym=${data.ym}`}>{t('dashboard.expensesLink')}</a>
 </p>
 
-<h2 id="add">{t('dashboard.addTitle')}</h2>
-{#if form?.error}<p class="error" role="alert">{t(form.error, form.vars)}</p>{/if}
-{#if form?.saved === 'complete'}<p class="notice" role="status">{t('dashboard.saved')}</p>{/if}
-{#if form?.saved === 'draft'}
-	<p class="notice" role="status">
-		{t('dashboard.savedDraft')} <a href={resolve('/drafts')}>{t('dashboard.draftsLink')}</a>
-	</p>
-{/if}
-<form method="post" action="?/add" enctype="multipart/form-data">
-	<Csrf token={data.csrf} />
-	<EntryForm
-		locale={data.locale}
-		categories={data.categories}
-		defaultDate={data.today}
-		ocrAvailable={data.ocrAvailable}
-	/>
-</form>
-
 <h2>{t('dashboard.whereTitle')}</h2>
 <div class="scroller">
 	<table>
@@ -92,7 +82,7 @@
 		<tbody>
 			{#each data.byCategory as row (row.id)}
 				<tr>
-					<td>{categoryLabel(t, row.kakebo_key, null)}</td>
+					<td><CategoryTag {t} rootKey={row.kakebo_key} /></td>
 					<td>{euro(row.total)}</td>
 				</tr>
 			{/each}
@@ -107,15 +97,47 @@
 {#if data.latest.length === 0}
 	<p>{t('dashboard.empty')}</p>
 {:else}
-	<ul class="latest">
+	<!-- Stessa riga della pagina delle spese del mese: una lista, un solo stile. -->
+	<ul class="records">
 		{#each data.latest as entry (entry.id)}
+			{@const date = parts(entry.occurred_on)}
 			<li>
-				<a href={resolve('/expenses/[id]', { id: String(entry.id) })}>
-					{entry.occurred_on} · {euro(entry.amount_cents ?? 0)} ·
-					{categoryLabel(t, entry.category_root_key ?? '', entry.category_child)}
-					{#if entry.note}<span class="hint">— {entry.note}</span>{/if}
-					{#if entry.visibility === 'private'}<span class="hint">{t('entry.private')}</span>{/if}
+				<time class="date" datetime={entry.occurred_on}>
+					<span class="day">{date.day}</span>
+					<span class="month">{date.month}</span>
+					<span class="year">{date.year}</span>
+				</time>
+
+				<p class="meta">
+					<CategoryTag
+						{t}
+						rootKey={entry.category_root_key ?? ''}
+						child={entry.category_child}
+						icon={entry.category_icon}
+					/>
+					{#if entry.visibility === 'private'}
+						<span class="hint">{t('entry.private')}</span>
+					{/if}
+					{#if entry.receipt_count > 0}
+						<span class="hint with-icon">
+							<Icon name="camera" size={16} />
+							{t('receipt.count', { count: entry.receipt_count })}
+						</span>
+					{/if}
+				</p>
+
+				<p class="amount">{euro(entry.amount_cents ?? 0)}</p>
+
+				<a class="icon-button" href={resolve('/expenses/[id]', { id: String(entry.id) })}>
+					<Icon name="pencil" />
+					<span class="visually-hidden">
+						{t('expenses.editOne', { date: dayLabel(entry.occurred_on, data.locale) })}
+					</span>
 				</a>
+
+				{#if entry.note}<p class="note hint">{entry.note}</p>{/if}
+
+				<p class="author"><span class="tag">{entry.author}</span></p>
 			</li>
 		{/each}
 	</ul>
@@ -124,12 +146,12 @@
 <style>
 	.summary {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
 		gap: 0.75rem;
 	}
 	.summary div {
 		background: var(--surface);
-		border: 1px solid var(--border);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius);
 		padding: 0.75rem;
 	}
@@ -137,25 +159,32 @@
 		color: var(--muted);
 		font-size: 0.9em;
 	}
+	/* Gli altri cinque numeri fanno un passo indietro: senza retrocessione non
+	   esiste gerarchia, esistono solo sei riquadri che gridano insieme. */
 	.summary dd {
 		margin: 0;
-		font-size: 1.4em;
-		font-weight: 700;
+		font-size: 1.2rem;
+		font-weight: 500;
 	}
-	.highlight {
+
+	/* Nel kakebo una sola domanda conta: quanto rimane. Sta da sola, in cima, e
+	   vince per dimensione — non per colore, che da solo non basta mai. */
+	.lead {
+		grid-column: 1 / -1;
+		padding: 1rem;
 		border-color: var(--accent);
-		border-width: 2px;
 	}
-	.latest {
-		padding-left: 0;
-		list-style: none;
+	.lead dt {
+		font-size: 1rem;
 	}
-	.latest li {
-		border-bottom: 1px solid var(--border);
+	.lead dd {
+		font-size: clamp(2.4rem, 12vw, 3.4rem);
+		font-weight: 700;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
 	}
-	.latest a {
-		display: block;
-		padding: 0.7rem 0;
-		min-height: var(--tap);
+	/* Il segno meno c'è già: il colore lo rinforza, non lo sostituisce. */
+	.negative {
+		color: var(--danger);
 	}
 </style>

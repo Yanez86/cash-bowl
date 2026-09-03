@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Bars from '$lib/Bars.svelte';
+	import Icon from '$lib/Icon.svelte';
 	import { categoryLabel } from '$lib/CategoryLabel';
 	import { translator } from '$lib/i18n';
 	import { monthLabel } from '$lib/dates';
@@ -104,8 +105,15 @@
 {/if}
 
 <p class="actions">
-	<a href={`${resolve('/reports/csv')}?${data.query}`} download>{t('reports.downloadCsv')}</a> ·
-	<button type="button" class="quiet" onclick={() => window.print()}>{t('reports.print')}</button>
+	<a class="with-icon" href={`${resolve('/reports/csv')}?${data.query}`} download>
+		<Icon name="download" />
+		{t('reports.downloadCsv')}
+	</a>
+	·
+	<button type="button" class="quiet with-icon" onclick={() => window.print()}>
+		<Icon name="printer" />
+		{t('reports.print')}
+	</button>
 	<span class="hint">{t('reports.printHint')}</span>
 </p>
 
@@ -136,7 +144,7 @@
 		gap: 0.5rem 1rem;
 		align-items: end;
 		background: var(--surface);
-		border: 1px solid var(--border);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius);
 		padding: 0.5rem 0.8rem 1rem;
 	}

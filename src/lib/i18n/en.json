@@ -1,6 +1,6 @@
 {
 	"app": {
-		"name": "cash-bowl",
+		"name": "Cash Bowl",
 		"skipToContent": "Skip to content"
 	},
 	"nav": {
@@ -24,7 +24,6 @@
 		"add": "Add",
 		"delete": "Delete",
 		"edit": "Edit",
-		"rename": "Rename",
 		"date": "Date",
 		"amount": "Amount",
 		"category": "Category",
@@ -41,12 +40,12 @@
 		"moveDown": "Move down"
 	},
 	"months": {
-		"previous": "← Previous month",
-		"next": "Next month →",
+		"previous": "Previous month",
+		"next": "Next month",
 		"chooser": "Month chooser"
 	},
 	"setup": {
-		"title": "Welcome to cash-bowl",
+		"title": "Welcome to Cash Bowl",
 		"intro": "This is the first run: create your account. You will be the administrator and can then create accounts for the rest of the household.",
 		"yourName": "Your name",
 		"username": "Username",
@@ -57,7 +56,7 @@
 		"submit": "Create my account"
 	},
 	"login": {
-		"title": "Sign in to cash-bowl",
+		"title": "Sign in to Cash Bowl",
 		"username": "Username",
 		"password": "Password",
 		"submit": "Sign in"
@@ -146,10 +145,12 @@
 		"empty": "No sub-categories.",
 		"addTo": "Add a sub-category to {name}",
 		"nameOf": "Name of sub-category {name}",
+		"chooseIcon": "Icon for {name}",
+		"noIcon": "No icon",
 		"deactivate": "Deactivate",
 		"reactivate": "Reactivate",
 		"added": "Sub-category “{name}” created.",
-		"renamed": "Name updated.",
+		"saved": "Name and icon updated.",
 		"toggled": "Sub-category updated.",
 		"removed": "Sub-category deleted.",
 		"moved": "Order updated.",
@@ -250,7 +251,7 @@
 		"receiptEmpty": "The file is empty.",
 		"receiptTooBig": "The photo is too big: the limit is 4 MB.",
 		"receiptNotAnImage": "This file is not a JPEG or PNG photo.",
-		"importNotAFile": "This does not look like a file exported from cash-bowl.",
+		"importNotAFile": "This does not look like a file exported from Cash Bowl.",
 		"importWrongFormat": "The file is from a different version and cannot be imported.",
 		"importMissingTable": "Part of the data is missing from the file.",
 		"importNoUsers": "There are no users in the file: nobody would be able to sign in.",
@@ -258,7 +259,10 @@
 		"importTooBig": "The file is too big.",
 		"receiptTooMany": "You chose more photos than there is room for: at most 5 per expense.",
 		"invalidDay": "The day must be a number from 1 to 28.",
-		"foreignForm": "The form did not come from this application. Reload the page and try again."
+		"foreignForm": "The form did not come from this application. Reload the page and try again.",
+		"endsBeforeStart": "The end cannot come before the month the entry starts.",
+		"invalidTimes": "The number of times must be between 1 and {max}.",
+		"unknownIcon": "Unknown icon."
 	},
 	"receipt": {
 		"legend": "Receipts",
@@ -281,7 +285,11 @@
 		"ocrReading": "Reading… {percent}%",
 		"ocrFound": "Suggested amount: check it before saving.",
 		"ocrNotFound": "No amount could be read. Please type it in.",
-		"ocrFailed": "Reading failed. Please type the amount in."
+		"ocrFailed": "Reading failed. Please type the amount in.",
+		"count": {
+			"one": "{count} photo",
+			"other": "{count} photos"
+		}
 	},
 	"reports": {
 		"title": "Reports",
@@ -354,7 +362,7 @@
 		"downloadJsonHint": "It opens in a text editor and can be imported back below.",
 		"restoreTitle": "Import the data back",
 		"restoreWarning": "Careful: importing REPLACES everything there is now. The program makes a backup first, and afterwards everyone will have to sign in again. Receipt photos are not in the file: put them back by copying the folder.",
-		"restoreFile": "JSON file exported from cash-bowl",
+		"restoreFile": "JSON file exported from Cash Bowl",
 		"restoreSubmit": "Replace the data with this file",
 		"imported": {
 			"one": "Data imported: {count} entry.",
@@ -386,7 +394,17 @@
 		"toggled": "Recurring entry updated.",
 		"removed": "Recurring entry deleted. Entries already recorded stay where they are.",
 		"descriptionOf": "Description of {name}",
-		"amountOf": "Amount of {name}"
+		"amountOf": "Amount of {name}",
+		"changeEnd": "Change the end",
+		"ends": "End",
+		"endsForever": "Forever, until I close it",
+		"endsUntil": "Until",
+		"endsOnLabel": "End date",
+		"endsTimes": "For",
+		"endsTimesLabel": "Number of times",
+		"endsTimesHint": "times (counting the first month)",
+		"until": "until {month}",
+		"finished": "finished"
 	},
 	"goals": {
 		"title": "Savings goals",
@@ -421,5 +439,27 @@
 		"depositRemoved": "Movement deleted.",
 		"toggled": "Goal updated.",
 		"removed": "Goal deleted."
+	},
+	"icons": {
+		"shoppingCart": "Groceries",
+		"utensils": "Restaurant",
+		"coffee": "Cafe",
+		"house": "Home",
+		"zap": "Bills",
+		"car": "Car",
+		"bus": "Transport",
+		"plane": "Travel",
+		"heartPulse": "Health",
+		"pill": "Pharmacy",
+		"shirt": "Clothes",
+		"graduationCap": "Education",
+		"bookOpen": "Books",
+		"film": "Cinema",
+		"music": "Music",
+		"dumbbell": "Sport",
+		"gift": "Gifts",
+		"pawPrint": "Pets",
+		"smartphone": "Phone",
+		"creditCard": "Bank"
 	}
 }

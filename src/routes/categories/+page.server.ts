@@ -1,3 +1,4 @@
+import { isCategoryIcon } from '$lib/icons';
 import { refuse } from '$lib/server/problem';
 import { db } from '$lib/server/db';
 import * as categories from '$lib/server/categories';
@@ -33,17 +34,23 @@ export const actions: Actions = {
 			return { added: value };
 		}),
 
-	rename: ({ request }) =>
+	// Nome e icona arrivano insieme: nella pagina sono un modulo solo.
+	save: ({ request }) =>
 		request.formData().then((form) => {
 			const target = id(form);
 			const value = name(form);
 			if (!target || !value) return refuse(400, 'errors.categoryNameRequired', { max: MAX_NAME });
+			// Dal modulo arriva un nome di icona, e solo uno di quelli previsti.
+			const chosen = form.get('icon');
+			if (chosen !== null && chosen !== '' && !isCategoryIcon(chosen)) {
+				return refuse(400, 'errors.unknownIcon');
+			}
 			try {
-				categories.rename(db(), target, value);
+				categories.save(db(), target, value, isCategoryIcon(chosen) ? chosen : null);
 			} catch {
 				return refuse(400, 'errors.categoryNameTaken');
 			}
-			return { renamed: true };
+			return { saved: true };
 		}),
 
 	toggle: ({ request }) =>

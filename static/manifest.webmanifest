@@ -1,6 +1,6 @@
 {
-	"name": "cash-bowl",
-	"short_name": "cash-bowl",
+	"name": "Cash Bowl",
+	"short_name": "Cash Bowl",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",

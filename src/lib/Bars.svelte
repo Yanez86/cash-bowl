@@ -48,7 +48,6 @@
 	}
 	.value {
 		display: block;
-		font-variant-numeric: tabular-nums;
 	}
 	.bar {
 		display: block;

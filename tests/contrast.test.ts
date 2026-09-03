@@ -53,6 +53,15 @@ for (const mode of ['light', 'dark'] as const) {
 		assert.ok(value >= 3, `bordi: ${value.toFixed(2)}:1, serve almeno 3`);
 	});
 
+	// I tag delle categorie sono colore, quindi passano dallo stesso esame:
+	// la scritta dentro il tag deve leggersi sulla sua tinta, in tutti e due i temi.
+	for (const category of ['survival', 'leisure', 'culture', 'extra']) {
+		test(`tag ${category} leggibile nel tema ${mode}`, () => {
+			const value = ratio(base[`tag-${category}-fg-${mode}`], base[`tag-${category}-bg-${mode}`]);
+			assert.ok(value >= 4.5, `tag ${category}: ${value.toFixed(2)}:1, serve almeno 4,5`);
+		});
+	}
+
 	test(`messaggi di errore leggibili nel tema ${mode}`, () => {
 		const value = ratio(base[`danger-${mode}`], base[`bg-${mode}`]);
 		assert.ok(value >= 4.5, `errori: ${value.toFixed(2)}:1, serve almeno 4,5`);

@@ -10,6 +10,8 @@ export type Category = {
 	name: string;
 	position: number;
 	is_active: number;
+	/** Nome di un'icona di CATEGORY_ICONS, oppure null. Vedi src/lib/icons.ts. */
+	icon: string | null;
 };
 
 export type Root = Category & { children: Category[] };
@@ -17,7 +19,7 @@ export type Root = Category & { children: Category[] };
 export function tree(db: DB, includeInactive = false): Root[] {
 	const rows = db
 		.prepare(
-			`SELECT id, parent_id, kakebo_key, name, position, is_active FROM categories
+			`SELECT id, parent_id, kakebo_key, name, position, is_active, icon FROM categories
 			 WHERE is_active = 1 OR ? = 1
 			 ORDER BY position, name`
 		)
@@ -76,8 +78,9 @@ export function addChild(db: DB, parentId: number, name: string): void {
 	);
 }
 
-export function rename(db: DB, id: number, name: string): void {
-	db.prepare('UPDATE categories SET name = ? WHERE id = ?').run(name, id);
+/** Nome e icona si salvano insieme: nella pagina sono un modulo solo. */
+export function save(db: DB, id: number, name: string, icon: string | null): void {
+	db.prepare('UPDATE categories SET name = ?, icon = ? WHERE id = ?').run(name, icon, id);
 }
 
 /** Disattiva o riattiva. Le quattro categorie kakebo restano sempre attive. */

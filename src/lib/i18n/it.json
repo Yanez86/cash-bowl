@@ -1,6 +1,6 @@
 {
 	"app": {
-		"name": "cash-bowl",
+		"name": "Cash Bowl",
 		"skipToContent": "Vai al contenuto"
 	},
 	"nav": {
@@ -24,7 +24,6 @@
 		"add": "Aggiungi",
 		"delete": "Elimina",
 		"edit": "Modifica",
-		"rename": "Rinomina",
 		"date": "Data",
 		"amount": "Importo",
 		"category": "Categoria",
@@ -41,12 +40,12 @@
 		"moveDown": "Sposta giù"
 	},
 	"months": {
-		"previous": "← Mese precedente",
-		"next": "Mese successivo →",
+		"previous": "Mese precedente",
+		"next": "Mese successivo",
 		"chooser": "Scelta del mese"
 	},
 	"setup": {
-		"title": "Benvenuto in cash-bowl",
+		"title": "Benvenuto in Cash Bowl",
 		"intro": "Questo è il primo avvio: crea il tuo accesso. Diventerai l'amministratore e potrai creare tu gli account degli altri membri della famiglia.",
 		"yourName": "Il tuo nome",
 		"username": "Nome utente",
@@ -57,7 +56,7 @@
 		"submit": "Crea il mio accesso"
 	},
 	"login": {
-		"title": "Accedi a cash-bowl",
+		"title": "Accedi a Cash Bowl",
 		"username": "Nome utente",
 		"password": "Password",
 		"submit": "Entra"
@@ -146,10 +145,12 @@
 		"empty": "Nessuna sotto-categoria.",
 		"addTo": "Aggiungi una sotto-categoria a {name}",
 		"nameOf": "Nome della sotto-categoria {name}",
+		"chooseIcon": "Icona di {name}",
+		"noIcon": "Nessuna icona",
 		"deactivate": "Disattiva",
 		"reactivate": "Riattiva",
 		"added": "Sotto-categoria «{name}» creata.",
-		"renamed": "Nome aggiornato.",
+		"saved": "Nome e icona aggiornati.",
 		"toggled": "Sotto-categoria aggiornata.",
 		"removed": "Sotto-categoria eliminata.",
 		"moved": "Ordine aggiornato.",
@@ -250,7 +251,7 @@
 		"receiptEmpty": "Il file è vuoto.",
 		"receiptTooBig": "La foto è troppo grande: il limite è 4 MB.",
 		"receiptNotAnImage": "Questo file non è una foto JPEG o PNG.",
-		"importNotAFile": "Questo non sembra un file esportato da cash-bowl.",
+		"importNotAFile": "Questo non sembra un file esportato da Cash Bowl.",
 		"importWrongFormat": "Il file è di una versione diversa e non si può reimportare.",
 		"importMissingTable": "Nel file manca una parte dei dati.",
 		"importNoUsers": "Nel file non c'è nessun utente: nessuno potrebbe più entrare.",
@@ -258,7 +259,10 @@
 		"importTooBig": "Il file è troppo grande.",
 		"receiptTooMany": "Hai scelto più foto di quante ne restino: al massimo 5 per spesa.",
 		"invalidDay": "Il giorno deve essere un numero da 1 a 28.",
-		"foreignForm": "Il modulo non è arrivato da questa applicazione. Ricarica la pagina e riprova."
+		"foreignForm": "Il modulo non è arrivato da questa applicazione. Ricarica la pagina e riprova.",
+		"endsBeforeStart": "La scadenza non può venire prima del mese in cui la ricorrente comincia.",
+		"invalidTimes": "Il numero di volte deve essere un numero da 1 a {max}.",
+		"unknownIcon": "Icona non riconosciuta."
 	},
 	"receipt": {
 		"legend": "Scontrini",
@@ -281,7 +285,11 @@
 		"ocrReading": "Sto leggendo… {percent}%",
 		"ocrFound": "Importo proposto: controllalo prima di salvare.",
 		"ocrNotFound": "Non sono riuscito a leggere un importo. Scrivilo a mano.",
-		"ocrFailed": "La lettura non è riuscita. Scrivi l'importo a mano."
+		"ocrFailed": "La lettura non è riuscita. Scrivi l'importo a mano.",
+		"count": {
+			"one": "{count} foto",
+			"other": "{count} foto"
+		}
 	},
 	"reports": {
 		"title": "Report",
@@ -354,7 +362,7 @@
 		"downloadJsonHint": "Si può aprire con un editor di testo e si può reimportare qui sotto.",
 		"restoreTitle": "Reimporta i dati",
 		"restoreWarning": "Attenzione: reimportare SOSTITUISCE tutto quello che c'è adesso. Prima di procedere il programma fa da solo una copia di sicurezza, e alla fine tutti dovranno rifare l'accesso. Le foto degli scontrini non sono nel file: vanno rimesse copiando la cartella.",
-		"restoreFile": "File JSON esportato da cash-bowl",
+		"restoreFile": "File JSON esportato da Cash Bowl",
 		"restoreSubmit": "Sostituisci i dati con questo file",
 		"imported": {
 			"one": "Reimportati i dati: {count} voce.",
@@ -386,7 +394,17 @@
 		"toggled": "Ricorrente aggiornata.",
 		"removed": "Ricorrente eliminata. Le voci già registrate restano dove sono.",
 		"descriptionOf": "Descrizione di {name}",
-		"amountOf": "Importo di {name}"
+		"amountOf": "Importo di {name}",
+		"changeEnd": "Cambia la scadenza",
+		"ends": "Fine",
+		"endsForever": "Per sempre, finché non la chiudo",
+		"endsUntil": "Fino al",
+		"endsOnLabel": "Data di scadenza",
+		"endsTimes": "Per",
+		"endsTimesLabel": "Numero di volte",
+		"endsTimesHint": "volte (dal mese di inizio compreso)",
+		"until": "fino a {month}",
+		"finished": "terminata"
 	},
 	"goals": {
 		"title": "Obiettivi di risparmio",
@@ -421,5 +439,27 @@
 		"depositRemoved": "Movimento eliminato.",
 		"toggled": "Obiettivo aggiornato.",
 		"removed": "Obiettivo eliminato."
+	},
+	"icons": {
+		"shoppingCart": "Carrello della spesa",
+		"utensils": "Ristorante",
+		"coffee": "Bar",
+		"house": "Casa",
+		"zap": "Bollette",
+		"car": "Automobile",
+		"bus": "Trasporti",
+		"plane": "Viaggi",
+		"heartPulse": "Salute",
+		"pill": "Farmacia",
+		"shirt": "Vestiti",
+		"graduationCap": "Istruzione",
+		"bookOpen": "Libri",
+		"film": "Cinema",
+		"music": "Musica",
+		"dumbbell": "Sport",
+		"gift": "Regali",
+		"pawPrint": "Animali",
+		"smartphone": "Telefono",
+		"creditCard": "Banca"
 	}
 }

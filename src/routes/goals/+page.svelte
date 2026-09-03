@@ -1,16 +1,16 @@
 <script lang="ts">
 	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
+	import Icon from '$lib/Icon.svelte';
 	import { translator } from '$lib/i18n';
+	import { dayLabel } from '$lib/dates';
 	import { missing, monthlyNeeded, progress } from '$lib/goals';
 	import { amountForInput, formatAmount } from '$lib/money';
 
 	let { data, form } = $props();
 	const t = $derived(translator(data.locale));
 	const euro = $derived((cents: number) => formatAmount(cents, data.locale, data.currency));
-	const day = $derived((iso: string) =>
-		new Date(iso).toLocaleDateString(data.locale, { dateStyle: 'medium' })
-	);
+	const day = $derived((iso: string) => dayLabel(iso, data.locale));
 </script>
 
 <h1>{t('goals.title')}</h1>
@@ -103,7 +103,7 @@
 							<tbody>
 								{#each data.deposits as movement (movement.id)}
 									<tr>
-										<td>{movement.occurred_on}</td>
+										<td>{day(movement.occurred_on)}</td>
 										<td>{euro(movement.amount_cents)}</td>
 										<td>{movement.note ?? t('common.none')}</td>
 										<td>{movement.author}</td>
@@ -111,7 +111,10 @@
 											<form method="post" action="?/removeDeposit">
 												<Csrf token={data.csrf} />
 												<input type="hidden" name="id" value={movement.id} />
-												<button type="submit" class="quiet">{t('common.delete')}</button>
+												<button type="submit" class="icon-button danger">
+													<Icon name="trash" />
+													<span class="visually-hidden">{t('common.delete')}</span>
+												</button>
 											</form>
 										</td>
 									</tr>
@@ -184,7 +187,7 @@
 
 <style>
 	section {
-		border: 1px solid var(--border);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius);
 		background: var(--surface);
 		padding: 0.6rem 0.9rem 1rem;

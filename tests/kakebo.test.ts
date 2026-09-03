@@ -6,6 +6,7 @@ import Database from 'better-sqlite3';
 import { migrate } from '../src/lib/server/db.ts';
 import { createUser } from '../src/lib/server/auth.ts';
 import * as categories from '../src/lib/server/categories.ts';
+import { isCategoryIcon } from '../src/lib/icons.ts';
 import {
 	MAX_PER_ENTRY,
 	addReceipt,
@@ -229,4 +230,25 @@ test('le categorie: due livelli, radici intoccabili, usate non si eliminano', as
 	createEntry(db, entry({ amountCents: 500, categoryId: usata }), anna);
 	assert.equal(categories.remove(db, usata), false, 'già usata: si disattiva soltanto');
 	assert.equal(categories.setActive(db, usata, false), true);
+});
+
+test("l'icona di una sotto-categoria: solo nomi previsti, e arriva fino alla spesa", async () => {
+	const { db, anna, survival } = await scenario();
+	categories.addChild(db, survival, 'Spesa alimentare');
+	const child = (
+		db.prepare("SELECT id FROM categories WHERE name = 'Spesa alimentare'").get() as { id: number }
+	).id;
+
+	// Dal modulo arriva un nome, mai un disegno: tutto il resto è da rifiutare.
+	assert.equal(isCategoryIcon('shoppingCart'), true);
+	assert.equal(isCategoryIcon('trash'), false, 'le icone delle azioni non si scelgono');
+	assert.equal(isCategoryIcon('<svg onload=alert(1)>'), false);
+	assert.equal(isCategoryIcon(null), false);
+
+	categories.save(db, child, 'Spesa alimentare', 'shoppingCart');
+	createEntry(db, entry({ amountCents: 1000, categoryId: child }), anna);
+	assert.equal(listEntries(db, { ym: YM, viewer: anna })[0].category_icon, 'shoppingCart');
+
+	categories.save(db, child, 'Spesa alimentare', null);
+	assert.equal(listEntries(db, { ym: YM, viewer: anna })[0].category_icon, null);
 });

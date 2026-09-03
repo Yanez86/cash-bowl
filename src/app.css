@@ -35,6 +35,20 @@ h2 {
 
 a {
 	color: var(--accent);
+	text-decoration: none;
+}
+
+/* Senza sottolineatura, dentro un paragrafo un link si distinguerebbe solo per
+   il colore: fra accento e testo ci sono meno di 2,5:1, troppo pochi. Il
+   grassetto è il secondo segnale, e la sottolineatura torna appena ci passi
+   sopra o ci arrivi da tastiera. */
+:where(p, dd, td) a {
+	font-weight: 600;
+}
+
+a:hover,
+a:focus-visible {
+	text-decoration: underline;
 }
 
 :where(a, button, input, select, summary, [tabindex]):focus-visible {
@@ -67,7 +81,10 @@ textarea {
 	font-family: inherit;
 }
 
-input[type='checkbox'] {
+/* Caselle e pallini non sono campi da riempire: senza questa eccezione
+   prenderebbero larghezza piena e 44px di altezza dalla regola qui sopra. */
+input[type='checkbox'],
+input[type='radio'] {
 	display: inline-block;
 	width: auto;
 	min-height: auto;
@@ -101,7 +118,7 @@ button.quiet {
 
 .notice {
 	background: var(--surface);
-	border: 1px solid var(--border);
+	border: 1px solid var(--rule);
 	border-left: 4px solid var(--accent);
 	border-radius: var(--radius);
 	padding: 0.6rem 0.8rem;
@@ -112,6 +129,148 @@ button.quiet {
 	color: var(--muted);
 	font-weight: 400;
 	font-size: 0.9em;
+}
+
+/* Il tag di una categoria. La parola c'è sempre: il colore aggiunge, non
+   sostituisce, e chi non distingue le tinte legge lo stesso. I colori stanno
+   in themes.css; una sotto-categoria porta il colore della categoria madre. */
+.tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.1rem 0.5rem;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	font-size: 0.9em;
+	font-weight: 600;
+	background: var(--surface);
+	color: var(--text);
+}
+
+.tag[data-cat='survival'] {
+	background: var(--tag-survival-bg);
+	color: var(--tag-survival-fg);
+}
+.tag[data-cat='leisure'] {
+	background: var(--tag-leisure-bg);
+	color: var(--tag-leisure-fg);
+}
+.tag[data-cat='culture'] {
+	background: var(--tag-culture-bg);
+	color: var(--tag-culture-fg);
+}
+.tag[data-cat='extra'] {
+	background: var(--tag-extra-bg);
+	color: var(--tag-extra-fg);
+}
+
+/* Elenco delle spese: data impilata a sinistra, nota piccola sotto il record.
+   Serve a due pagine (spese e bozze), quindi sta qui e non dentro una delle due. */
+.records {
+	list-style: none;
+	padding: 0;
+	margin: var(--gap) 0 0;
+}
+
+.records li {
+	display: grid;
+	grid-template-columns: auto 1fr auto auto;
+	align-items: center;
+	column-gap: 0.6rem;
+	padding: 0.2rem 0;
+	border-bottom: 1px solid var(--rule);
+}
+
+.records .date {
+	display: grid;
+	justify-items: center;
+	grid-row: 1 / span 2;
+	min-width: 2.4rem;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.records .day {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.records .month {
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.records .year {
+	font-size: 0.7rem;
+	color: var(--muted);
+}
+
+.records .meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem;
+	margin: 0;
+}
+
+.records .amount {
+	margin: 0;
+	font-weight: 600;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Chi ha segnato la spesa sta in fondo a destra, appena sopra la riga che
+   separa dalla spesa dopo: si legge quando serve, non ruba spazio al resto. */
+.records .author {
+	grid-column: 2 / -1;
+	justify-self: end;
+	margin: 0;
+	font-size: 0.75rem;
+}
+
+/* La nota è un contorno, non il piatto: piccola, sotto, non in mezzo ai piedi. */
+.records .note {
+	grid-column: 2 / -1;
+	margin: 0;
+}
+
+/* Azione dentro una riga: si vede solo l'icona, ma l'area da toccare è 44×44
+   e il nome dell'azione c'è sempre, nascosto per lo screen reader. */
+.icon-button {
+	display: grid;
+	place-items: center;
+	width: var(--tap);
+	height: var(--tap);
+	padding: 0;
+	color: var(--accent);
+	background: none;
+	border: 1px solid transparent;
+	border-radius: var(--radius);
+	text-decoration: none;
+}
+
+/* Rosso solo dove si cancella: il nome dell'azione resta comunque scritto,
+   nascosto per lo screen reader. */
+.icon-button.danger {
+	color: var(--danger);
+}
+
+/* Icona e parola sullo stesso pulsante restano allineate. */
+.with-icon {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+/* Alto contrasto: via le tinte, restano la parola e un bordo netto. */
+:root[data-contrast='high'] .tag {
+	background: var(--surface);
+	color: var(--text);
+	border-color: var(--border);
 }
 
 .visually-hidden {
@@ -143,12 +302,18 @@ th,
 td {
 	text-align: left;
 	padding: 0.5rem;
-	border-bottom: 1px solid var(--border);
+	border-bottom: 1px solid var(--rule);
 	vertical-align: top;
 }
 
+/* Le cifre incolonnate: in una colonna di importi si confrontano a colpo d'occhio. */
+td,
+dd {
+	font-variant-numeric: tabular-nums;
+}
+
 fieldset {
-	border: 1px solid var(--border);
+	border: 1px solid var(--rule);
 	border-radius: var(--radius);
 	margin: var(--gap) 0 0;
 }
@@ -166,6 +331,7 @@ legend {
 		--text: #000000;
 		--muted: #333333;
 		--border: #999999;
+		--rule: #cccccc;
 		--accent: #000000;
 	}
 
@@ -173,6 +339,7 @@ legend {
 	.quick,
 	.filters,
 	.actions,
+	.icon-button,
 	form {
 		display: none !important;
 	}
@@ -182,11 +349,13 @@ legend {
 		padding: 0;
 	}
 
-	a {
-		text-decoration: none;
-	}
-
 	table {
 		break-inside: avoid;
+	}
+
+	.tag[data-cat] {
+		background: none;
+		color: #000000;
+		border-color: #999999;
 	}
 }

@@ -3,7 +3,12 @@
 
    Ogni palette definisce la sua versione chiara e la sua versione scura; più in
    basso due sole regole scelgono quale delle due usare. Così una palette si
-   aggiunge in cinque righe. */
+   aggiunge in cinque righe.
+
+   Due bordi diversi, di proposito: --border è quello dei controlli (campi,
+   pulsanti) e deve restare leggibile, 3:1 minimo, perché dice "qui si scrive";
+   --rule è solo un tratto che raggruppa (riquadri, righe di tabella) e sta
+   indietro. In alto contrasto tornano tutti e due colore del testo. */
 
 :root {
 	/* --- base, uguale per tutte le palette --- */
@@ -12,14 +17,37 @@
 	--text-light: #1b1a18;
 	--muted-light: #56534d;
 	--border-light: #8a857c;
+	--rule-light: #dfdbd2;
 	--danger-light: #99251a;
+
+	/* --- tag delle quattro categorie kakebo: sfondo tenue, scritta scura ---
+	   Non sono palette d'accento: restano gli stessi qualunque tema si scelga,
+	   perché dicono a quale categoria appartiene una spesa, non che aria tira. */
+	--tag-survival-bg-light: #dce7f7;
+	--tag-survival-fg-light: #1f4a80;
+	--tag-leisure-bg-light: #f8e6c9;
+	--tag-leisure-fg-light: #7a4708;
+	--tag-culture-bg-light: #ebe0f5;
+	--tag-culture-fg-light: #5a3785;
+	--tag-extra-bg-light: #d8ecdd;
+	--tag-extra-fg-light: #1c5734;
 
 	--bg-dark: #16161a;
 	--surface-dark: #212127;
 	--text-dark: #f3f2ef;
 	--muted-dark: #b0aca4;
 	--border-dark: #6e6d78;
+	--rule-dark: #33333c;
 	--danger-dark: #ff9d92;
+
+	--tag-survival-bg-dark: #22304a;
+	--tag-survival-fg-dark: #a9c6ef;
+	--tag-leisure-bg-dark: #3c2f16;
+	--tag-leisure-fg-dark: #edc077;
+	--tag-culture-bg-dark: #322a47;
+	--tag-culture-fg-dark: #cbb3ea;
+	--tag-extra-bg-dark: #1c3527;
+	--tag-extra-fg-dark: #93cfa6;
 
 	/* --- palette predefinita: Kakebo --- */
 	--accent-light: #1a6152;
@@ -68,9 +96,18 @@
 	--text: var(--text-light);
 	--muted: var(--muted-light);
 	--border: var(--border-light);
+	--rule: var(--rule-light);
 	--danger: var(--danger-light);
 	--accent: var(--accent-light);
 	--accent-fg: var(--accent-fg-light);
+	--tag-survival-bg: var(--tag-survival-bg-light);
+	--tag-survival-fg: var(--tag-survival-fg-light);
+	--tag-leisure-bg: var(--tag-leisure-bg-light);
+	--tag-leisure-fg: var(--tag-leisure-fg-light);
+	--tag-culture-bg: var(--tag-culture-bg-light);
+	--tag-culture-fg: var(--tag-culture-fg-light);
+	--tag-extra-bg: var(--tag-extra-bg-light);
+	--tag-extra-fg: var(--tag-extra-fg-light);
 }
 
 /* --- scuro: quando lo chiede il telefono, se l'utente non ha scelto "chiaro" --- */
@@ -82,9 +119,18 @@
 		--text: var(--text-dark);
 		--muted: var(--muted-dark);
 		--border: var(--border-dark);
+		--rule: var(--rule-dark);
 		--danger: var(--danger-dark);
 		--accent: var(--accent-dark);
 		--accent-fg: var(--accent-fg-dark);
+		--tag-survival-bg: var(--tag-survival-bg-dark);
+		--tag-survival-fg: var(--tag-survival-fg-dark);
+		--tag-leisure-bg: var(--tag-leisure-bg-dark);
+		--tag-leisure-fg: var(--tag-leisure-fg-dark);
+		--tag-culture-bg: var(--tag-culture-bg-dark);
+		--tag-culture-fg: var(--tag-culture-fg-dark);
+		--tag-extra-bg: var(--tag-extra-bg-dark);
+		--tag-extra-fg: var(--tag-extra-fg-dark);
 	}
 }
 
@@ -96,15 +142,25 @@
 	--text: var(--text-dark);
 	--muted: var(--muted-dark);
 	--border: var(--border-dark);
+	--rule: var(--rule-dark);
 	--danger: var(--danger-dark);
 	--accent: var(--accent-dark);
 	--accent-fg: var(--accent-fg-dark);
+	--tag-survival-bg: var(--tag-survival-bg-dark);
+	--tag-survival-fg: var(--tag-survival-fg-dark);
+	--tag-leisure-bg: var(--tag-leisure-bg-dark);
+	--tag-leisure-fg: var(--tag-leisure-fg-dark);
+	--tag-culture-bg: var(--tag-culture-bg-dark);
+	--tag-culture-fg: var(--tag-culture-fg-dark);
+	--tag-extra-bg: var(--tag-extra-bg-dark);
+	--tag-extra-fg: var(--tag-extra-fg-dark);
 }
 
 /* --- alto contrasto: bordi netti e grigi che diventano testo pieno --- */
 :root[data-contrast='high'] {
 	--muted: var(--text);
 	--border: var(--text);
+	--rule: var(--text);
 }
 
 /* --- meno movimento: scelto dall'utente o chiesto dal sistema --- */

@@ -1,13 +1,16 @@
 <script lang="ts">
 	import Csrf from '$lib/Csrf.svelte';
 	import { resolve } from '$app/paths';
+	import Icon from '$lib/Icon.svelte';
 	import MonthNav from '$lib/MonthNav.svelte';
 	import { translator } from '$lib/i18n';
+	import { dayLabel } from '$lib/dates';
 	import { amountForInput, formatAmount } from '$lib/money';
 
 	let { data, form } = $props();
 	const t = $derived(translator(data.locale));
 	const euro = $derived((cents: number) => formatAmount(cents, data.locale, data.currency));
+	const day = $derived((iso: string) => dayLabel(iso, data.locale));
 
 	const sections = $derived([
 		{
@@ -113,16 +116,19 @@
 				<tbody>
 					{#each section.rows as row (row.id)}
 						<tr>
-							<td>{row.occurred_on}</td>
+							<td>{day(row.occurred_on)}</td>
 							<td>{row.note ?? t('common.none')}</td>
 							<td>{euro(row.amount_cents ?? 0)}</td>
 							<td>
 								<form method="post" action="?/remove">
 									<Csrf token={data.csrf} />
 									<input type="hidden" name="id" value={row.id} />
-									<button type="submit" class="quiet">
-										{t('common.delete')}
-										<span class="visually-hidden">{row.note ?? row.occurred_on}</span>
+									<button type="submit" class="icon-button danger">
+										<Icon name="trash" />
+										<span class="visually-hidden">
+											{t('common.delete')}
+											{row.note ?? day(row.occurred_on)}
+										</span>
 									</button>
 								</form>
 							</td>
@@ -160,7 +166,7 @@
 <style>
 	.closing {
 		background: var(--surface);
-		border: 1px solid var(--border);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius);
 		padding: 0.5rem 1rem 1rem;
 		margin-top: 2rem;

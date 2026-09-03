@@ -16,5 +16,8 @@ export default defineConfig({
 			// solido, che non dipende dalle intestazioni: src/lib/server/csrf.ts
 			csrf: { checkOrigin: false }
 		})
-	]
+	],
+
+	// Sempre la stessa porta: se è occupata si ferma invece di spostarsi su 5174.
+	server: { port: 5173, strictPort: true }
 });

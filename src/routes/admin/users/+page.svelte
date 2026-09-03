@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Csrf from '$lib/Csrf.svelte';
+	import Icon from '$lib/Icon.svelte';
 	import { translator } from '$lib/i18n';
 
 	let { data, form } = $props();
@@ -49,8 +50,12 @@
 							<form method="post" action="?/delete">
 								<Csrf token={data.csrf} />
 								<input type="hidden" name="id" value={user.id} />
-								<button type="submit" class="quiet">
-									{t('common.delete')} <span class="visually-hidden">{user.display_name}</span>
+								<button type="submit" class="icon-button danger">
+									<Icon name="trash" />
+									<span class="visually-hidden">
+										{t('common.delete')}
+										{user.display_name}
+									</span>
 								</button>
 							</form>
 						{:else}
