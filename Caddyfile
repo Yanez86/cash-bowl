@@ -20,14 +20,9 @@
 		}
 	}
 
-	# Registro delle richieste, acceso durante la fase di prova: serve a vedere
-	# quali intestazioni manda davvero il browser. Da togliere prima di
-	# distribuire, o almeno da mandare su file invece che a schermo.
-	log {
-		output stdout
-		format json
-	}
-
+	# Nessun registro delle richieste: gli indirizzi delle pagine dicono chi
+	# guarda cosa, e nessuno li deve leggere. Gli errori Caddy li scrive
+	# comunque. Vedi audit.md §1.6
 	reverse_proxy app:3000
 
 	header {
