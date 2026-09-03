@@ -36,6 +36,7 @@ const rent = (over: Partial<recurring.NewRecurring> = {}): recurring.NewRecurrin
 	categoryId: null,
 	dayOfMonth: 1,
 	startsYm: THIS,
+	endsYm: null,
 	...over
 });
 
@@ -93,7 +94,7 @@ test('cambiare l importo non tocca i mesi già registrati', async () => {
 	const id = recurring.create(db, rent(), anna);
 	recurring.generate(db, THIS, anna);
 
-	recurring.update(db, id, 90_000, 'Affitto');
+	recurring.update(db, id, 90_000, 'Affitto', null);
 	assert.equal(summary(db, THIS, anna).fixed, 80_000, 'il mese già registrato resta a 800');
 	assert.equal(recurring.generate(db, THIS, anna), 0, 'e non se ne aggiunge un secondo');
 });
@@ -151,4 +152,32 @@ test('una spesa ricorrente senza categoria non si può nemmeno creare', async ()
 		() => recurring.create(db, rent({ kind: 'expense', categoryId: null }), anna),
 		/CHECK/
 	);
+});
+
+// Fase 14: una ricorrente può finire. L'ultimo mese è compreso.
+
+test('l ultimo mese entra, il mese dopo no', async () => {
+	const { db, anna } = await scenario();
+	const last = shift(THIS, -1);
+	recurring.create(db, rent({ startsYm: shift(THIS, -3), endsYm: last }), anna);
+
+	assert.equal(recurring.generate(db, last, anna), 1, 'il mese di scadenza è compreso');
+	assert.equal(recurring.generate(db, THIS, anna), 0, 'dal mese dopo non genera più');
+	assert.equal(summary(db, THIS, anna).fixed, 0);
+});
+
+test('una per sempre non ha scadenza, e si può chiudere dopo', async () => {
+	const { db, anna } = await scenario();
+	const id = recurring.create(db, rent({ startsYm: shift(THIS, -3) }), anna);
+	assert.equal(recurring.list(db)[0].ends_ym, null, 'per sempre');
+	assert.equal(recurring.generate(db, shift(THIS, -2), anna), 1);
+
+	// Chiuderla dopo: dal mese successivo alla scadenza non nasce più niente.
+	recurring.update(db, id, 80_000, 'Affitto', shift(THIS, -2));
+	assert.equal(recurring.generate(db, shift(THIS, -1), anna), 0);
+});
+
+test('il database rifiuta una scadenza precedente al mese di inizio', async () => {
+	const { db, anna } = await scenario();
+	assert.throws(() => recurring.create(db, rent({ endsYm: shift(THIS, -1) }), anna));
 });

@@ -1,9 +1,10 @@
 // Le voci che tornano ogni mese.
 //
 // La generazione è volutamente prudente: mai nel futuro, mai prima del mese in
-// cui la ricorrente è nata, e mai due volte. L'ultima garanzia non è in questo
-// file ma nel database, in un indice unico: se anche il codice sbagliasse, il
-// doppione non entrerebbe comunque. Vedi migrations/007_recurring.sql
+// cui la ricorrente è nata, mai dopo il mese in cui finisce, e mai due volte.
+// L'ultima garanzia non è in questo file ma nel database, in un indice unico: se
+// anche il codice sbagliasse, il doppione non entrerebbe comunque.
+// Vedi migrations/007_recurring.sql e 009_recurring_end.sql
 import type { DB } from './db.ts';
 import { currentMonth, isMonth, type Kind } from './kakebo.ts';
 
@@ -15,8 +16,10 @@ export type Recurring = {
 	category_id: number | null;
 	category_root_key: string | null;
 	category_child: string | null;
+	category_icon: string | null;
 	day_of_month: number;
 	starts_ym: string;
+	ends_ym: string | null;
 	is_active: number;
 	author: string;
 };
@@ -24,7 +27,8 @@ export type Recurring = {
 const COLUMNS = `r.id, r.kind, r.description, r.amount_cents, r.category_id,
 	COALESCE(root.kakebo_key, c.kakebo_key) AS category_root_key,
 	CASE WHEN c.parent_id IS NULL THEN NULL ELSE c.name END AS category_child,
-	r.day_of_month, r.starts_ym, r.is_active, u.display_name AS author
+	c.icon AS category_icon,
+	r.day_of_month, r.starts_ym, r.ends_ym, r.is_active, u.display_name AS author
 	FROM recurring r
 	LEFT JOIN categories c ON c.id = r.category_id
 	LEFT JOIN categories root ON root.id = c.parent_id
@@ -43,25 +47,42 @@ export type NewRecurring = {
 	categoryId: number | null;
 	dayOfMonth: number;
 	startsYm: string;
+	/** Ultimo mese compreso. null: per sempre, finché non la chiudi. */
+	endsYm: string | null;
 };
 
 export function create(db: DB, input: NewRecurring, author: number): number {
 	const result = db
 		.prepare(
 			`INSERT INTO recurring
-			   (kind, description, amount_cents, category_id, day_of_month, starts_ym, created_by)
-			 VALUES (@kind, @description, @amountCents, @categoryId, @dayOfMonth, @startsYm, @author)`
+			   (kind, description, amount_cents, category_id, day_of_month, starts_ym, ends_ym,
+			    created_by)
+			 VALUES (@kind, @description, @amountCents, @categoryId, @dayOfMonth, @startsYm, @endsYm,
+			         @author)`
 		)
 		.run({ ...input, author });
 	return Number(result.lastInsertRowid);
 }
 
-/** Cambia importo e descrizione. I mesi già registrati non si toccano. */
-export function update(db: DB, id: number, amountCents: number, description: string): boolean {
+/** Il mese da cui vale la ricorrente, o null se non esiste. */
+export function startsYm(db: DB, id: number): string | null {
+	const row = db.prepare('SELECT starts_ym FROM recurring WHERE id = ?').get(id) as
+		{ starts_ym: string } | undefined;
+	return row?.starts_ym ?? null;
+}
+
+/** Cambia importo, descrizione e scadenza. I mesi già registrati non si toccano. */
+export function update(
+	db: DB,
+	id: number,
+	amountCents: number,
+	description: string,
+	endsYm: string | null
+): boolean {
 	return (
 		db
-			.prepare('UPDATE recurring SET amount_cents = ?, description = ? WHERE id = ?')
-			.run(amountCents, description, id).changes > 0
+			.prepare('UPDATE recurring SET amount_cents = ?, description = ?, ends_ym = ? WHERE id = ?')
+			.run(amountCents, description, endsYm, id).changes > 0
 	);
 }
 
@@ -91,6 +112,7 @@ export function generate(db: DB, ym: string, author: number): number {
 			`SELECT r.id, r.kind, r.amount_cents, r.category_id, r.day_of_month
 			 FROM recurring r
 			 WHERE r.is_active = 1 AND r.starts_ym <= @ym
+			   AND (r.ends_ym IS NULL OR r.ends_ym >= @ym)
 			   AND NOT EXISTS (
 			     SELECT 1 FROM transactions t
 			     WHERE t.recurring_id = r.id AND substr(t.occurred_on, 1, 7) = @ym
